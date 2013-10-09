@@ -100,28 +100,28 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
 
     // Electron real eff
     if (m_el_real_eff[r] == NULL) {
-      std::cout << "\033[1;31mERROR:\033[0;31m Failed to get el_real_eff from "
+      std::cout << "ERROR: Failed to get el_real_eff from "
                 << file_name << "for region "<<r<<"\033[0m\n";
       return false;
     }
 
     // Electron fake rate
     if (m_el_fake_rate[r] == NULL) {
-      std::cout << "\033[1;31mERROR:\033[0;31m Failed to get el_fake_rate from "
+      std::cout << "ERROR: Failed to get el_fake_rate from "
                 << file_name << "for region "<<r<<"\033[0m\n";
       return false;
     }
 
     // Muon real eff
     if (m_mu_real_eff[r] == NULL) {
-      std::cout << "\033[1;31mERROR:\033[0;31m Failed to get mu_real_eff from "
+      std::cout << "ERROR: Failed to get mu_real_eff from "
                 << file_name << "for region "<<r<<"\033[0m\n";
       return false;
     }
 
     // Muon fake rate
     if (m_mu_fake_rate[r] == NULL) {
-      std::cout << "\033[1;31mERROR:\033[0;31m Failed to get mu_fake_rate from "
+      std::cout << "ERROR: Failed to get mu_fake_rate from "
                 << file_name << "for region "<<r<<"\033[0m\n";
       return false;
     }
