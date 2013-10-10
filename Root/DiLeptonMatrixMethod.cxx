@@ -47,8 +47,8 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
   // open the file. If file fails to open, return false
   m_hist_file = TFile::Open(file_name.c_str(), "OPEN");
   if (!m_hist_file->IsOpen()) {
-    std::cout << "\033[1;31mERROR:\033[0;31m Failed to open fake rate file: "
-              << file_name << "\033[0m\n";
+    std::cout << "ERROR: Failed to open fake rate file: "
+              << file_name << "\n";
     return false;
   }
 
@@ -101,28 +101,28 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
     // Electron real eff
     if (m_el_real_eff[r] == NULL) {
       std::cout << "ERROR: Failed to get el_real_eff from "
-                << file_name << "for region "<<r<<"\033[0m\n";
+                << file_name << "for region "<<r<<"\n";
       return false;
     }
 
     // Electron fake rate
     if (m_el_fake_rate[r] == NULL) {
       std::cout << "ERROR: Failed to get el_fake_rate from "
-                << file_name << "for region "<<r<<"\033[0m\n";
+                << file_name << "for region "<<r<<"\n";
       return false;
     }
 
     // Muon real eff
     if (m_mu_real_eff[r] == NULL) {
       std::cout << "ERROR: Failed to get mu_real_eff from "
-                << file_name << "for region "<<r<<"\033[0m\n";
+                << file_name << "for region "<<r<<"\n";
       return false;
     }
 
     // Muon fake rate
     if (m_mu_fake_rate[r] == NULL) {
       std::cout << "ERROR: Failed to get mu_fake_rate from "
-                << file_name << "for region "<<r<<"\033[0m\n";
+                << file_name << "for region "<<r<<"\n";
       return false;
     }
     
