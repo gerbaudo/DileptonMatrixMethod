@@ -128,7 +128,8 @@ namespace SusyMatrixMethod
     FR_CRPremT2,
 
     // Added for Davide
-    FR_SRDavide,
+    // FR_SRDavide,
+    FR_SR_WHSS,
 
     FR_N};
 
@@ -157,8 +158,9 @@ namespace SusyMatrixMethod
 				  "CRZVmT2_100",
 				  "CR_SSInc",  // Mistake in the naming.. shouldn't have "_"
 				  "CRPremT2",
-				  
-				  "SRDavide"
+                                  //"SRDavide",
+				  "CR_WHSS"
+
                                  };
 
 
