@@ -1,5 +1,9 @@
 #include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
 
+#include <algorithm> // copy
+#include <cassert>   // assert
+#include <iterator> // ostream_iterator
+
 // -----------------------------------------------------------------------------
 SusyMatrixMethod::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
     m_hist_file(NULL),
@@ -668,34 +672,41 @@ void SusyMatrixMethod::DiLeptonMatrixMethod::loadSysFromFile()
   // I want to parameterize the metrel variation, as it kind of bounces around
   // and it isn't fair to assign +/- the max and min bounce.
 
-  // Real
-  m_el_real_up
-      = ((TParameter<double>*) m_hist_file->Get("el_real_up"))->GetVal();
-  m_el_real_down
-      = ((TParameter<double>*) m_hist_file->Get("el_real_down"))->GetVal();
-  m_mu_real_up
-      = ((TParameter<double>*) m_hist_file->Get("mu_real_up"))->GetVal();
-  m_mu_real_down
-      = ((TParameter<double>*) m_hist_file->Get("mu_real_down"))->GetVal();
-
+  struct RetrieveOrZero {
+    typedef TParameter<double>* tdp_t;
+    TFile *f_;  // TFile::Get breaks const-ness
+    vector<string> miss_;
+    RetrieveOrZero(TFile *f) : f_(f) {}
+    bool anythingMissing() const { return miss_.size()>0; }
+    double operator() (const char* varname) {
+      double val(0.0);
+      if(!f_) miss_.push_back(varname);
+      else if(tdp_t tdp = static_cast<tdp_t>(f_->Get(varname))) val = tdp->GetVal();
+      else miss_.push_back(varname);
+      return val;
+    }
+  } roz(m_hist_file);
+  m_el_real_up   = roz("el_real_up");
+  m_el_real_down = roz("el_real_down");
+  m_mu_real_up   = roz("mu_real_up");
+  m_mu_real_down = roz("mu_real_down");
+  m_el_HFLFerr   = roz("el_HFLFerr");
+  m_el_datamc    = roz("el_datamc");
+  m_mu_datamc    = roz("mu_datamc");
+  m_el_region    = roz("el_region");
+  m_mu_region    = roz("mu_region");
+  if(roz.anythingMissing()) {
+    cout<<"DiLeptonMatrixMethod::loadSysFromFile(): missing the following systematics:"<<endl;
+    copy(roz.miss_.begin(), roz.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
+    cout<<"Will use 0.0 for these"<<endl;
+    assert(false); // should provide a bool return value and exit gracefully
+  }
   // Met Rel -- Parameterized vs Met Rel
   m_el_metrel = static_cast<TH1F*>(m_hist_file->Get("el_metrel_sys"));
   m_mu_metrel = static_cast<TH1F*>(m_hist_file->Get("mu_metrel_sys"));
-
   // Eta -- Parameterized vs Eta
   m_el_eta = static_cast<TH1F*>(m_hist_file->Get("el_eta_sys"));
   m_mu_eta = static_cast<TH1F*>(m_hist_file->Get("mu_eta_sys"));
-
-  // HF/LF non-separation error
-  m_el_HFLFerr = ((TParameter<double>*) m_hist_file->Get("el_HFLFerr"))->GetVal();
-
-  // Data/MC error associated with rates
-  m_el_datamc  = ((TParameter<double>*) m_hist_file->Get("el_datamc"))->GetVal();
-  m_mu_datamc  = ((TParameter<double>*) m_hist_file->Get("mu_datamc"))->GetVal();
-
-  // Error associated with Region
-  m_el_region  = ((TParameter<double>*) m_hist_file->Get("el_region"))->GetVal();
-  m_mu_region  = ((TParameter<double>*) m_hist_file->Get("mu_region"))->GetVal();
 
 }
 // -----------------------------------------------------------------------------
