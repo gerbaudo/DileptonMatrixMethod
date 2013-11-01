@@ -2,7 +2,7 @@
 
 #include <algorithm> // copy
 #include <cassert>   // assert
-#include <iterator> // ostream_iterator
+#include <iterator>  // ostream_iterator
 
 // -----------------------------------------------------------------------------
 SusyMatrixMethod::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
@@ -46,97 +46,41 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
   m_rate_param_fake_el = rate_param_fake_el;
   m_rate_param_real_mu = rate_param_real_mu;
   m_rate_param_fake_mu = rate_param_fake_mu;
-
-
-  // open the file. If file fails to open, return false
   m_hist_file = TFile::Open(file_name.c_str(), "OPEN");
-  if (!m_hist_file->IsOpen()) {
-    std::cout << "ERROR: Failed to open fake rate file: "
-              << file_name << "\n";
+  if (!m_hist_file || !m_hist_file->IsOpen()) {
+    std::cout << "ERROR: Failed to open fake rate file: "<< file_name << "\n";
     return false;
   }
-
-  // Get the Real eff and Fake rate for electrons and muons
-  std::string s_el_real = "el_real_eff_";
-  std::string s_el_fake = "el_fake_rate_";
-  std::string s_mu_real = "mu_real_eff_";
-  std::string s_mu_fake = "mu_fake_rate_";
-
-  // Loop and load
-  for(int r=0; r<FR_N; ++r) {
-
-    // Electon Real Eff
-    std::cout << "getting real rate hist with name "
-              << (s_el_real + FRNames[r]).c_str()
-              << " -- storing to index: " << r << "\n";
-    m_el_real_eff[r]  = static_cast<TH1*>(m_hist_file->Get(( s_el_real
-                                                            + FRNames[r]
-                                                            ).c_str()));
-
-    // Electron Fake Rate
-    std::cout << "getting fake rate hist with name "
-              << (s_el_fake + FRNames[r]).c_str()
-              << " -- storing to index: " << r << "\n";
-    m_el_fake_rate[r]  = static_cast<TH1*>(m_hist_file->Get(( s_el_fake
-                                                            + FRNames[r]
-                                                            ).c_str()));
-
-    // Muon Real Eff
-    std::cout << "getting real rate hist with name "
-              << (s_mu_real + FRNames[r]).c_str()
-              << " -- storing to index: " << r << "\n";
-    m_mu_real_eff[r]  = static_cast<TH1*>(m_hist_file->Get(( s_mu_real
-                                                            + FRNames[r]
-                                                            ).c_str()));
-
-    // Muon Fake Rate
-    std::cout << "getting fake rate hist with name "
-              << (s_mu_fake + FRNames[r]).c_str()
-              << " -- storing to index: " << r << "\n";
-    m_mu_fake_rate[r]  = static_cast<TH1*>(m_hist_file->Get(( s_mu_fake
-                                                            + FRNames[r]
-                                                            ).c_str()));
+  struct RetrieveOrNull {
+    TFile *f_;  // TFile::Get breaks const-ness
+    vector<string> miss_;
+    RetrieveOrNull(TFile *f) : f_(f) {}
+    bool anythingMissing() const { return miss_.size()>0; }
+    TH1* operator() (const string &histoname) {
+      cout<<"Retrieving "<<histoname<<endl;
+      if(!f_) miss_.push_back(histoname);
+      TH1* h = static_cast<TH1*>(f_->Get(histoname.c_str()));
+      if(!h) miss_.push_back(histoname);
+      return h;
+    }
+  } ron(m_hist_file);
+  std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
+  std::string s_mu_real("mu_real_eff_"), s_mu_fake("mu_fake_rate_");
+  for(int r=0; r<FR_N; ++r) { // Get the Real eff and Fake rate for electrons and muons
+    m_el_real_eff [r]  = ron(s_el_real + FRNames[r]);
+    m_el_fake_rate[r]  = ron(s_el_fake + FRNames[r]);
+    m_mu_real_eff [r]  = ron(s_mu_real + FRNames[r]);
+    m_mu_fake_rate[r]  = ron(s_mu_fake + FRNames[r]);
   }
-
-  // Check that all histograms are found
-  // If not, abort
-  for(int r=0; r<FR_N; ++r){
-
-    // Electron real eff
-    if (m_el_real_eff[r] == NULL) {
-      std::cout << "ERROR: Failed to get el_real_eff from "
-                << file_name << "for region "<<r<<"\n";
-      return false;
-    }
-
-    // Electron fake rate
-    if (m_el_fake_rate[r] == NULL) {
-      std::cout << "ERROR: Failed to get el_fake_rate from "
-                << file_name << "for region "<<r<<"\n";
-      return false;
-    }
-
-    // Muon real eff
-    if (m_mu_real_eff[r] == NULL) {
-      std::cout << "ERROR: Failed to get mu_real_eff from "
-                << file_name << "for region "<<r<<"\n";
-      return false;
-    }
-
-    // Muon fake rate
-    if (m_mu_fake_rate[r] == NULL) {
-      std::cout << "ERROR: Failed to get mu_fake_rate from "
-                << file_name << "for region "<<r<<"\n";
-      return false;
-    }
-    
+  if(ron.anythingMissing()) {
+    cout<<"DiLeptonMatrixMethod::configure(): missing the following systematics:"<<endl;
+    copy(ron.miss_.begin(), ron.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
+    cout<<"Exiting"<<endl;
+    return false;
   }
-  
   loadSysFromFile();
-  
   return true;
 }
-
 // -----------------------------------------------------------------------------
 float SusyMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
     bool isTight1, bool isElectron1, float pt1, float eta1,
