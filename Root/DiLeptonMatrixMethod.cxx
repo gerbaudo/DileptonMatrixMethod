@@ -659,38 +659,15 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& l
                  , FAKE_REGION region) const
 
 {
-
-  // get histogram from member objects
-  TH1* h_rate = NULL;
-  RATE_PARAM rate_param = PT;
-
-  if (rate_type == REAL) {
-    if (lep.isElectron()){
-      h_rate = m_el_real_eff[region];
-      rate_param = m_rate_param_real_el;
-    }
-    else{
-      h_rate = m_mu_real_eff[region];
-      rate_param = m_rate_param_real_mu;
-    }
-  }
-  else if (rate_type == FAKE) {
-    if (lep.isElectron()){
-      h_rate = m_el_fake_rate[region];
-      rate_param = m_rate_param_fake_el;
-    }
-    else{
-      h_rate = m_mu_fake_rate[region];
-      rate_param = m_rate_param_fake_mu;
-    }
-  }
-  else {
-    std::cout << "WARNING: invalid RATE_TYPE\n";
-    return 0;
-  }
-
+  bool real(rate_type == REAL), fake(rate_type == FAKE), eitherForR(real!=fake);
+  bool isEl(lep.isElectron()), isMu(lep.isMuon()),       eitherEorM(isEl!=isMu);
+  bool validCombination(eitherForR && eitherEorM);
+  if(!validCombination) { std::cout << "WARNING: invalid RATE_TYPE\n"; return 0; }
+  TH1* h_rate = (real ? (isEl ? m_el_real_eff [region] : m_mu_real_eff [region])
+                 :      (isEl ? m_el_fake_rate[region] : m_mu_fake_rate[region]));
+  RATE_PARAM rate_param = (real ? (isEl ? m_rate_param_real_el : m_rate_param_real_mu)
+                           :      (isEl ? m_rate_param_fake_el : m_rate_param_fake_mu));
   int rate_bin = getRateBin(lep, h_rate, rate_param);
-
   // Need to add in protection in the event that the
   // lepton Pt goes beyond the rate histograms boundaries
   /*
@@ -715,11 +692,8 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& l
     rate_bin   = h_rate->FindBin(pt);
   }
   */
-
   float error = h_rate->GetBinError(rate_bin);
-
   return error;
-
 }
 // -----------------------------------------------------------------------------
 void SusyMatrixMethod::DiLeptonMatrixMethod::printInfo(
