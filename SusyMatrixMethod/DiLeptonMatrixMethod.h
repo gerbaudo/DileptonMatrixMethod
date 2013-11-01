@@ -50,10 +50,10 @@ namespace SusyMatrixMethod
 		  , SYS_MU_ETA          // Any eta dep
                   , SYS_EL_HFLF_UP      // Needed for HF/LF diff for elec
                   , SYS_EL_HFLF_DOWN    // Needed for HF/LF diff for elec
-		  , SYS_EL_REG_UP       // Error from percentage in weighted avg 
-		  , SYS_EL_REG_DOWN     // Error from percentage in weighted avg 
-		  , SYS_MU_REG_UP       // Error from percentage in weighted avg 
-		  , SYS_MU_REG_DOWN     // Error from percentage in weighted avg 
+		  , SYS_EL_REG_UP       // Error from percentage in weighted avg
+		  , SYS_EL_REG_DOWN     // Error from percentage in weighted avg
+		  , SYS_MU_REG_UP       // Error from percentage in weighted avg
+		  , SYS_MU_REG_DOWN     // Error from percentage in weighted avg
                   , SYS_N
                   };
 
@@ -87,82 +87,74 @@ namespace SusyMatrixMethod
 				         , "MU_REG_DOWN"
                                          , "SYS_N"
                                          };
-  
-  // Redo the enums to be in line with 
+
+  // Redo the enums to be in line with
   // new definitions.  Delete old names
   // so as to not confuse.
   // See PDF for definitions!
   enum FAKE_REGION {
-
-    // mT2 SR
-    FR_SRmT2a = 0,
-    FR_SRmT2b,
-    FR_SRmT2c,
-    
-    // WW SR
-    FR_SRWWa,
-    FR_SRWWb,
-    FR_SRWWc,
-    
-    // Z+jets SR
-    FR_SRZjets,
-    
-    // Validation/Control regions
-    FR_VRSS,
-    FR_CRWWMet,
-    FR_CRWWmT2,
-    FR_CRTopMet,
-    FR_CRTopmT2,
-    FR_CRTopZjets,
-    FR_CRZVMet,
-    FR_CRZVmT2_90, 
-    FR_CRZVmT2_120, 
-    FR_CRZVmT2_150, 
-    FR_CRZVmT2_100, 
-
-    // Added for testing
-    FR_SRSSInc,
-
-    // Additional Regions requested 
-    // for plotting purposes
-    FR_CRPremT2,
-
-    // Added for Davide
-    // FR_SRDavide,
-    FR_SR_WHSS,
-
-    FR_N};
+    FR_SRmT2a = 0 // mT2 SR
+    ,FR_SRmT2b
+    ,FR_SRmT2c
+    ,FR_SRWWa // WW SR
+    ,FR_SRWWb
+    ,FR_SRWWc
+    ,FR_SRZjets // Z+jets SR
+    ,FR_VRSS // Validation/Control regions
+    ,FR_CRWWMet
+    ,FR_CRWWmT2
+    ,FR_CRTopMet
+    ,FR_CRTopmT2
+    ,FR_CRTopZjets
+    ,FR_CRZVMet
+    ,FR_CRZVmT2_90
+    ,FR_CRZVmT2_120
+    ,FR_CRZVmT2_150
+    ,FR_CRZVmT2_100
+    ,FR_SRSSInc // Added for testing
+    ,FR_CRPremT2 // Additional Regions requested for plotting purposes
+    ,FR_SR_WHSS // was FR_SRDavide
+    ,FR_CR8lpt
+    ,FR_CR8ee
+    ,FR_CR8mm
+    ,FR_CR8mmMtww
+    ,FR_CR8mmHt
+    ,FR_N
+  };
 
   enum SIGN_CHANNEL { NO_SIGN = 0
                     , OS_CHANNEL
                     , SS_CHANNEL
                     };
 
-  static std::string FRNames[] = {"SRmT2a",
-				  "SRmT2b",
-				  "SRmT2c",
-				  "SRWWa",
-				  "SRWWb",
-				  "SRWWc",
-				  "SRZjets",				  
-				  "VRSS",
-				  "CRWWMet",
-				  "CRWWmT2",
-				  "CRTopMet",
-				  "CRTopmT2",
-				  "CRTopZjets",
-				  "CRZVMet",
-				  "CRZVmT2_90",
-				  "CRZVmT2_120",
-				  "CRZVmT2_150",
-				  "CRZVmT2_100",
-				  "CR_SSInc",  // Mistake in the naming.. shouldn't have "_"
-				  "CRPremT2",
-                                  //"SRDavide",
-				  "CR_WHSS"
-
-                                 };
-
+  static std::string FRNames[] = {
+    "SRmT2a"
+    ,"SRmT2b"
+    ,"SRmT2c"
+    ,"SRWWa"
+    ,"SRWWb"
+    ,"SRWWc"
+    ,"SRZjets"
+    ,"VRSS"
+    ,"CRWWMet"
+    ,"CRWWmT2"
+    ,"CRTopMet"
+    ,"CRTopmT2"
+    ,"CRTopZjets"
+    ,"CRZVMet"
+    ,"CRZVmT2_90"
+    ,"CRZVmT2_120"
+    ,"CRZVmT2_150"
+    ,"CRZVmT2_100"
+    ,"CR_SSInc" // Mistake in the naming.. shouldn't have "_"
+    ,"CRPremT2"
+    ,"CR_WHSS" // was "SRDavide"
+    ,"CR_CR8lpt"
+    ,"CR_CR8ee"
+    ,"CR_CR8mm"
+    ,"CR_CR8mmMtww"
+    ,"CR_CR8mmHt"
+  };
 
   class DiLeptonMatrixMethod
   {
