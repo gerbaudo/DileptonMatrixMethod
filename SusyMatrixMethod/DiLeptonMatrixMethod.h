@@ -19,6 +19,7 @@
 #include "TH2.h"
 
 #include "SusyMatrixMethod/MatrixLepton.h"
+#include "SusyMatrixMethod/FakeRegions.h"
 
 namespace SusyMatrixMethod
 {
@@ -88,74 +89,6 @@ namespace SusyMatrixMethod
                                          , "SYS_N"
                                          };
 
-  // Redo the enums to be in line with
-  // new definitions.  Delete old names
-  // so as to not confuse.
-  // See PDF for definitions!
-  enum FAKE_REGION {
-    FR_SRmT2a = 0 // mT2 SR
-    ,FR_SRmT2b
-    ,FR_SRmT2c
-    ,FR_SRWWa // WW SR
-    ,FR_SRWWb
-    ,FR_SRWWc
-    ,FR_SRZjets // Z+jets SR
-    ,FR_VRSS // Validation/Control regions
-    ,FR_CRWWMet
-    ,FR_CRWWmT2
-    ,FR_CRTopMet
-    ,FR_CRTopmT2
-    ,FR_CRTopZjets
-    ,FR_CRZVMet
-    ,FR_CRZVmT2_90
-    ,FR_CRZVmT2_120
-    ,FR_CRZVmT2_150
-    ,FR_CRZVmT2_100
-    ,FR_SRSSInc // Added for testing
-    ,FR_CRPremT2 // Additional Regions requested for plotting purposes
-    ,FR_SR_WHSS // was FR_SRDavide
-    ,FR_CR8lpt
-    ,FR_CR8ee
-    ,FR_CR8mm
-    ,FR_CR8mmMtww
-    ,FR_CR8mmHt
-    ,FR_N
-  };
-
-  enum SIGN_CHANNEL { NO_SIGN = 0
-                    , OS_CHANNEL
-                    , SS_CHANNEL
-                    };
-
-  static std::string FRNames[] = {
-    "SRmT2a"
-    ,"SRmT2b"
-    ,"SRmT2c"
-    ,"SRWWa"
-    ,"SRWWb"
-    ,"SRWWc"
-    ,"SRZjets"
-    ,"VRSS"
-    ,"CRWWMet"
-    ,"CRWWmT2"
-    ,"CRTopMet"
-    ,"CRTopmT2"
-    ,"CRTopZjets"
-    ,"CRZVMet"
-    ,"CRZVmT2_90"
-    ,"CRZVmT2_120"
-    ,"CRZVmT2_150"
-    ,"CRZVmT2_100"
-    ,"CR_SSInc" // Mistake in the naming.. shouldn't have "_"
-    ,"CRPremT2"
-    ,"CR_WHSS" // was "SRDavide"
-    ,"CR_CR8lpt"
-    ,"CR_CR8ee"
-    ,"CR_CR8mm"
-    ,"CR_CR8mmMtww"
-    ,"CR_CR8mmHt"
-  };
-
   class DiLeptonMatrixMethod
   {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -187,7 +120,7 @@ namespace SusyMatrixMethod
        */
       float getTotalFake( bool isTight1, bool isElectron1, float pt1, float eta1
                         , bool isTight2, bool isElectron2, float pt2, float eta2
-                        , FAKE_REGION region
+                        , susy::fake::Region region
                         , float MetRel
                         , SYSTEMATIC syst = SYS_NONE
                         ) const;
@@ -197,7 +130,7 @@ namespace SusyMatrixMethod
        */
       float getRR( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
@@ -207,7 +140,7 @@ namespace SusyMatrixMethod
        */
       float getRF( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
@@ -217,7 +150,7 @@ namespace SusyMatrixMethod
        */
       float getFR( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
@@ -227,7 +160,7 @@ namespace SusyMatrixMethod
        */
       float getFF( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
@@ -245,7 +178,7 @@ namespace SusyMatrixMethod
                    , float pt
                    , float eta
                    , RATE_TYPE rate_type
-                   , FAKE_REGION region
+                   , susy::fake::Region region
                    , float MetRel
                    , SYSTEMATIC syst = SYS_NONE
                    ) const;
@@ -258,13 +191,13 @@ namespace SusyMatrixMethod
       // for internal use
       float getRate( const MatrixLepton&
                    , RATE_TYPE
-                   , FAKE_REGION region
+                   , susy::fake::Region region
                    , float MetRel
                    , SYSTEMATIC syst = SYS_NONE
                    ) const;
       float getRateSyst( const MatrixLepton&
                        , RATE_TYPE
-           , FAKE_REGION region
+           , susy::fake::Region region
                        , float MetRel
                        , SYSTEMATIC syst = SYS_NONE
                        ) const;
@@ -277,37 +210,37 @@ namespace SusyMatrixMethod
       // Get the fake/real contribution for this event -- for internal use
       float getTotalFake( const MatrixLepton& lep1
                         , const MatrixLepton& lep2
-                        , FAKE_REGION region
+                        , susy::fake::Region region
                         , float MetRel
                         , SYSTEMATIC syst = SYS_NONE
                         ) const;
       float getRR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
       float getRF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
       float getFR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
       float getFF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , FAKE_REGION region
+                 , susy::fake::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, FAKE_REGION region) const;
+      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region region) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
       int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
@@ -318,7 +251,7 @@ namespace SusyMatrixMethod
       // Verbose output
       void printInfo( const MatrixLepton& lep1
                     , const MatrixLepton& lep2
-                    , FAKE_REGION region
+                    , susy::fake::Region region
                     , float MetRel
                     , SYSTEMATIC syst = SYS_NONE
                     ) const;
@@ -328,10 +261,10 @@ namespace SusyMatrixMethod
 
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
-      TH1* m_el_real_eff[FR_N];
-      TH1* m_el_fake_rate[FR_N];
-      TH1* m_mu_real_eff[FR_N];
-      TH1* m_mu_fake_rate[FR_N];
+      TH1* m_el_real_eff [susy::fake::FR_N];
+      TH1* m_el_fake_rate[susy::fake::FR_N];
+      TH1* m_mu_real_eff [susy::fake::FR_N];
+      TH1* m_mu_fake_rate[susy::fake::FR_N];
 
       // Systematic uncertainties grabbed from the config file
       // Real errors

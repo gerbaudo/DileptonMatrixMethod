@@ -9,6 +9,7 @@
 
 
 #include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
+#include "SusyMatrixMethod/FakeRegions.h"
 #include "TRandom3.h"
 
 namespace FakeStatTool{
@@ -34,7 +35,7 @@ namespace FakeStatTool{
 			  int n_tl,                              // # of TL events
 			  int n_lt,                              // # of LT events
 			  int n_ll,                              // # of LL events
-			  SusyMatrixMethod::FAKE_REGION fr,       // Fake Region to get average rates
+              susy::fake::Region fr,       // Fake Region to get average rates
 			  DileptonType dt);                      // Dilepton Type
     
 
@@ -47,8 +48,8 @@ namespace FakeStatTool{
     float getAvgRate(TH1* hist);
 
     // Get the rate given a signal region
-    void getRealEff(DileptonType dt, SusyMatrixMethod::FAKE_REGION fr, float &r1, float &r2);
-    void getFakeRate(DileptonType dt, SusyMatrixMethod::FAKE_REGION fr, float &f1, float &f2);
+    void getRealEff(DileptonType dt, susy::fake::Region fr, float &r1, float &r2);
+    void getFakeRate(DileptonType dt, susy::fake::Region fr, float &f1, float &f2);
 
     // Get Number of Fakes
     float getWeight(float r1, float f1, float r2, float f2, float ntt, float ntl, float nlt, float nll){
@@ -90,10 +91,10 @@ namespace FakeStatTool{
     };
 
     // Average rates
-    float m_avgElReal[SusyMatrixMethod::FR_N];
-    float m_avgMuReal[SusyMatrixMethod::FR_N];
-    float m_avgElFake[SusyMatrixMethod::FR_N];
-    float m_avgMuFake[SusyMatrixMethod::FR_N];
+    float m_avgElReal[susy::fake::FR_N];
+    float m_avgMuReal[susy::fake::FR_N];
+    float m_avgElFake[susy::fake::FR_N];
+    float m_avgMuFake[susy::fake::FR_N];
 
     TRandom3* rand;
     float m_upper;

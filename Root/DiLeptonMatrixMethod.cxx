@@ -66,11 +66,11 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
   } ron(m_hist_file);
   std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
   std::string s_mu_real("mu_real_eff_"), s_mu_fake("mu_fake_rate_");
-  for(int r=0; r<FR_N; ++r) { // Get the Real eff and Fake rate for electrons and muons
-    m_el_real_eff [r]  = ron(s_el_real + FRNames[r]);
-    m_el_fake_rate[r]  = ron(s_el_fake + FRNames[r]);
-    m_mu_real_eff [r]  = ron(s_mu_real + FRNames[r]);
-    m_mu_fake_rate[r]  = ron(s_mu_fake + FRNames[r]);
+  for(int r=0; r<susy::fake::FR_N; ++r) { // Get the Real eff and Fake rate for electrons and muons
+    m_el_real_eff [r]  = ron(s_el_real + susy::fake::RegionNames[r]);
+    m_el_fake_rate[r]  = ron(s_el_fake + susy::fake::RegionNames[r]);
+    m_mu_real_eff [r]  = ron(s_mu_real + susy::fake::RegionNames[r]);
+    m_mu_fake_rate[r]  = ron(s_mu_fake + susy::fake::RegionNames[r]);
   }
   if(ron.anythingMissing()) {
     cout<<"DiLeptonMatrixMethod::configure(): missing the following systematics:"<<endl;
@@ -85,7 +85,7 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
 float SusyMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -99,7 +99,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRR(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -113,7 +113,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRR(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRF(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -127,7 +127,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRF(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getFR(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -141,7 +141,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getFR(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getFF(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -155,7 +155,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getFF(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 
@@ -170,7 +170,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRR(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -206,7 +206,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRR(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRF(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -233,7 +233,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRF(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getFR(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -260,7 +260,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getFR(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getFF(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -287,7 +287,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getFF(
 // -----------------------------------------------------------------------------
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
     bool isTight, bool isElectron, float pt, float eta,
-    RATE_TYPE rate_type, FAKE_REGION region, float MetRel,
+    RATE_TYPE rate_type, susy::fake::Region region, float MetRel,
     SYSTEMATIC syst) const
 {
   SusyMatrixMethod::MatrixLepton lep(isTight, isElectron, pt, eta);
@@ -299,7 +299,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
     const MatrixLepton& lep,
     RATE_TYPE rate_type,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -417,7 +417,7 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
     const MatrixLepton& lep,
     RATE_TYPE rate_type,
-    FAKE_REGION region,
+    susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -656,7 +656,7 @@ void SusyMatrixMethod::DiLeptonMatrixMethod::loadSysFromFile()
 // -----------------------------------------------------------------------------
 float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& lep
                  , RATE_TYPE rate_type
-                 , FAKE_REGION region) const
+                 , susy::fake::Region region) const
 
 {
   bool real(rate_type == REAL), fake(rate_type == FAKE), eitherForR(real!=fake);
@@ -699,7 +699,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& l
 void SusyMatrixMethod::DiLeptonMatrixMethod::printInfo(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    FAKE_REGION region, float MetRel,
+    susy::fake::Region region, float MetRel,
     SYSTEMATIC syst) const
 {
   float r1 = getRate(lep1, REAL, region, MetRel, syst);
