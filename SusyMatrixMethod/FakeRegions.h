@@ -40,7 +40,7 @@ const Region SignalRegions[] = {
     CR_SsEwk, CR_SsEwkLoose
 };
 const int NumberOfSignalRegions = sizeof(SignalRegions) / sizeof(SignalRegions[0]);
-const string RegionNames[] =
+const std::string RegionNames[] =
 {
   "realCR",
   "realSideLow",
