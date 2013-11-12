@@ -66,11 +66,12 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
   } ron(m_hist_file);
   std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
   std::string s_mu_real("mu_real_eff_"), s_mu_fake("mu_fake_rate_");
-  for(int r=0; r<susy::fake::FR_N; ++r) { // Get the Real eff and Fake rate for electrons and muons
-    m_el_real_eff [r]  = ron(s_el_real + susy::fake::RegionNames[r]);
-    m_el_fake_rate[r]  = ron(s_el_fake + susy::fake::RegionNames[r]);
-    m_mu_real_eff [r]  = ron(s_mu_real + susy::fake::RegionNames[r]);
-    m_mu_fake_rate[r]  = ron(s_mu_fake + susy::fake::RegionNames[r]);
+  for(int r=0; r<susy::fake::NumberOfSignalRegions; ++r) { // Get the Real eff and Fake rate for electrons and muons
+    std::string regionName(susy::fake::region2str(susy::fake::SignalRegions[r]));
+    m_el_real_eff [r]  = ron(s_el_real + regionName);
+    m_el_fake_rate[r]  = ron(s_el_fake + regionName);
+    m_mu_real_eff [r]  = ron(s_mu_real + regionName);
+    m_mu_fake_rate[r]  = ron(s_mu_fake + regionName);
   }
   if(ron.anythingMissing()) {
     cout<<"DiLeptonMatrixMethod::configure(): missing the following systematics:"<<endl;

@@ -91,10 +91,10 @@ namespace FakeStatTool{
     };
 
     // Average rates
-    float m_avgElReal[susy::fake::FR_N];
-    float m_avgMuReal[susy::fake::FR_N];
-    float m_avgElFake[susy::fake::FR_N];
-    float m_avgMuFake[susy::fake::FR_N];
+    float m_avgElReal[susy::fake::NumberOfSignalRegions];
+    float m_avgMuReal[susy::fake::NumberOfSignalRegions];
+    float m_avgElFake[susy::fake::NumberOfSignalRegions];
+    float m_avgMuFake[susy::fake::NumberOfSignalRegions];
 
     TRandom3* rand;
     float m_upper;

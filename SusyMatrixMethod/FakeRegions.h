@@ -2,6 +2,7 @@
 #ifndef SUSY_FAKE_FAKEREGIONS_H
 #define SUSY_FAKE_FAKEREGIONS_H
 
+#include <string>
 
 
 // binnings used to derive the fake estimate
@@ -33,8 +34,13 @@ enum Region
   CR_SsEwkLoose,
 };
 
-static const int FR_N = CR_SsEwkLoose-CR_Real+1;
-static string RegionNames[] =
+const Region SignalRegions[] = {
+    CR_SSInc, CR_SRWHSS,
+    CR_CR8lpt, CR_CR8ee, CR_CR8mm, CR_CR8mmMtww, CR_CR8mmHt,
+    CR_SsEwk, CR_SsEwkLoose
+};
+const int NumberOfSignalRegions = sizeof(SignalRegions) / sizeof(SignalRegions[0]);
+const string RegionNames[] =
 {
   "realCR",
   "realSideLow",
@@ -54,8 +60,9 @@ static string RegionNames[] =
   "CR_CR8mmHt",
   "CR_SsEwk",
   "CR_SsEwkLoose",
-
 };
+
+inline std::string region2str(const Region &r) {return RegionNames[r];}
 
 } // end namespace fake
 } // end namespace susy

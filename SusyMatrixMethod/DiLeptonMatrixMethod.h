@@ -261,10 +261,10 @@ namespace SusyMatrixMethod
 
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
-      TH1* m_el_real_eff [susy::fake::FR_N];
-      TH1* m_el_fake_rate[susy::fake::FR_N];
-      TH1* m_mu_real_eff [susy::fake::FR_N];
-      TH1* m_mu_fake_rate[susy::fake::FR_N];
+      TH1* m_el_real_eff [susy::fake::NumberOfSignalRegions];
+      TH1* m_el_fake_rate[susy::fake::NumberOfSignalRegions];
+      TH1* m_mu_real_eff [susy::fake::NumberOfSignalRegions];
+      TH1* m_mu_fake_rate[susy::fake::NumberOfSignalRegions];
 
       // Systematic uncertainties grabbed from the config file
       // Real errors

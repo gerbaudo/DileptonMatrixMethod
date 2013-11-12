@@ -101,7 +101,7 @@ void StatErrorTool::loadRates()
 {
 
   // Load the rates
-    for(int fr=0; fr<susy::fake::FR_N; ++fr){
+    for(int fr=0; fr<susy::fake::NumberOfSignalRegions; ++fr){
     m_avgElReal[fr] = getAvgRate(m_el_real_eff[fr]);
     m_avgMuReal[fr] = getAvgRate(m_mu_real_eff[fr]);
     m_avgElFake[fr] = getAvgRate(m_el_fake_rate[fr]);
