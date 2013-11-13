@@ -2,7 +2,7 @@
 
 #include <algorithm> // copy
 #include <cassert>   // assert
-#include <iterator>  // ostream_iterator
+#include <iterator>  // ostream_iterator, distance
 
 // -----------------------------------------------------------------------------
 SusyMatrixMethod::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
@@ -307,24 +307,24 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
   // get histogram from member objects
   TH1* h_rate = NULL;
   RATE_PARAM rate_param = SusyMatrixMethod::PT;
-
+  int iRegion(getIndexRegion(region));
   if (rate_type == REAL) {
     if (lep.isElectron()) {
-      h_rate = m_el_real_eff[region];
+      h_rate = m_el_real_eff[iRegion];
       rate_param = m_rate_param_real_el;
     }
     else {
-      h_rate = m_mu_real_eff[region];
+      h_rate = m_mu_real_eff[iRegion];
       rate_param = m_rate_param_real_mu;
     }
   }
   else if (rate_type == FAKE) {
     if (lep.isElectron()) {
-      h_rate = m_el_fake_rate[region];
+      h_rate = m_el_fake_rate[iRegion];
       rate_param = m_rate_param_fake_el;
     }
     else {
-      h_rate = m_mu_fake_rate[region];
+      h_rate = m_mu_fake_rate[iRegion];
       rate_param = m_rate_param_fake_mu;
     }
   }
@@ -664,8 +664,9 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& l
   bool isEl(lep.isElectron()), isMu(lep.isMuon()),       eitherEorM(isEl!=isMu);
   bool validCombination(eitherForR && eitherEorM);
   if(!validCombination) { std::cout << "WARNING: invalid RATE_TYPE\n"; return 0; }
-  TH1* h_rate = (real ? (isEl ? m_el_real_eff [region] : m_mu_real_eff [region])
-                 :      (isEl ? m_el_fake_rate[region] : m_mu_fake_rate[region]));
+  int iRegion(getIndexRegion(region));
+  TH1* h_rate = (real ? (isEl ? m_el_real_eff [iRegion] : m_mu_real_eff [iRegion])
+                 :      (isEl ? m_el_fake_rate[iRegion] : m_mu_fake_rate[iRegion]));
   RATE_PARAM rate_param = (real ? (isEl ? m_rate_param_real_el : m_rate_param_real_mu)
                            :      (isEl ? m_rate_param_fake_el : m_rate_param_fake_mu));
   int rate_bin = getRateBin(lep, h_rate, rate_param);
@@ -742,3 +743,19 @@ void SusyMatrixMethod::DiLeptonMatrixMethod::printInfo(
   std::cout << "ff: " << getFF(lep1,lep2,region,syst) << "\n";
   std::cout << "total fake: " << getTotalFake(lep1,lep2,region,syst) << "\n";
 }
+// -----------------------------------------------------------------------------
+int SusyMatrixMethod::DiLeptonMatrixMethod::getIndexRegion(susy::fake::Region region)
+{
+    const susy::fake::Region* begin = susy::fake::SignalRegions;
+    const susy::fake::Region* end   = begin + susy::fake::NumberOfSignalRegions;
+    const susy::fake::Region* it    = std::find(begin, end, region);
+    if(it!=end) {
+      return std::distance(begin, it);
+    } else {
+      std::cout<<"SusyMatrixMethod::getIndexRegion :"
+               <<" error, the region '"<<region2str(region)<<"'"
+               <<" is not in the SignalRegions list"<<endl;
+      assert(false);
+    }
+}
+// -----------------------------------------------------------------------------

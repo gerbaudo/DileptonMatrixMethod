@@ -164,7 +164,8 @@ namespace SusyMatrixMethod
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NONE
                  ) const;
-
+      //! given a region, determine the internal index used to store its histograms; abort if invalid
+      static int getIndexRegion(susy::fake::Region region);
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       enum RATE_TYPE { REAL
                      , FAKE
