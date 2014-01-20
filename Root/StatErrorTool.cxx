@@ -1,5 +1,5 @@
 
-#include "SusyMatrixMethod/StatErrorTool.h"
+#include "SameSignMatrixMethod/StatErrorTool.h"
 
 using namespace FakeStatTool;
 
@@ -7,10 +7,10 @@ using namespace FakeStatTool;
 // Constructor
 //---------------------------------------------------------------//
 StatErrorTool::StatErrorTool(std::string fakeFile, 
-			     SusyMatrixMethod::RATE_PARAM rate_param_real_el,
-			     SusyMatrixMethod::RATE_PARAM rate_param_fake_el,
-			     SusyMatrixMethod::RATE_PARAM rate_param_real_mu,
-			     SusyMatrixMethod::RATE_PARAM rate_param_fake_mu
+			     SameSignMatrixMethod::RATE_PARAM rate_param_real_el,
+			     SameSignMatrixMethod::RATE_PARAM rate_param_fake_el,
+			     SameSignMatrixMethod::RATE_PARAM rate_param_real_mu,
+			     SameSignMatrixMethod::RATE_PARAM rate_param_fake_mu
 			     ) : 
   DiLeptonMatrixMethod(), // Could decouple these, but this is easiest for now
   rand(NULL),

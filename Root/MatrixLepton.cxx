@@ -1,7 +1,7 @@
-#include "SusyMatrixMethod/MatrixLepton.h"
+#include "SameSignMatrixMethod/MatrixLepton.h"
 
 // -----------------------------------------------------------------------------
-SusyMatrixMethod::MatrixLepton::MatrixLepton( bool isTight
+SameSignMatrixMethod::MatrixLepton::MatrixLepton( bool isTight
                                             , bool isElectron
                                             , float pt
                                             , float eta
@@ -15,51 +15,51 @@ SusyMatrixMethod::MatrixLepton::MatrixLepton( bool isTight
 }
 
 // -----------------------------------------------------------------------------
-SusyMatrixMethod::MatrixLepton::~MatrixLepton()
+SameSignMatrixMethod::MatrixLepton::~MatrixLepton()
 {
   // do nothing
 }
 
 // -----------------------------------------------------------------------------
-bool SusyMatrixMethod::MatrixLepton::isTight() const
+bool SameSignMatrixMethod::MatrixLepton::isTight() const
 {
   return m_isTight;
 }
 
 // -----------------------------------------------------------------------------
-bool SusyMatrixMethod::MatrixLepton::isElectron() const
+bool SameSignMatrixMethod::MatrixLepton::isElectron() const
 {
   return m_isElectron;
 }
 
 // -----------------------------------------------------------------------------
-bool SusyMatrixMethod::MatrixLepton::isMuon() const
+bool SameSignMatrixMethod::MatrixLepton::isMuon() const
 {
   return !m_isElectron;
 }
 
 // -----------------------------------------------------------------------------
-float SusyMatrixMethod::MatrixLepton::pt() const
+float SameSignMatrixMethod::MatrixLepton::pt() const
 {
   return m_pt;
 }
 
 // -----------------------------------------------------------------------------
-float SusyMatrixMethod::MatrixLepton::eta() const
+float SameSignMatrixMethod::MatrixLepton::eta() const
 {
   return m_eta;
 }
 
 // -----------------------------------------------------------------------------
-bool SusyMatrixMethod::MatrixLepton::operator<(
-    const SusyMatrixMethod::MatrixLepton& rhs) const
+bool SameSignMatrixMethod::MatrixLepton::operator<(
+    const SameSignMatrixMethod::MatrixLepton& rhs) const
 {
   return (pt() < rhs.pt());
 }
 
 // -----------------------------------------------------------------------------
-bool SusyMatrixMethod::MatrixLepton::operator>(
-    const SusyMatrixMethod::MatrixLepton& rhs) const
+bool SameSignMatrixMethod::MatrixLepton::operator>(
+    const SameSignMatrixMethod::MatrixLepton& rhs) const
 {
   return (pt() > rhs.pt());
 }

@@ -1,5 +1,5 @@
-#ifndef SusyMatrixMethod_MatrixLepton_h
-#define SusyMatrixMethod_MatrixLepton_h
+#ifndef SameSignMatrixMethod_MatrixLepton_h
+#define SameSignMatrixMethod_MatrixLepton_h
 
 /**
  * @author Brett Jackson <Brett.David.Jackson@cern.ch>
@@ -13,7 +13,7 @@
  * https://svnweb.cern.ch/trac/atlasinst/browser/Institutes/UCIrvine/sfarrell/MultiLepMatrixMethod/tags/MultiLepMatrixMethod-00-00-02/Root/MatrixLepton.cxx
  */
 
-namespace SusyMatrixMethod
+namespace SameSignMatrixMethod
 {
   class MatrixLepton
   {
@@ -32,8 +32,8 @@ namespace SusyMatrixMethod
       float pt() const;
       float eta() const;
 
-      bool operator< (const SusyMatrixMethod::MatrixLepton& rhs) const;
-      bool operator> (const SusyMatrixMethod::MatrixLepton& rhs) const;
+      bool operator< (const SameSignMatrixMethod::MatrixLepton& rhs) const;
+      bool operator> (const SameSignMatrixMethod::MatrixLepton& rhs) const;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     private:
