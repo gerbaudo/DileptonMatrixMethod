@@ -30,14 +30,36 @@ enum Region
   CR_CR8mm,
   CR_CR8mmMtww,
   CR_CR8mmHt,
+  CR_CR9lpt,
   CR_SsEwk,
   CR_SsEwkLoose,
+  CR_WHZVfake1jee,
+  CR_WHZVfake2jee,
+  CR_WHZVfake1jem,
+  CR_WHZVfake2jem,
+  CR_WHfake1jem,
+  CR_WHfake2jem,
+  CR_WHZV1jmm,
+  CR_WHZV2jmm,
+  CR_WHfake1jmm,
+  CR_WHfake2jmm,
 };
 
 const Region SignalRegions[] = {
     CR_SSInc, CR_SRWHSS,
     CR_CR8lpt, CR_CR8ee, CR_CR8mm, CR_CR8mmMtww, CR_CR8mmHt,
-    CR_SsEwk, CR_SsEwkLoose
+    CR_CR9lpt,
+    CR_SsEwk, CR_SsEwkLoose,
+    CR_WHZVfake1jee,
+    CR_WHZVfake2jee,
+    CR_WHZVfake1jem,
+    CR_WHZVfake2jem,
+    CR_WHfake1jem,
+    CR_WHfake2jem,
+    CR_WHZV1jmm,
+    CR_WHZV2jmm,
+    CR_WHfake1jmm,
+    CR_WHfake2jmm,
 };
 const int NumberOfSignalRegions = sizeof(SignalRegions) / sizeof(SignalRegions[0]);
 const std::string RegionNames[] =
@@ -58,8 +80,19 @@ const std::string RegionNames[] =
   "CR_CR8mm",
   "CR_CR8mmMtww",
   "CR_CR8mmHt",
+  "CR_CR9lpt",
   "CR_SsEwk",
   "CR_SsEwkLoose",
+  "CR_WHZVfake1jee",
+  "CR_WHZVfake2jee",
+  "CR_WHZVfake1jem",
+  "CR_WHZVfake2jem",
+  "CR_WHfake1jem",
+  "CR_WHfake2jem",
+  "CR_WHZV1jmm",
+  "CR_WHZV2jmm",
+  "CR_WHfake1jmm",
+  "CR_WHfake2jmm",
 };
 
 inline std::string region2str(const Region &r) {return RegionNames[r];}
