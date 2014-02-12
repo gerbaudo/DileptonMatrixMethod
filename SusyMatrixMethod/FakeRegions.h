@@ -24,6 +24,7 @@ enum Region
   CR_MCReal,         // MC cr Real
   // DG These are the SR, which we need b/c we want to compute the compositions.
   CR_SSInc,
+  CR_SSInc1j,
   CR_SRWHSS,
   CR_CR8lpt,
   CR_CR8ee,
@@ -57,7 +58,7 @@ enum Region
 };
 
 const Region SignalRegions[] = {
-    CR_SSInc, CR_SRWHSS,
+    CR_SSInc, CR_SSInc1j, CR_SRWHSS,
     CR_CR8lpt, CR_CR8ee, CR_CR8mm, CR_CR8mmMtww, CR_CR8mmHt,
     CR_CR9lpt,
     CR_SsEwk, CR_SsEwkLoose, CR_SsEwkLea,
@@ -95,6 +96,7 @@ const std::string RegionNames[] =
   "qcdMC",
   "realMC",
   "CR_SSInc",
+  "CR_SSInc1j",
   "CR_WHSS",
   "CR_CR8lpt",
   "CR_CR8ee",
