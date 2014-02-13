@@ -94,6 +94,5 @@ int main(int argc, char** argv)
             nFail++;
         }
     }
-    cout<<"Number of "
     return 0;
 }
