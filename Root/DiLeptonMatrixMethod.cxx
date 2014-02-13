@@ -317,58 +317,31 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRate(
 {
   // get histogram from member objects
   TH1* h_rate = NULL;
-  RATE_PARAM rate_param = SameSignMatrixMethod::PT;
+  RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
   int iRegion(getIndexRegion(region));
   if (rate_type == REAL) {
-    if (lep.isElectron()) {
-      h_rate = m_el_real_eff[iRegion];
-      rate_param = m_rate_param_real_el;
-    }
-    else {
-      h_rate = m_mu_real_eff[iRegion];
-      rate_param = m_rate_param_real_mu;
-    }
-  }
-  else if (rate_type == FAKE) {
-    if (lep.isElectron()) {
-      h_rate = m_el_fake_rate[iRegion];
-      rate_param = m_rate_param_fake_el;
-    }
-    else {
-      h_rate = m_mu_fake_rate[iRegion];
-      rate_param = m_rate_param_fake_mu;
-    }
+      if (lep.isElectron()) {
+          h_rate = m_el_real_eff[iRegion];
+          rate_param = m_rate_param_real_el;
+      } else {
+          h_rate = m_mu_real_eff[iRegion];
+          rate_param = m_rate_param_real_mu;
+      }
+  } else if (rate_type == FAKE) {
+      if (lep.isElectron()) {
+          h_rate = m_el_fake_rate[iRegion];
+          rate_param = m_rate_param_fake_el;
+      } else {
+          h_rate = m_mu_fake_rate[iRegion];
+          rate_param = m_rate_param_fake_mu;
+      }
   }
   else {
-    return 0;
+      return 0;
   }
 
   // Get the rate bin
   int rate_bin = getRateBin(lep, h_rate, rate_param);
-
-  /*
-  if (m_rate_param == PT_ETA) {
-    int maxbin = h_rate->GetYaxis()->GetNbins();
-    float max  = h_rate->GetYaxis()->GetBinCenter(maxbin) +
-                 h_rate->GetYaxis()->GetBinWidth(maxbin)/2.;
-    // float pt   = lep.pt() > max ? max - 1e-4 : lep.pt();
-    float pt   = lep.pt()/1000.;
-    // TODO Clean up conversion
-    pt = pt > max ? max - 1e-4 : pt;
-    rate_bin   = h_rate->FindBin(pt, fabs(lep.eta()));
-  }
-  else if (m_rate_param == PT) {
-    int maxbin = h_rate->GetXaxis()->GetNbins();
-    float max  = h_rate->GetXaxis()->GetBinCenter(maxbin) +
-                 h_rate->GetXaxis()->GetBinWidth(maxbin)/2.;
-    // float pt   = lep.pt() > max ? max - 1e-4 : lep.pt();
-    float pt   = lep.pt()/1000.;
-    // TODO Clean up conversion
-    pt = pt > max ? max - 1e-4 : pt;
-    rate_bin   = h_rate->FindBin(pt);
-  }
-  */
-
   float rate = h_rate->GetBinContent(rate_bin);
   rate *= (1+getRateSyst(lep, rate_type, region, MetRel, syst));
 
