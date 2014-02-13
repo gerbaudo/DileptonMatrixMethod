@@ -64,8 +64,19 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
       return h;
     }
   } ron(m_hist_file);
+  if(rate_param_real_el != rate_param_fake_el ||
+     rate_param_fake_el != rate_param_real_mu ||
+     rate_param_real_mu != rate_param_fake_mu) {
+      cout<<"DiLeptonMatrixMethod::configure: mixed parametrization not implemented"<<endl;
+      return false;
+  }
+  const RATE_PARAM rp = rate_param_real_el;
   std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
   std::string s_mu_real("mu_real_eff_"), s_mu_fake("mu_fake_rate_");
+  if(rp==PT_ETA) { // todo: use string replacement (eff->eff2d, rate->rate2d)
+      s_el_real = "el_real_eff2d_"; s_el_fake = "el_fake_rate2d_";
+      s_mu_real = "mu_real_eff2d_"; s_mu_fake = "mu_fake_rate2d_";
+  }
   for(int r=0; r<susy::fake::NumberOfSignalRegions; ++r) { // Get the Real eff and Fake rate for electrons and muons
     std::string regionName(susy::fake::region2str(susy::fake::SignalRegions[r]));
     m_el_real_eff [r]  = ron(s_el_real + regionName);
