@@ -369,7 +369,7 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
     // Reset x-var
     float var_x = lep.pt() / 1000.;
     var_x = var_x > max_x ? max_x : var_x;
-    
+
     // Reset y-var
     float var_y = fabs(lep.eta());
     var_y = var_y > max_y ? max_y : var_y;
@@ -377,7 +377,7 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
     return h_rate->FindBin(var_x,var_y);
 
   }
-  
+
   // Handle 1-D param
   if( rate_param == PT ){
     int max_bin_x = h_rate->GetXaxis()->GetNbins();
@@ -395,7 +395,7 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
   // parameterization set. Print error message
   std::cout<<"*** Error: Did not set a supported rate-parameterization"<<std::endl;
   return 0;
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -406,154 +406,91 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
     float MetRel,
     SYSTEMATIC syst) const
 {
-  // No Systematic
-  if( syst == SYS_NONE )
-    return 0.;
-
-  if ( syst == SYS_N || syst == SYS_N_USER) {
-    std::cout << "WARNING: invalid SYSTEMATIC type\n";
-  }
-
-  // Real Eff Sys
-  if( rate_type == REAL ){
-
-    float statSys = getStatError(lep, rate_type, region);
-
-    if( lep.isElectron() ){
-      if( syst == SYS_EL_RE_UP )   return sqrt( m_el_real_up*m_el_real_up + statSys*statSys);
-      if( syst == SYS_EL_RE_DOWN ) return -sqrt( m_el_real_down*m_el_real_down + statSys*statSys);
-    }
-    else{
-      if( syst == SYS_MU_RE_UP )   return sqrt( m_mu_real_up*m_mu_real_up + statSys*statSys);
-      if( syst == SYS_MU_RE_DOWN ) return -sqrt( m_mu_real_down*m_mu_real_down + statSys*statSys);
-    }
-    return 0.;
-  }
-
-  // Fake Rate Sys
-  if( rate_type == FAKE ){
-    if( lep.isElectron() ){
-      // Fake Rate Up
-      if( syst == SYS_EL_FR_UP ){
-        //float metSys   = m_el_metrel->GetBinContent( m_el_metrel->FindBin(MetRel/1000.) );
-        //metSys = metSys > 0 ? metSys : 0.;
-	float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-	etaSys = etaSys > 0 ? etaSys : 0.;
-        float statSys  = getStatError(lep, rate_type, region);
-
-        // treat systematics as independent, and add in quadrature
-        return sqrt( m_el_HFLFerr*m_el_HFLFerr
-		     + statSys*statSys
-		     + etaSys*etaSys
-		     + m_el_datamc*m_el_datamc
-		     + m_el_region*m_el_region
-		     );
+  if( syst == SYS_NONE ) return 0.;
+  if ( syst == SYS_N || syst == SYS_N_USER) { std::cout << "WARNING: invalid SYSTEMATIC type\n"; }
+  if( rate_type == REAL ){ // Real Eff Sys
+      float statSys = getStatError(lep, rate_type, region);
+      if( lep.isElectron() ){
+          if( syst == SYS_EL_RE_UP )   return sqrt( m_el_real_up*m_el_real_up + statSys*statSys);
+          if( syst == SYS_EL_RE_DOWN ) return -sqrt( m_el_real_down*m_el_real_down + statSys*statSys);
+      } else {
+          if( syst == SYS_MU_RE_UP )   return sqrt( m_mu_real_up*m_mu_real_up + statSys*statSys);
+          if( syst == SYS_MU_RE_DOWN ) return -sqrt( m_mu_real_down*m_mu_real_down + statSys*statSys);
       }
-
-      // Fake Rate Down
-      if( syst == SYS_EL_FR_DOWN){
-        //float metSys   = m_el_metrel->GetBinContent( m_el_metrel->FindBin(MetRel/1000.) );
-        //metSys = metSys < 0 ? metSys : 0.;
-	float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-	etaSys = etaSys < 0 ? etaSys : 0.;
-        float statSys  = getStatError(lep, rate_type, region);
-
-        // treat systematics as independent, and add in quadrature
-        return (-1) * sqrt(m_el_HFLFerr*m_el_HFLFerr 
-			   + statSys*statSys
-			   + etaSys*etaSys
-			   + m_el_datamc*m_el_datamc
-			   + m_el_region*m_el_region
-                          );
-      }
-
-      // HF/LF error
-      if( syst == SYS_EL_HFLF_UP )   return m_el_HFLFerr;
-      if( syst == SYS_EL_HFLF_DOWN ) return -m_el_HFLFerr;
-
-      // Met Rel
-      //if( syst == SYS_EL_METREL ) 
-      //return m_el_metrel->GetBinContent( m_el_metrel->FindBin(MetRel/1000.) );	
-
-      // Eta
-      if( syst == SYS_EL_ETA )
-	return m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-
-      // Statistical error from maps
-      if( syst == SYS_EL_FR_STAT_UP )   return getStatError(lep, rate_type, region);
-      if( syst == SYS_EL_FR_STAT_DOWN ) return (-1) * getStatError(lep, rate_type, region);
-
-      // Data/MC error
-      if( syst == SYS_EL_DATAMC_UP )   return m_el_datamc;
-      if( syst == SYS_EL_DATAMC_DOWN ) return -m_el_datamc;
-
-      // Error from combination
-      if( syst == SYS_EL_REG_UP )   return m_el_region;
-      if( syst == SYS_EL_REG_DOWN ) return -m_el_region;
-      
-      // Neither shift
       return 0.;
-
-    }// end if Electron
-    else{
-      // Fake Rate Up
-      if( syst == SYS_MU_FR_UP ){
-        //float metSys   = m_mu_metrel->GetBinContent( m_mu_metrel->FindBin(MetRel/1000.) );
-        //metSys = metSys > 0 ? metSys : 0.;
-	float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-	etaSys = etaSys > 0 ? etaSys : 0.;
-        float statSys  = getStatError(lep, rate_type, region);
-
-        // treat systematics as independent, and add in quadrature
-        return sqrt( statSys*statSys
-		     + etaSys*etaSys
-		     + m_mu_datamc*m_mu_datamc
-		     + m_mu_region*m_mu_region
-		     );
-      }
-
-      // Fake Rate Down
-      if( syst == SYS_MU_FR_DOWN){
-        //float metSys   = m_mu_metrel->GetBinContent( m_mu_metrel->FindBin(MetRel/1000.) );
-        //metSys = metSys < 0 ? metSys : 0.;
-	float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-	etaSys = etaSys < 0 ? etaSys : 0.;
-        float statSys  = getStatError(lep, rate_type, region);
-
-        // treat systematics as independent, and add in quadrature
-        return (-1) * sqrt( statSys*statSys
-			    + etaSys*etaSys
-			    + m_mu_datamc*m_mu_datamc
-			    + m_mu_region*m_mu_region
-			    );
-      }
-
-      // Met Rel
-      //if( syst == SYS_MU_METREL )
-      //return m_mu_metrel->GetBinContent( m_mu_metrel->FindBin(MetRel/1000.) );
-
-      // Eta
-      if( syst == SYS_MU_ETA )
-	return m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-
-      // Statistical error from maps
-      if( syst == SYS_MU_FR_STAT_UP )   return getStatError(lep, rate_type, region);
-      if( syst == SYS_MU_FR_STAT_DOWN ) return (-1) * getStatError(lep, rate_type, region);
-
-      // Data/MC error
-      if( syst == SYS_MU_DATAMC_UP )   return m_mu_datamc;
-      if( syst == SYS_MU_DATAMC_DOWN ) return -m_mu_datamc;
-      
-      // Error from combination
-      if( syst == SYS_MU_REG_UP )   return m_mu_region;
-      if( syst == SYS_MU_REG_DOWN ) return -m_mu_region;
-
-      // Neither shift
-      return 0.;
-
-    }// end if Muon
-  }// end if FAKE
-
+  }
+  if( rate_type == FAKE ){ // Fake Rate Sys
+      if( lep.isElectron() ){
+          if( syst == SYS_EL_FR_UP ){ // Fake Rate Up
+              //float metSys   = m_el_metrel->GetBinContent( m_el_metrel->FindBin(MetRel/1000.) );
+              //metSys = metSys > 0 ? metSys : 0.;
+              float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
+              etaSys = etaSys > 0 ? etaSys : 0.;
+              float statSys  = getStatError(lep, rate_type, region);
+              // treat systematics as independent, and add in quadrature
+              return sqrt( m_el_HFLFerr*m_el_HFLFerr
+                           + statSys*statSys
+                           + etaSys*etaSys
+                           + m_el_datamc*m_el_datamc
+                           + m_el_region*m_el_region);
+          }
+          if( syst == SYS_EL_FR_DOWN){ // Fake Rate Down
+              //float metSys   = m_el_metrel->GetBinContent( m_el_metrel->FindBin(MetRel/1000.) );
+              //metSys = metSys < 0 ? metSys : 0.;
+              float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
+              etaSys = etaSys < 0 ? etaSys : 0.;
+              float statSys  = getStatError(lep, rate_type, region);
+              return (-1.0) * sqrt(m_el_HFLFerr*m_el_HFLFerr // add in quadrature
+                                   + statSys*statSys
+                                   + etaSys*etaSys
+                                   + m_el_datamc*m_el_datamc
+                                   + m_el_region*m_el_region);
+          }
+          if( syst == SYS_EL_HFLF_UP )   return +m_el_HFLFerr; // HF/LF error
+          if( syst == SYS_EL_HFLF_DOWN ) return -m_el_HFLFerr;
+          //if( syst == SYS_EL_METREL ) return m_el_metrel->GetBinContent( m_el_metrel->FindBin(MetRel/1000.) );
+          if( syst == SYS_EL_ETA ) return m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
+          if( syst == SYS_EL_FR_STAT_UP )   return +1.0*getStatError(lep, rate_type, region); // Statistical error from maps
+          if( syst == SYS_EL_FR_STAT_DOWN ) return -1.0*getStatError(lep, rate_type, region);
+          if( syst == SYS_EL_DATAMC_UP )   return +m_el_datamc; // Data/MC error
+          if( syst == SYS_EL_DATAMC_DOWN ) return -m_el_datamc;
+          if( syst == SYS_EL_REG_UP )   return +m_el_region; // Error from combinatino
+          if( syst == SYS_EL_REG_DOWN ) return -m_el_region;
+          return 0.;
+      } else { // end electron
+          if( syst == SYS_MU_FR_UP ){ // Fake Rate Up
+              //float metSys   = m_mu_metrel->GetBinContent( m_mu_metrel->FindBin(MetRel/1000.) );
+              //metSys = metSys > 0 ? metSys : 0.;
+              float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
+              etaSys = etaSys > 0 ? etaSys : 0.;
+              float statSys  = getStatError(lep, rate_type, region);
+              return sqrt( statSys*statSys
+                           + etaSys*etaSys
+                           + m_mu_datamc*m_mu_datamc
+                           + m_mu_region*m_mu_region);
+          }
+          if( syst == SYS_MU_FR_DOWN){ // Fake Rate Down
+              //float metSys   = m_mu_metrel->GetBinContent( m_mu_metrel->FindBin(MetRel/1000.) );
+              //metSys = metSys < 0 ? metSys : 0.;
+              float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
+              etaSys = etaSys < 0 ? etaSys : 0.;
+              float statSys  = getStatError(lep, rate_type, region);
+              return (-1.0) * sqrt( statSys*statSys
+                                    + etaSys*etaSys
+                                    + m_mu_datamc*m_mu_datamc
+                                    + m_mu_region*m_mu_region);
+          }
+          //if( syst == SYS_MU_METREL ) return m_mu_metrel->GetBinContent( m_mu_metrel->FindBin(MetRel/1000.) );
+          if( syst == SYS_MU_ETA ) return m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
+          if( syst == SYS_MU_FR_STAT_UP )   return getStatError(lep, rate_type, region); // Statistical error from maps
+          if( syst == SYS_MU_FR_STAT_DOWN ) return (-1) * getStatError(lep, rate_type, region);
+          if( syst == SYS_MU_DATAMC_UP )   return m_mu_datamc; // Data/MC error
+          if( syst == SYS_MU_DATAMC_DOWN ) return -m_mu_datamc;
+          if( syst == SYS_MU_REG_UP )   return m_mu_region; // Error from combination
+          if( syst == SYS_MU_REG_DOWN ) return -m_mu_region;
+          return 0.;
+      }// end muon
+  }// end fake
   return 0.;
 }
 
