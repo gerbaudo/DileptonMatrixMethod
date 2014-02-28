@@ -55,6 +55,7 @@ enum Region
 
   CR_SRWH1j,
   CR_SRWH2j,
+  CR_SRWHnoMlj, // same as above but without n-jet and mljj requirements
 };
 
 const Region SignalRegions[] = {
@@ -81,7 +82,8 @@ const Region SignalRegions[] = {
     CR_WHZV2j,
 
     CR_SRWH1j,
-    CR_SRWH2j
+    CR_SRWH2j,
+    CR_SRWHnoMlj
 };
 const int NumberOfSignalRegions = sizeof(SignalRegions) / sizeof(SignalRegions[0]);
 const std::string RegionNames[] =
@@ -126,7 +128,8 @@ const std::string RegionNames[] =
   "CR_WHZV2j",
 
   "CR_SRWH1j",
-  "CR_SRWH2j"
+  "CR_SRWH2j",
+  "CR_SRWHnoMlj"
 
 };
 
