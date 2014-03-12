@@ -27,7 +27,7 @@ namespace SusyMatrixMethod
                   , PT
                   };
 
-  enum SYSTEMATIC { SYS_NONE       = 0
+  enum SYSTEMATIC { SYS_NOM    = 0
                   , SYS_EL_RE_UP
                   , SYS_EL_RE_DOWN
                   , SYS_EL_FR_UP
@@ -58,7 +58,7 @@ namespace SusyMatrixMethod
                   , SYS_N
                   };
 
-  static std::string systematic_names[] = { "NONE"
+  static std::string systematic_names[] = { "NOM"
                                          , "EL_RE_UP"
                                          , "EL_RE_DOWN"
                                          , "EL_FR_UP"
@@ -122,7 +122,7 @@ namespace SusyMatrixMethod
                         , bool isTight2, bool isElectron2, float pt2, float eta2
                         , susy::fake::Region region
                         , float MetRel
-                        , SYSTEMATIC syst = SYS_NONE
+                        , SYSTEMATIC syst = SYS_NOM
                         ) const;
 
       /**
@@ -132,7 +132,7 @@ namespace SusyMatrixMethod
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
 
       /**
@@ -142,7 +142,7 @@ namespace SusyMatrixMethod
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
 
       /**
@@ -152,7 +152,7 @@ namespace SusyMatrixMethod
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
 
       /**
@@ -162,7 +162,7 @@ namespace SusyMatrixMethod
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
       //! given a region, determine the internal index used to store its histograms; abort if invalid
       static int getIndexRegion(susy::fake::Region region);
@@ -181,7 +181,7 @@ namespace SusyMatrixMethod
                    , RATE_TYPE rate_type
                    , susy::fake::Region region
                    , float MetRel
-                   , SYSTEMATIC syst = SYS_NONE
+                   , SYSTEMATIC syst = SYS_NOM
                    ) const;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -194,13 +194,13 @@ namespace SusyMatrixMethod
                    , RATE_TYPE
                    , susy::fake::Region region
                    , float MetRel
-                   , SYSTEMATIC syst = SYS_NONE
+                   , SYSTEMATIC syst = SYS_NOM
                    ) const;
       float getRateSyst( const MatrixLepton&
                        , RATE_TYPE
            , susy::fake::Region region
                        , float MetRel
-                       , SYSTEMATIC syst = SYS_NONE
+                       , SYSTEMATIC syst = SYS_NOM
                        ) const;
 
       int getRateBin( const MatrixLepton& lep,
@@ -213,31 +213,31 @@ namespace SusyMatrixMethod
                         , const MatrixLepton& lep2
                         , susy::fake::Region region
                         , float MetRel
-                        , SYSTEMATIC syst = SYS_NONE
+                        , SYSTEMATIC syst = SYS_NOM
                         ) const;
       float getRR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
       float getRF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
       float getFR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
       float getFF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NONE
+                 , SYSTEMATIC syst = SYS_NOM
                  ) const;
 
       // Additional methods needed for systematics
@@ -254,7 +254,7 @@ namespace SusyMatrixMethod
                     , const MatrixLepton& lep2
                     , susy::fake::Region region
                     , float MetRel
-                    , SYSTEMATIC syst = SYS_NONE
+                    , SYSTEMATIC syst = SYS_NOM
                     ) const;
 
       // Get systematic value from file -- for internal use

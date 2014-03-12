@@ -407,7 +407,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
     SYSTEMATIC syst) const
 {
   // No Systematic
-  if( syst == SYS_NONE )
+  if( syst == SYS_NOM )
     return 0.;
 
   if ( syst == SYS_N || syst == SYS_N_USER) {
