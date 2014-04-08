@@ -406,7 +406,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
     float MetRel,
     SYSTEMATIC syst) const
 {
-  if( syst == SYS_NONE ) return 0.;
+  if( syst == SYS_NOM ) return 0.;
   if ( syst == SYS_N || syst == SYS_N_USER) { std::cout << "WARNING: invalid SYSTEMATIC type\n"; }
   if( rate_type == REAL ){ // Real Eff Sys
       float statSys = getStatError(lep, rate_type, region);
@@ -416,7 +416,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
       } else {
           if( syst == SYS_MU_RE_UP )   return sqrt( m_mu_real_up*m_mu_real_up + statSys*statSys);
           if( syst == SYS_MU_RE_DOWN ) return -sqrt( m_mu_real_down*m_mu_real_down + statSys*statSys);
-      }
+    }
       return 0.;
   }
   if( rate_type == FAKE ){ // Fake Rate Sys
