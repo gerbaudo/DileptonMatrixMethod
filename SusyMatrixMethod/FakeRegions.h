@@ -59,6 +59,9 @@ enum Region
 };
 
 const Region SignalRegions[] = {
+    CR_SSInc1j,
+    CR_SRWHnoMlj
+/*
     CR_SSInc, CR_SSInc1j, CR_SRWHSS,
     CR_CR8lpt, CR_CR8ee, CR_CR8mm, CR_CR8mmMtww, CR_CR8mmHt,
     CR_CR9lpt,
@@ -84,6 +87,7 @@ const Region SignalRegions[] = {
     CR_SRWH1j,
     CR_SRWH2j,
     CR_SRWHnoMlj
+*/
 };
 const int NumberOfSignalRegions = sizeof(SignalRegions) / sizeof(SignalRegions[0]);
 const std::string RegionNames[] =
