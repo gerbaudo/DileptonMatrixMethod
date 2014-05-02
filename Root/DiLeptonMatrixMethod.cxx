@@ -1,5 +1,12 @@
 #include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
 
+#include "TParameter.h"
+#include "TVectorD.h"
+#include "TFile.h"
+#include "TH1F.h"
+#include "TH2.h"
+
+
 #include <algorithm> // copy
 #include <cassert>   // assert
 #include <iterator>  // ostream_iterator, distance

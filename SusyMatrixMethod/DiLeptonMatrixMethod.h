@@ -13,13 +13,12 @@
 #include <math.h>
 #include <string>
 
-#include "TParameter.h"
-#include "TVectorD.h"
-#include "TFile.h"
-#include "TH2.h"
-
 #include "SusyMatrixMethod/MatrixLepton.h"
 #include "SusyMatrixMethod/FakeRegions.h"
+
+class TFile;
+class TH1;
+class TH1F;
 
 namespace SusyMatrixMethod
 {

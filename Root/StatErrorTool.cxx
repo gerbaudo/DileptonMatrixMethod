@@ -1,6 +1,8 @@
 
 #include "SusyMatrixMethod/StatErrorTool.h"
 
+#include "TH1.h"
+
 using namespace FakeStatTool;
 
 //---------------------------------------------------------------//
