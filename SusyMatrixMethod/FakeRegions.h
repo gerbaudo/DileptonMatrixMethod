@@ -56,6 +56,8 @@ enum Region
   CR_SRWH1j,
   CR_SRWH2j,
   CR_SRWHnoMlj, // same as above but without n-jet and mljj requirements
+  CR_HF_SS, // see MeasureFakeRate2::passHFCR_Ss
+  CR_HF_mme, // see MeasureFakeRate2::passZvetoPlusJetsCR
 };
 
 const Region SignalRegions[] = {
@@ -133,8 +135,9 @@ const std::string RegionNames[] =
 
   "CR_SRWH1j",
   "CR_SRWH2j",
-  "CR_SRWHnoMlj"
-
+  "CR_SRWHnoMlj",
+  "CR_HF_SS",
+  "CR_HF_mme"
 };
 
 inline std::string region2str(const Region &r) {return RegionNames[r];}
