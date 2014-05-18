@@ -2,6 +2,8 @@
 
 #include "TParameter.h"
 #include "TVectorD.h"
+#include "TArrayD.h"
+#include "TAxis.h"
 #include "TFile.h"
 #include "TH1F.h"
 #include "TH2.h"
@@ -10,6 +12,9 @@
 #include <algorithm> // copy
 #include <cassert>   // assert
 #include <iterator>  // ostream_iterator, distance
+#include <sstream>
+
+using SusyMatrixMethod::DiLeptonMatrixMethod;
 
 // -----------------------------------------------------------------------------
 SusyMatrixMethod::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
@@ -652,3 +657,114 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getIndexRegion(susy::fake::Region re
     }
 }
 // -----------------------------------------------------------------------------
+const TArrayD* DiLeptonMatrixMethod::getPtBins() const
+{
+    const TArrayD *bins = 0;
+    if(const TAxis *ax = getPtAxis()) bins = ax->GetXbins();
+    else cout<<"DiLeptonMatrixMethod::getPtBins(): error, invalid axis"<<endl;
+    return bins;
+}
+//----------------------------------------------------------
+const TArrayD* DiLeptonMatrixMethod::getEtaBins() const
+{
+    const TArrayD *bins = 0;
+    if(const TAxis *ax = getEtaAxis()) bins = ax->GetXbins();
+    else cout<<"DiLeptonMatrixMethod::getEtaBins(): error, invalid axis"<<endl;
+    return bins;
+}
+//----------------------------------------------------------
+std::string sys2str(const SusyMatrixMethod::SYSTEMATIC s)
+{
+return SusyMatrixMethod::systematic_names[s];
+}
+std::string lep2str(const SusyMatrixMethod::MatrixLepton l)
+{
+    std::ostringstream oss;
+    oss<<(l.isElectron() ? "el" : "mu")
+       <<" "<<(l.isTight() ? "tight" : "loose")
+       <<" pt "<<l.pt()
+       <<" eta "<<l.eta();
+    return oss.str();
+}
+//----------------------------------------------------------
+void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fake::Region &reg) const
+{
+    // this is a useless parameter, it should be dropped everywhere (DG, 2014-05-18 TODO)
+    float dummyMetRel(20.0);
+    bool isEl(l.isElectron());
+    float nomRate = getRate(l, rt, reg, dummyMetRel, SYS_NOM);
+    float statSys = getStatError(l, rt, reg);
+    vector<SYSTEMATIC> syss;
+    cout<<lep2str(l)<<": "<<endl;
+    cout<<"rate : "
+        <<sys2str(SYS_NOM)<<" : "<<nomRate
+        <<" stat sys : "<<statSys
+        <<"fractional variations : ";
+    if(rt==REAL){
+        if(isEl){
+            syss.push_back(SYS_EL_RE_UP   );
+            syss.push_back(SYS_EL_RE_DOWN );
+        } else {
+            syss.push_back(SYS_MU_RE_UP   );
+            syss.push_back(SYS_MU_RE_DOWN );
+        }
+    } else if(rt==FAKE){
+        if(isEl){
+            syss.push_back(SYS_EL_FR_UP       );
+            syss.push_back(SYS_EL_FR_DOWN     );
+            syss.push_back(SYS_EL_HFLF_UP     );
+            syss.push_back(SYS_EL_HFLF_DOWN   );
+            syss.push_back(SYS_EL_ETA         );
+            syss.push_back(SYS_EL_FR_STAT_UP  );
+            syss.push_back(SYS_EL_FR_STAT_DOWN);
+            syss.push_back(SYS_EL_DATAMC_UP   );
+            syss.push_back(SYS_EL_DATAMC_DOWN );
+            syss.push_back(SYS_EL_REG_UP      );
+            syss.push_back(SYS_EL_REG_DOWN    );
+        } else { // isEl
+            syss.push_back(SYS_MU_FR_UP        );
+            syss.push_back(SYS_MU_FR_DOWN      );
+            syss.push_back(SYS_MU_ETA          );
+            syss.push_back(SYS_MU_FR_STAT_UP   );
+            syss.push_back(SYS_MU_FR_STAT_DOWN );
+            syss.push_back(SYS_MU_DATAMC_UP    );
+            syss.push_back(SYS_MU_DATAMC_DOWN  );
+            syss.push_back(SYS_MU_REG_UP       );
+            syss.push_back(SYS_MU_REG_DOWN     );
+        } // end isMu
+    } // end isFake
+    for(size_t s=0; s<syss.size(); ++s)
+        cout<<sys2str(syss[s])<<" : "<<getRateSyst(l, rt, reg, dummyMetRel, syss[s])<<" ";
+    cout<<endl;
+}
+//----------------------------------------------------------
+const TH1* DiLeptonMatrixMethod::getFirstPtEtaHisto() const
+{
+    const TH1 *first2dhisto=0;
+    if(m_rate_param_fake_el==PT_ETA){
+        if(susy::fake::NumberOfSignalRegions>0) first2dhisto = m_el_fake_rate[0];
+        else cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto: error, need at least one signal region"<<endl;
+    } else {
+        cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto can only be called with the 2d parametrization."
+            <<" Returning "<<first2dhisto
+            <<endl;
+    }
+    return first2dhisto;
+}
+//----------------------------------------------------------
+const TAxis* DiLeptonMatrixMethod::getPtAxis() const
+{
+    const TAxis* ax = 0;
+    if(const TH2* histo2d = static_cast<const TH2*>(getFirstPtEtaHisto())) ax = histo2d->GetXaxis();
+    else cout<<"DiLeptonMatrixMethod::getPtAxis() : error, invalid histo2d, returning "<<ax<<endl;
+    return ax;
+}
+//----------------------------------------------------------
+const TAxis* DiLeptonMatrixMethod::getEtaAxis() const
+{
+    const TAxis* ax = 0;
+    if(const TH2* histo2d = static_cast<const TH2*>(getFirstPtEtaHisto())) ax = histo2d->GetYaxis();
+    else cout<<"DiLeptonMatrixMethod::getEtaAxis() : error, invalid histo2d, returning "<<ax<<endl;
+    return ax;
+}
+//----------------------------------------------------------

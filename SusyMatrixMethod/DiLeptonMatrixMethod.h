@@ -19,6 +19,8 @@
 class TFile;
 class TH1;
 class TH1F;
+class TArrayD;
+class TAxis;
 
 namespace SusyMatrixMethod
 {
@@ -183,6 +185,9 @@ namespace SusyMatrixMethod
                    , SYSTEMATIC syst = SYS_NOM
                    ) const;
 
+      const TArrayD* getPtBins() const;
+      const TArrayD* getEtaBins() const;
+      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fake::Region &r) const;
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
       // Get the rate for this lepton -- real/fake for electron or muon
@@ -258,6 +263,10 @@ namespace SusyMatrixMethod
 
       // Get systematic value from file -- for internal use
       void loadSysFromFile();
+
+      const TH1* getFirstPtEtaHisto() const; /// get the first available pt_eta histo
+      const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
+      const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
 
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
