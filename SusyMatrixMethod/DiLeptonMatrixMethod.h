@@ -240,7 +240,8 @@ namespace SusyMatrixMethod
                  ) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region region) const;
+      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
+      float getRelStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
       int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
@@ -259,6 +260,11 @@ namespace SusyMatrixMethod
       // Get systematic value from file -- for internal use
       void loadSysFromFile();
 
+      bool getHistoAndParametrization(const MatrixLepton &lep,
+                                      const susy::fake::Region reg,
+                                      const RATE_TYPE &rt,
+                                      TH1* &h,
+                                      RATE_PARAM &rp) const;
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
       TH1* m_el_real_eff [susy::fake::NumberOfSignalRegions];

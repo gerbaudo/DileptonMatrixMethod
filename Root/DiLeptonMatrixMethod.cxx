@@ -177,7 +177,6 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
     susy::fake::Region region,
     float MetRel,
     SYSTEMATIC syst) const
-
 {
   float fake_contribution = getRF(lep1, lep2, region, MetRel, syst);
   fake_contribution += getFR(lep1, lep2, region, MetRel, syst);
@@ -203,7 +202,6 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRR(
 
   float f1 = getRate(lep1, FAKE, region, MetRel, syst);
   float f2 = getRate(lep2, FAKE, region, MetRel, syst);
-
   float rr = r1*r2/(r1-f1)/(r2-f2)*( (1.-f1)*(1.-f2)*n_tt
                                    + (f1-1.)*f2*n_tl
                                    + f1*(f2-1.)*n_lt
@@ -313,7 +311,37 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
   return getRate(lep, rate_type, region, MetRel, syst);
 }
 
-
+// --------------------------------------------------------
+bool SusyMatrixMethod::DiLeptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
+                                                                        const susy::fake::Region reg,
+                                                                        const RATE_TYPE &rt,
+                                                                        TH1* &h, RATE_PARAM &rp) const
+{
+    bool found=false;
+    int iRegion(getIndexRegion(reg));
+    if(rt==REAL) {
+        if (lep.isElectron()) {
+            h  = m_el_real_eff[iRegion];
+            rp = m_rate_param_real_el;
+            found = true;
+        } else {
+            h  = m_mu_real_eff[iRegion];
+            rp = m_rate_param_real_mu;
+            found = true;
+        }
+    } else if(rt==FAKE) {
+        if (lep.isElectron()) {
+            h  = m_el_fake_rate[iRegion];
+            rp = m_rate_param_fake_el;
+            found = true;
+        } else {
+            h  = m_mu_fake_rate[iRegion];
+            rp = m_rate_param_fake_mu;
+            found = true;
+        }
+    }
+    return found;
+}
 // -----------------------------------------------------------------------------
 float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
     const MatrixLepton& lep,
@@ -322,41 +350,18 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRate(
     float MetRel,
     SYSTEMATIC syst) const
 {
-  // get histogram from member objects
-  TH1* h_rate = NULL;
-  RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
-  int iRegion(getIndexRegion(region));
-  if (rate_type == REAL) {
-      if (lep.isElectron()) {
-          h_rate = m_el_real_eff[iRegion];
-          rate_param = m_rate_param_real_el;
-      } else {
-          h_rate = m_mu_real_eff[iRegion];
-          rate_param = m_rate_param_real_mu;
-      }
-  } else if (rate_type == FAKE) {
-      if (lep.isElectron()) {
-          h_rate = m_el_fake_rate[iRegion];
-          rate_param = m_rate_param_fake_el;
-      } else {
-          h_rate = m_mu_fake_rate[iRegion];
-          rate_param = m_rate_param_fake_mu;
-      }
-  }
-  else {
-      return 0;
-  }
-
-  // Get the rate bin
-  int rate_bin = getRateBin(lep, h_rate, rate_param);
-  float rate = h_rate->GetBinContent(rate_bin);
-  rate *= (1.0+getRateSyst(lep, rate_type, region, MetRel, syst));
-
-  // Don't let rate go above 1
-  if( rate > 1.0 ) rate = 1.0;
-  // Don't let the rate go below 0
-  if( rate < 0.0 ) rate = 1e-5;
-
+    float rate = 0.0;
+    TH1* h_rate = NULL;
+    RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
+    if(getHistoAndParametrization(lep, region, rate_type, h_rate, rate_param)) {
+        int rate_bin = getRateBin(lep, h_rate, rate_param);
+        rate = h_rate->GetBinContent(rate_bin);
+        rate *= (1.0+getRateSyst(lep, rate_type, region, MetRel, syst));
+        if( rate > 1.0 ) rate = 1.0;
+        if( rate < 0.0 ) rate = 1e-5;
+    } else {
+        cout<<"DiLeptonMatrixMethod::getRate: cannot get histo"<<endl;
+    }
   return rate;
 }
 
@@ -577,42 +582,29 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& l
                  , susy::fake::Region region) const
 
 {
-  bool real(rate_type == REAL), fake(rate_type == FAKE), eitherForR(real!=fake);
-  bool isEl(lep.isElectron()), isMu(lep.isMuon()),       eitherEorM(isEl!=isMu);
-  bool validCombination(eitherForR && eitherEorM);
-  if(!validCombination) { std::cout << "WARNING: invalid RATE_TYPE\n"; return 0.0; }
-  int iRegion(getIndexRegion(region));
-  TH1* h_rate = (real ? (isEl ? m_el_real_eff [iRegion] : m_mu_real_eff [iRegion])
-                 :      (isEl ? m_el_fake_rate[iRegion] : m_mu_fake_rate[iRegion]));
-  RATE_PARAM rate_param = (real ? (isEl ? m_rate_param_real_el : m_rate_param_real_mu)
-                           :      (isEl ? m_rate_param_fake_el : m_rate_param_fake_mu));
-  int rate_bin = getRateBin(lep, h_rate, rate_param);
-  // Need to add in protection in the event that the
-  // lepton Pt goes beyond the rate histograms boundaries
-  /*
-  if (m_rate_param == PT_ETA) {
-    int maxbin = h_rate->GetYaxis()->GetNbins();
-    float max  = h_rate->GetYaxis()->GetBinCenter(maxbin) +
-                 h_rate->GetYaxis()->GetBinWidth(maxbin)/2.;
-    // float pt   = lep.pt() > max ? max - 1e-4 : lep.pt();
-    float pt   = lep.pt()/1000.;
-    // TODO Clean up conversion
-    pt = pt > max ? max - 1e-4 : pt;
-    rate_bin   = h_rate->FindBin(lep.eta(), pt);
-  }
-  else if (m_rate_param == PT) {
-    int maxbin = h_rate->GetXaxis()->GetNbins();
-    float max  = h_rate->GetXaxis()->GetBinCenter(maxbin) +
-                 h_rate->GetXaxis()->GetBinWidth(maxbin)/2.;
-    // float pt   = lep.pt() > max ? max - 1e-4 : lep.pt();
-    float pt   = lep.pt()/1000.;
-    // TODO Clean up conversion
-    pt = pt > max ? max - 1e-4 : pt;
-    rate_bin   = h_rate->FindBin(pt);
-  }
-  */
-  float error = h_rate->GetBinError(rate_bin);
+    float error = 0.0;
+    TH1* h_rate = NULL;
+    RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
+    if(getHistoAndParametrization(lep, region, rate_type, h_rate, rate_param)) {
+        int rate_bin = getRateBin(lep, h_rate, rate_param);
+        error = h_rate->GetBinError(rate_bin);
+    }
   return error;
+}
+// ---------------------------------------------------------
+float SusyMatrixMethod::DiLeptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region) const
+{
+    float rate(0.0), error(0.0), relativeError(0.0);
+    TH1* h_rate = NULL;
+    RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
+    if(getHistoAndParametrization(lep, region, rt, h_rate, rate_param)) {
+        int rate_bin = getRateBin(lep, h_rate, rate_param);
+        rate = h_rate->GetBinContent(rate_bin);
+        error = h_rate->GetBinError(rate_bin);
+        if(rate!=0.0) relativeError = error/rate;
+        else cout<<"DiLeptonMatrixMethod::getRelStatError: rate "<<rate<<" returning "<<relativeError<<endl;
+    }
+    return relativeError;
 }
 // -----------------------------------------------------------------------------
 void SusyMatrixMethod::DiLeptonMatrixMethod::printInfo(
