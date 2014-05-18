@@ -46,10 +46,11 @@ void printSystematics(smm::DiLeptonMatrixMethod & matrix, bool isEl, bool isMu)
     copy(etaBins.begin(), etaBins.end(), ostream_iterator<double>(cout, ", "));
     cout<<endl;
     bool isTight(false), isElectron(true);
+    float gev2mev(1.0e3); // the matrix is stored in GeV, but the inputs are supposed to be in MeV...how nice
     for(size_t i=0; i<ptBins.size(); ++i)
         for(size_t j=0; j<etaBins.size(); ++j){
             float pt(ptBins[i]), eta(etaBins[j]);
-            smm::MatrixLepton l(isTight, isElectron, pt, eta);
+            smm::MatrixLepton l(isTight, isElectron, pt*gev2mev, eta);
             smm::DiLeptonMatrixMethod::RATE_TYPE rt = smm::DiLeptonMatrixMethod::FAKE;
             susy::fake::Region reg = susy::fake::CR_SSInc1j;
             matrix.printRateSystematics(l, rt, reg);

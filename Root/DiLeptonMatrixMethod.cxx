@@ -699,7 +699,7 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
     cout<<"rate : "
         <<sys2str(SYS_NOM)<<" : "<<nomRate
         <<" stat sys : "<<statSys
-        <<"fractional variations : ";
+        <<endl;
     if(rt==REAL){
         if(isEl){
             syss.push_back(SYS_EL_RE_UP   );
@@ -733,6 +733,7 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
             syss.push_back(SYS_MU_REG_DOWN     );
         } // end isMu
     } // end isFake
+    cout<<" fractional variations : ";
     for(size_t s=0; s<syss.size(); ++s)
         cout<<sys2str(syss[s])<<" : "<<getRateSyst(l, rt, reg, dummyMetRel, syss[s])<<" ";
     cout<<endl;
