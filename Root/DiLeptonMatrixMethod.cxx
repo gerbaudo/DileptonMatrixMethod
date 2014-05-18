@@ -587,30 +587,6 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& l
   RATE_PARAM rate_param = (real ? (isEl ? m_rate_param_real_el : m_rate_param_real_mu)
                            :      (isEl ? m_rate_param_fake_el : m_rate_param_fake_mu));
   int rate_bin = getRateBin(lep, h_rate, rate_param);
-  // Need to add in protection in the event that the
-  // lepton Pt goes beyond the rate histograms boundaries
-  /*
-  if (m_rate_param == PT_ETA) {
-    int maxbin = h_rate->GetYaxis()->GetNbins();
-    float max  = h_rate->GetYaxis()->GetBinCenter(maxbin) +
-                 h_rate->GetYaxis()->GetBinWidth(maxbin)/2.;
-    // float pt   = lep.pt() > max ? max - 1e-4 : lep.pt();
-    float pt   = lep.pt()/1000.;
-    // TODO Clean up conversion
-    pt = pt > max ? max - 1e-4 : pt;
-    rate_bin   = h_rate->FindBin(lep.eta(), pt);
-  }
-  else if (m_rate_param == PT) {
-    int maxbin = h_rate->GetXaxis()->GetNbins();
-    float max  = h_rate->GetXaxis()->GetBinCenter(maxbin) +
-                 h_rate->GetXaxis()->GetBinWidth(maxbin)/2.;
-    // float pt   = lep.pt() > max ? max - 1e-4 : lep.pt();
-    float pt   = lep.pt()/1000.;
-    // TODO Clean up conversion
-    pt = pt > max ? max - 1e-4 : pt;
-    rate_bin   = h_rate->FindBin(pt);
-  }
-  */
   float error = h_rate->GetBinError(rate_bin);
   return error;
 }
