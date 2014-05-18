@@ -421,7 +421,7 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
   if( syst == SYS_NOM ) return 0.0;
   if ( syst == SYS_N || syst == SYS_N_USER) { std::cout << "WARNING: invalid SYSTEMATIC type\n"; }
   if( rate_type == REAL ){ // Real Eff Sys
-      float statSys = getStatError(lep, rate_type, region);
+      float statSys = getRelStatError(lep, rate_type, region);
       if( lep.isElectron() ){
           if( syst == SYS_EL_RE_UP )   return sqrt( m_el_real_up*m_el_real_up + statSys*statSys);
           if( syst == SYS_EL_RE_DOWN ) return -sqrt( m_el_real_down*m_el_real_down + statSys*statSys);
@@ -436,28 +436,30 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
           if( syst == SYS_EL_FR_UP ){ // Fake Rate Up
               float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys > 0 ? etaSys : 0.;
-              float statSys  = getStatError(lep, rate_type, region);
-              return sqrt( m_el_HFLFerr*m_el_HFLFerr //add in quadrature
-                           + statSys*statSys
-                           + etaSys*etaSys
-                           + m_el_datamc*m_el_datamc
-                           + m_el_region*m_el_region);
+              float statSys = getRelStatError(lep, rate_type, region);
+              return +1.0*sqrt(statSys*statSys);
+//               return sqrt( m_el_HFLFerr*m_el_HFLFerr //add in quadrature
+//                            + statSys*statSys
+//                            + etaSys*etaSys
+//                            + m_el_datamc*m_el_datamc
+//                            + m_el_region*m_el_region);
           }
           if( syst == SYS_EL_FR_DOWN){ // Fake Rate Down
               float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys < 0.0 ? etaSys : 0.0;
-              float statSys  = getStatError(lep, rate_type, region);
-              return (-1.0) * sqrt(m_el_HFLFerr*m_el_HFLFerr // add in quadrature
-                                   + statSys*statSys
-                                   + etaSys*etaSys
-                                   + m_el_datamc*m_el_datamc
-                                   + m_el_region*m_el_region);
+              float statSys  = getRelStatError(lep, rate_type, region);
+              return -1.0*sqrt(statSys*statSys);
+//               return (-1.0) * sqrt(m_el_HFLFerr*m_el_HFLFerr // add in quadrature
+//                                    + statSys*statSys
+//                                    + etaSys*etaSys
+//                                    + m_el_datamc*m_el_datamc
+//                                    + m_el_region*m_el_region);
           }
           if( syst == SYS_EL_HFLF_UP )   return +m_el_HFLFerr; // HF/LF error
           if( syst == SYS_EL_HFLF_DOWN ) return -m_el_HFLFerr;
           if( syst == SYS_EL_ETA ) return m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-          if( syst == SYS_EL_FR_STAT_UP )   return +1.0*getStatError(lep, rate_type, region); // Statistical error from maps
-          if( syst == SYS_EL_FR_STAT_DOWN ) return -1.0*getStatError(lep, rate_type, region);
+          if( syst == SYS_EL_FR_STAT_UP )   return +1.0*getRelStatError(lep, rate_type, region); // Statistical error from maps
+          if( syst == SYS_EL_FR_STAT_DOWN ) return -1.0*getRelStatError(lep, rate_type, region);
           if( syst == SYS_EL_DATAMC_UP )   return +m_el_datamc; // Data/MC error
           if( syst == SYS_EL_DATAMC_DOWN ) return -m_el_datamc;
           if( syst == SYS_EL_REG_UP )   return +m_el_region; // Error from combinatino
@@ -467,24 +469,26 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
           if( syst == SYS_MU_FR_UP ){ // Fake Rate Up
               float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys > 0.0 ? etaSys : 0.0;
-              float statSys  = getStatError(lep, rate_type, region);
-              return sqrt( statSys*statSys
-                           + etaSys*etaSys
-                           + m_mu_datamc*m_mu_datamc
-                           + m_mu_region*m_mu_region);
+              float statSys  = getRelStatError(lep, rate_type, region);
+              return +1.0*sqrt(statSys*statSys);
+//               return sqrt( statSys*statSys
+//                            + etaSys*etaSys
+//                            + m_mu_datamc*m_mu_datamc
+//                            + m_mu_region*m_mu_region);
           }
           if( syst == SYS_MU_FR_DOWN){ // Fake Rate Down
               float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys < 0.0 ? etaSys : 0.0;
-              float statSys  = getStatError(lep, rate_type, region);
-              return (-1.0) * sqrt( statSys*statSys
-                                    + etaSys*etaSys
-                                    + m_mu_datamc*m_mu_datamc
-                                    + m_mu_region*m_mu_region);
+              float statSys  = getRelStatError(lep, rate_type, region);
+              return -1.0*sqrt(statSys*statSys);
+//               return (-1.0) * sqrt( statSys*statSys
+//                                     + etaSys*etaSys
+//                                     + m_mu_datamc*m_mu_datamc
+//                                     + m_mu_region*m_mu_region);
           }
           if( syst == SYS_MU_ETA ) return m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-          if( syst == SYS_MU_FR_STAT_UP )   return getStatError(lep, rate_type, region); // Statistical error from maps
-          if( syst == SYS_MU_FR_STAT_DOWN ) return (-1) * getStatError(lep, rate_type, region);
+          if( syst == SYS_MU_FR_STAT_UP )   return getRelStatError(lep, rate_type, region); // Statistical error from maps
+          if( syst == SYS_MU_FR_STAT_DOWN ) return (-1) * getRelStatError(lep, rate_type, region);
           if( syst == SYS_MU_DATAMC_UP )   return m_mu_datamc; // Data/MC error
           if( syst == SYS_MU_DATAMC_DOWN ) return -m_mu_datamc;
           if( syst == SYS_MU_REG_UP )   return m_mu_region; // Error from combination
