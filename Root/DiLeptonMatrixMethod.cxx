@@ -14,6 +14,10 @@
 // -----------------------------------------------------------------------------
 SusyMatrixMethod::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
     m_hist_file(NULL),
+    m_el_frac_up(NULL),
+    m_el_frac_do(NULL),
+    m_mu_frac_up(NULL),
+    m_mu_frac_do(NULL),
     m_el_real_up(0.0), m_el_real_down(0.0),
     m_mu_real_up(0.0), m_mu_real_down(0.0),
     m_el_datamc(0.0), m_mu_datamc(0.0),
@@ -91,6 +95,10 @@ bool SusyMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_name
     m_mu_real_eff [r]  = ron(s_mu_real + regionName);
     m_mu_fake_rate[r]  = ron(s_mu_fake + regionName);
   }
+  m_el_frac_up = ron("el_fake_rate2d_CR_SSInc1j_frac_up");
+  m_el_frac_do = ron("el_fake_rate2d_CR_SSInc1j_frac_do");
+  m_mu_frac_up = ron("mu_fake_rate2d_CR_SSInc1j_frac_up");
+  m_mu_frac_do = ron("mu_fake_rate2d_CR_SSInc1j_frac_do");
   if(ron.anythingMissing()) {
     cout<<"DiLeptonMatrixMethod::configure(): missing the following systematics:"<<endl;
     copy(ron.miss_.begin(), ron.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
@@ -370,7 +378,6 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
 							TH1* h_rate,
 							RATE_PARAM rate_param) const
 {
-
   // Handle 2-D param
   if( rate_param == PT_ETA ){
     int max_bin_x = h_rate->GetXaxis()->GetNbins();
@@ -432,6 +439,8 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
       return 0.;
   }
   if( rate_type == FAKE ){ // Fake Rate Sys
+      if(syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO || syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO)
+          return getFracRelativeError(lep, rate_type, region, syst);
       if( lep.isElectron() ){
           if( syst == SYS_EL_FR_UP ){ // Fake Rate Up
               float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
@@ -670,5 +679,39 @@ int SusyMatrixMethod::DiLeptonMatrixMethod::getIndexRegion(susy::fake::Region re
                <<" is not in the SignalRegions list"<<endl;
       assert(false);
     }
+}
+// -----------------------------------------------------------------------------
+float SusyMatrixMethod::DiLeptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
+                                                                   RATE_TYPE rt,
+                                                                   susy::fake::Region region,
+                                                                   SYSTEMATIC syst) const
+{
+    float relativeError=0.0;
+    if(region==susy::fake::CR_SSInc1j){
+        if(rt==FAKE &&
+           (syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO ||
+            syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO )){
+            bool isEl(lep.isElectron()), isMu(lep.isMuon());
+            assert(isEl!=isMu);
+            int iRegion(getIndexRegion(region));
+            TH1* nomHisto = isEl ? m_el_fake_rate[iRegion] : m_mu_fake_rate[iRegion];
+            TH1* sysHisto = NULL;
+            if(isEl) sysHisto = syst==SYS_EL_FRAC_UP ? m_el_frac_up : m_el_frac_do;
+            if(isMu) sysHisto = syst==SYS_MU_FRAC_UP ? m_mu_frac_up : m_mu_frac_do;
+            if(!nomHisto) cout<<"cannot get nom histo"<<endl;
+            if(!sysHisto) cout<<"cannot get sys histo"<<endl;
+            if(nomHisto&&sysHisto){
+                int nomBin = getRateBin(lep, nomHisto, PT_ETA); // TODO : assert rate_param is pt_eta [DG 2014]
+                int sysBin = getRateBin(lep, sysHisto, PT_ETA);
+                float nom = nomHisto->GetBinContent(nomBin);
+                float sys = sysHisto->GetBinContent(sysBin);
+                if(nom) relativeError=(sys-nom)/nom;
+            }
+        } // end if(FAKE); assume real is negligible
+    } else {
+        cout<<"getFracRelativeError: implemented only for CR_SSInc1j, not for "<<susy::fake::RegionNames[region]
+            <<"; returning "<<relativeError<<endl;
+    }
+    return relativeError;
 }
 // -----------------------------------------------------------------------------
