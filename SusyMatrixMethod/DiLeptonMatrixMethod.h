@@ -56,6 +56,10 @@ namespace SusyMatrixMethod
 		  , SYS_EL_REG_DOWN     // Error from percentage in weighted avg
 		  , SYS_MU_REG_UP       // Error from percentage in weighted avg
 		  , SYS_MU_REG_DOWN     // Error from percentage in weighted avg
+                    ,SYS_EL_FRAC_UP
+                    ,SYS_EL_FRAC_DO
+                    ,SYS_MU_FRAC_UP
+                    ,SYS_MU_FRAC_DO
                   , SYS_N
                   };
 
@@ -87,6 +91,10 @@ namespace SusyMatrixMethod
 				         , "EL_REG_DOWN"
 				         , "MU_REG_UP"
 				         , "MU_REG_DOWN"
+                    ,"EL_FRAC_UP"
+                    ,"EL_FRAC_DO"
+                    ,"MU_FRAC_UP"
+                    ,"MU_FRAC_DO"
                                          , "SYS_N"
                                          };
 
@@ -245,7 +253,8 @@ namespace SusyMatrixMethod
                  ) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region region) const;
+      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
+      float getRelStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
       int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
@@ -267,6 +276,12 @@ namespace SusyMatrixMethod
       const TH1* getFirstPtEtaHisto() const; /// get the first available pt_eta histo
       const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
       const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
+      bool getHistoAndParametrization(const MatrixLepton &lep,
+                                      const susy::fake::Region reg,
+                                      const RATE_TYPE &rt,
+                                      TH1* &h,
+                                      RATE_PARAM &rp) const;
+      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region, SYSTEMATIC syst) const;
 
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
@@ -274,6 +289,10 @@ namespace SusyMatrixMethod
       TH1* m_el_fake_rate[susy::fake::NumberOfSignalRegions];
       TH1* m_mu_real_eff [susy::fake::NumberOfSignalRegions];
       TH1* m_mu_fake_rate[susy::fake::NumberOfSignalRegions];
+      TH1* m_el_frac_up;
+      TH1* m_el_frac_do;
+      TH1* m_mu_frac_up;
+      TH1* m_mu_frac_do;
 
       // Systematic uncertainties grabbed from the config file
       // Real errors
