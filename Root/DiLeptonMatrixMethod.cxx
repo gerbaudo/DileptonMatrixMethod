@@ -751,6 +751,10 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
             syss.push_back(SYS_EL_DATAMC_DOWN );
             syss.push_back(SYS_EL_REG_UP      );
             syss.push_back(SYS_EL_REG_DOWN    );
+            syss.push_back(SYS_EL_FRAC_UP     );
+            syss.push_back(SYS_EL_FRAC_DO     );
+            syss.push_back(SYS_MU_FRAC_UP     );
+            syss.push_back(SYS_MU_FRAC_DO     );
         } else { // isEl
             syss.push_back(SYS_MU_FR_UP        );
             syss.push_back(SYS_MU_FR_DOWN      );
@@ -761,6 +765,10 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
             syss.push_back(SYS_MU_DATAMC_DOWN  );
             syss.push_back(SYS_MU_REG_UP       );
             syss.push_back(SYS_MU_REG_DOWN     );
+            syss.push_back(SYS_EL_FRAC_UP      );
+            syss.push_back(SYS_EL_FRAC_DO      );
+            syss.push_back(SYS_MU_FRAC_UP      );
+            syss.push_back(SYS_MU_FRAC_DO      );
         } // end isMu
     } // end isFake
     cout<<" fractional variations : ";
@@ -810,20 +818,24 @@ float SusyMatrixMethod::DiLeptonMatrixMethod::getFracRelativeError(const MatrixL
            (syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO ||
             syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO )){
             bool isEl(lep.isElectron()), isMu(lep.isMuon());
+            bool isElSys(syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO);
+            bool isMuSys(syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO);
             assert(isEl!=isMu);
             int iRegion(getIndexRegion(region));
             TH1* nomHisto = isEl ? m_el_fake_rate[iRegion] : m_mu_fake_rate[iRegion];
             TH1* sysHisto = NULL;
-            if(isEl) sysHisto = syst==SYS_EL_FRAC_UP ? m_el_frac_up : m_el_frac_do;
-            if(isMu) sysHisto = syst==SYS_MU_FRAC_UP ? m_mu_frac_up : m_mu_frac_do;
-            if(!nomHisto) cout<<"cannot get nom histo"<<endl;
-            if(!sysHisto) cout<<"cannot get sys histo"<<endl;
-            if(nomHisto&&sysHisto){
-                int nomBin = getRateBin(lep, nomHisto, PT_ETA); // TODO : assert rate_param is pt_eta [DG 2014]
-                int sysBin = getRateBin(lep, sysHisto, PT_ETA);
-                float nom = nomHisto->GetBinContent(nomBin);
-                float sys = sysHisto->GetBinContent(sysBin);
-                if(nom) relativeError=(sys-nom)/nom;
+            if((isEl && isElSys) || (isMu && isMuSys)){
+                if(isEl) sysHisto = syst==SYS_EL_FRAC_UP ? m_el_frac_up : m_el_frac_do;
+                if(isMu) sysHisto = syst==SYS_MU_FRAC_UP ? m_mu_frac_up : m_mu_frac_do;
+                if(!nomHisto) cout<<"cannot get nom histo"<<endl;
+                if(!sysHisto) cout<<"cannot get sys histo"<<endl;
+                if(nomHisto&&sysHisto){
+                    int nomBin = getRateBin(lep, nomHisto, PT_ETA); // TODO : assert rate_param is pt_eta [DG 2014]
+                    int sysBin = getRateBin(lep, sysHisto, PT_ETA);
+                    float nom = nomHisto->GetBinContent(nomBin);
+                    float sys = sysHisto->GetBinContent(sysBin);
+                    if(nom) relativeError=(sys-nom)/nom;
+                }
             }
         } // end if(FAKE); assume real is negligible
     } else {
