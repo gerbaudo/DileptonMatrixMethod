@@ -54,7 +54,7 @@ float StatErrorTool::getUpdatedError(float currentError,
 				    int n_tl,
 				    int n_lt,
 				    int n_ll,
-				    susy::fake::Region fr,
+				    susy::fakess::Region fr,
 				    DileptonType dt)
 {
 
@@ -103,7 +103,7 @@ void StatErrorTool::loadRates()
 {
 
   // Load the rates
-    for(int fr=0; fr<susy::fake::NumberOfSignalRegions; ++fr){
+    for(int fr=0; fr<susy::fakess::NumberOfSignalRegions; ++fr){
     m_avgElReal[fr] = getAvgRate(m_el_real_eff[fr]);
     m_avgMuReal[fr] = getAvgRate(m_mu_real_eff[fr]);
     m_avgElFake[fr] = getAvgRate(m_el_fake_rate[fr]);
@@ -134,7 +134,7 @@ float StatErrorTool::getAvgRate(TH1* hist)
 //---------------------------------------------------------------//
 // Get the real effeciency
 //---------------------------------------------------------------//
-void StatErrorTool::getRealEff(DileptonType dt, susy::fake::Region fr, 
+void StatErrorTool::getRealEff(DileptonType dt, susy::fakess::Region fr, 
 			       float &r1, float &r2)
 {
 
@@ -160,7 +160,7 @@ void StatErrorTool::getRealEff(DileptonType dt, susy::fake::Region fr,
 //---------------------------------------------------------------//
 // Get the fake rate
 //---------------------------------------------------------------//
-void StatErrorTool::getFakeRate(DileptonType dt, susy::fake::Region fr, 
+void StatErrorTool::getFakeRate(DileptonType dt, susy::fakess::Region fr, 
 				float &f1, float &f2)
 {
 

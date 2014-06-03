@@ -13,7 +13,7 @@
 
 using namespace std;
 namespace smm = SameSignMatrixMethod;
-namespace sf = susy::fake;
+namespace sf = susy::fakess;
 
 //----------------------------------------------------------
 bool testParametrization(string filename, smm::RATE_PARAM rp)

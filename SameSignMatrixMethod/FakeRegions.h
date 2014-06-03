@@ -1,6 +1,6 @@
 // emacs -*- C++ -*-
-#ifndef SUSY_FAKE_FAKEREGIONS_H
-#define SUSY_FAKE_FAKEREGIONS_H
+#ifndef SUSY_FAKESS_FAKEREGIONS_H
+#define SUSY_FAKESS_FAKEREGIONS_H
 
 #include <string>
 
@@ -8,7 +8,7 @@
 // binnings used to derive the fake estimate
 
 namespace susy {
-namespace fake {
+namespace fakess {
 
 enum Region
 {
@@ -142,7 +142,7 @@ const std::string RegionNames[] =
 
 inline std::string region2str(const Region &r) {return RegionNames[r];}
 
-} // end namespace fake
+} // end namespace fakess
 } // end namespace susy
 
 #endif

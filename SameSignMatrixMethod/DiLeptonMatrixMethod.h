@@ -129,7 +129,7 @@ namespace SameSignMatrixMethod
        */
       float getTotalFake( bool isTight1, bool isElectron1, float pt1, float eta1
                         , bool isTight2, bool isElectron2, float pt2, float eta2
-                        , susy::fake::Region region
+                        , susy::fakess::Region region
                         , float MetRel
                         , SYSTEMATIC syst = SYS_NOM
                         ) const;
@@ -139,7 +139,7 @@ namespace SameSignMatrixMethod
        */
       float getRR( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
@@ -149,7 +149,7 @@ namespace SameSignMatrixMethod
        */
       float getRF( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
@@ -159,7 +159,7 @@ namespace SameSignMatrixMethod
        */
       float getFR( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
@@ -169,12 +169,12 @@ namespace SameSignMatrixMethod
        */
       float getFF( bool isTight1, bool isElectron1, float pt1, float eta1
                  , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
       //! given a region, determine the internal index used to store its histograms; abort if invalid
-      static int getIndexRegion(susy::fake::Region region);
+      static int getIndexRegion(susy::fakess::Region region);
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       enum RATE_TYPE { REAL
                      , FAKE
@@ -188,14 +188,14 @@ namespace SameSignMatrixMethod
                    , float pt
                    , float eta
                    , RATE_TYPE rate_type
-                   , susy::fake::Region region
+                   , susy::fakess::Region region
                    , float MetRel
                    , SYSTEMATIC syst = SYS_NOM
                    ) const;
 
       const TArrayD* getPtBins() const;
       const TArrayD* getEtaBins() const;
-      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fake::Region &r) const;
+      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fakess::Region &r) const;
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
       // Get the rate for this lepton -- real/fake for electron or muon
@@ -204,13 +204,13 @@ namespace SameSignMatrixMethod
       // for internal use
       float getRate( const MatrixLepton&
                    , RATE_TYPE
-                   , susy::fake::Region region
+                   , susy::fakess::Region region
                    , float MetRel
                    , SYSTEMATIC syst = SYS_NOM
                    ) const;
       float getRateSyst( const MatrixLepton&
                        , RATE_TYPE
-           , susy::fake::Region region
+           , susy::fakess::Region region
                        , float MetRel
                        , SYSTEMATIC syst = SYS_NOM
                        ) const;
@@ -223,38 +223,38 @@ namespace SameSignMatrixMethod
       // Get the fake/real contribution for this event -- for internal use
       float getTotalFake( const MatrixLepton& lep1
                         , const MatrixLepton& lep2
-                        , susy::fake::Region region
+                        , susy::fakess::Region region
                         , float MetRel
                         , SYSTEMATIC syst = SYS_NOM
                         ) const;
       float getRR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
       float getRF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
       float getFR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
       float getFF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
-                 , susy::fake::Region region
+                 , susy::fakess::Region region
                  , float MetRel
                  , SYSTEMATIC syst = SYS_NOM
                  ) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
-      float getRelStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
+      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fakess::Region) const;
+      float getRelStatError(const MatrixLepton&, RATE_TYPE, susy::fakess::Region) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
       int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
@@ -265,7 +265,7 @@ namespace SameSignMatrixMethod
       // Verbose output
       void printInfo( const MatrixLepton& lep1
                     , const MatrixLepton& lep2
-                    , susy::fake::Region region
+                    , susy::fakess::Region region
                     , float MetRel
                     , SYSTEMATIC syst = SYS_NOM
                     ) const;
@@ -277,18 +277,18 @@ namespace SameSignMatrixMethod
       const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
       const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
       bool getHistoAndParametrization(const MatrixLepton &lep,
-                                      const susy::fake::Region reg,
+                                      const susy::fakess::Region reg,
                                       const RATE_TYPE &rt,
                                       TH1* &h,
                                       RATE_PARAM &rp) const;
-      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region, SYSTEMATIC syst) const;
+      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fakess::Region region, SYSTEMATIC syst) const;
 
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
-      TH1* m_el_real_eff [susy::fake::NumberOfSignalRegions];
-      TH1* m_el_fake_rate[susy::fake::NumberOfSignalRegions];
-      TH1* m_mu_real_eff [susy::fake::NumberOfSignalRegions];
-      TH1* m_mu_fake_rate[susy::fake::NumberOfSignalRegions];
+      TH1* m_el_real_eff [susy::fakess::NumberOfSignalRegions];
+      TH1* m_el_fake_rate[susy::fakess::NumberOfSignalRegions];
+      TH1* m_mu_real_eff [susy::fakess::NumberOfSignalRegions];
+      TH1* m_mu_fake_rate[susy::fakess::NumberOfSignalRegions];
       TH1* m_el_frac_up;
       TH1* m_el_frac_do;
       TH1* m_mu_frac_up;

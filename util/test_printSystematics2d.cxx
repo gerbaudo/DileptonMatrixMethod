@@ -19,7 +19,7 @@
 
 using namespace std;
 namespace smm = SameSignMatrixMethod;
-namespace sf = susy::fake;
+namespace sf = susy::fakess;
 
 //----------------------------------------------------------
 vector<double>  bin_edges2bin_centers(const TArrayD* binEdges)
@@ -52,7 +52,7 @@ void printSystematics(smm::DiLeptonMatrixMethod & matrix, bool isEl, bool isMu)
             float pt(ptBins[i]), eta(etaBins[j]);
             smm::MatrixLepton l(isTight, isElectron, pt*gev2mev, eta);
             smm::DiLeptonMatrixMethod::RATE_TYPE rt = smm::DiLeptonMatrixMethod::FAKE;
-            susy::fake::Region reg = susy::fake::CR_SSInc1j;
+            susy::fakess::Region reg = susy::fakess::CR_SSInc1j;
             matrix.printRateSystematics(l, rt, reg);
         }
 /*   

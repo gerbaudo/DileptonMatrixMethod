@@ -93,8 +93,8 @@ bool SameSignMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_nam
       s_el_real = "el_real_eff2d_"; s_el_fake = "el_fake_rate2d_";
       s_mu_real = "mu_real_eff2d_"; s_mu_fake = "mu_fake_rate2d_";
   }
-  for(int r=0; r<susy::fake::NumberOfSignalRegions; ++r) { // Get the Real eff and Fake rate for electrons and muons
-    std::string regionName(susy::fake::region2str(susy::fake::SignalRegions[r]));
+  for(int r=0; r<susy::fakess::NumberOfSignalRegions; ++r) { // Get the Real eff and Fake rate for electrons and muons
+    std::string regionName(susy::fakess::region2str(susy::fakess::SignalRegions[r]));
     m_el_real_eff [r]  = ron(s_el_real + regionName);
     m_el_fake_rate[r]  = ron(s_el_fake + regionName);
     m_mu_real_eff [r]  = ron(s_mu_real + regionName);
@@ -117,7 +117,7 @@ bool SameSignMatrixMethod::DiLeptonMatrixMethod::configure( std::string file_nam
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -131,7 +131,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRR(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -145,7 +145,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRR(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRF(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -159,7 +159,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRF(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getFR(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -173,7 +173,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getFR(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getFF(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -187,7 +187,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getFF(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -201,7 +201,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getTotalFake(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRR(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -236,7 +236,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRR(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRF(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -263,7 +263,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRF(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getFR(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -290,7 +290,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getFR(
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getFF(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -317,7 +317,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getFF(
 // -----------------------------------------------------------------------------
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRate(
     bool isTight, bool isElectron, float pt, float eta,
-    RATE_TYPE rate_type, susy::fake::Region region, float MetRel,
+    RATE_TYPE rate_type, susy::fakess::Region region, float MetRel,
     SYSTEMATIC syst) const
 {
   SameSignMatrixMethod::MatrixLepton lep(isTight, isElectron, pt, eta);
@@ -326,7 +326,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRate(
 
 // --------------------------------------------------------
 bool SameSignMatrixMethod::DiLeptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
-                                                                        const susy::fake::Region reg,
+                                                                        const susy::fakess::Region reg,
                                                                         const RATE_TYPE &rt,
                                                                         TH1* &h, RATE_PARAM &rp) const
 {
@@ -359,7 +359,7 @@ bool SameSignMatrixMethod::DiLeptonMatrixMethod::getHistoAndParametrization(cons
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRate(
     const MatrixLepton& lep,
     RATE_TYPE rate_type,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -426,7 +426,7 @@ int SameSignMatrixMethod::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& 
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getRateSyst(
     const MatrixLepton& lep,
     RATE_TYPE rate_type,
-    susy::fake::Region region,
+    susy::fakess::Region region,
     float MetRel,
     SYSTEMATIC syst) const
 {
@@ -597,7 +597,7 @@ void SameSignMatrixMethod::DiLeptonMatrixMethod::loadSysFromFile()
 // -----------------------------------------------------------------------------
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepton& lep
                  , RATE_TYPE rate_type
-                 , susy::fake::Region region) const
+                 , susy::fakess::Region region) const
 
 {
     float error = 0.0;
@@ -610,7 +610,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getStatError(const MatrixLepto
   return error;
 }
 // ---------------------------------------------------------
-float SameSignMatrixMethod::DiLeptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region) const
+float SameSignMatrixMethod::DiLeptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt, susy::fakess::Region region) const
 {
     float rate(0.0), error(0.0), relativeError(0.0);
     TH1* h_rate = NULL;
@@ -628,7 +628,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getRelStatError(const MatrixLe
 void SameSignMatrixMethod::DiLeptonMatrixMethod::printInfo(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
-    susy::fake::Region region, float MetRel,
+    susy::fakess::Region region, float MetRel,
     SYSTEMATIC syst) const
 {
   float r1 = getRate(lep1, REAL, region, MetRel, syst);
@@ -671,11 +671,11 @@ void SameSignMatrixMethod::DiLeptonMatrixMethod::printInfo(
   std::cout << "total fake: " << getTotalFake(lep1,lep2,region,syst) << "\n";
 }
 // -----------------------------------------------------------------------------
-int SameSignMatrixMethod::DiLeptonMatrixMethod::getIndexRegion(susy::fake::Region region)
+int SameSignMatrixMethod::DiLeptonMatrixMethod::getIndexRegion(susy::fakess::Region region)
 {
-    const susy::fake::Region* begin = susy::fake::SignalRegions;
-    const susy::fake::Region* end   = begin + susy::fake::NumberOfSignalRegions;
-    const susy::fake::Region* it    = std::find(begin, end, region);
+    const susy::fakess::Region* begin = susy::fakess::SignalRegions;
+    const susy::fakess::Region* end   = begin + susy::fakess::NumberOfSignalRegions;
+    const susy::fakess::Region* it    = std::find(begin, end, region);
     if(it!=end) {
       return std::distance(begin, it);
     } else {
@@ -717,7 +717,7 @@ std::string lep2str(const SameSignMatrixMethod::MatrixLepton l)
     return oss.str();
 }
 //----------------------------------------------------------
-void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fake::Region &reg) const
+void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fakess::Region &reg) const
 {
     // this is a useless parameter, it should be dropped everywhere (DG, 2014-05-18 TODO)
     float dummyMetRel(20.0);
@@ -781,7 +781,7 @@ const TH1* DiLeptonMatrixMethod::getFirstPtEtaHisto() const
 {
     const TH1 *first2dhisto=0;
     if(m_rate_param_fake_el==PT_ETA){
-        if(susy::fake::NumberOfSignalRegions>0) first2dhisto = m_el_fake_rate[0];
+        if(susy::fakess::NumberOfSignalRegions>0) first2dhisto = m_el_fake_rate[0];
         else cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto: error, need at least one signal region"<<endl;
     } else {
         cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto can only be called with the 2d parametrization."
@@ -809,11 +809,11 @@ const TAxis* DiLeptonMatrixMethod::getEtaAxis() const
 //----------------------------------------------------------
 float SameSignMatrixMethod::DiLeptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
                                                                    RATE_TYPE rt,
-                                                                   susy::fake::Region region,
+                                                                   susy::fakess::Region region,
                                                                    SYSTEMATIC syst) const
 {
     float relativeError=0.0;
-    if(region==susy::fake::CR_SSInc1j){
+    if(region==susy::fakess::CR_SSInc1j){
         if(rt==FAKE &&
            (syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO ||
             syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO )){
@@ -839,7 +839,7 @@ float SameSignMatrixMethod::DiLeptonMatrixMethod::getFracRelativeError(const Mat
             }
         } // end if(FAKE); assume real is negligible
     } else {
-        cout<<"getFracRelativeError: implemented only for CR_SSInc1j, not for "<<susy::fake::RegionNames[region]
+        cout<<"getFracRelativeError: implemented only for CR_SSInc1j, not for "<<susy::fakess::RegionNames[region]
             <<"; returning "<<relativeError<<endl;
     }
     return relativeError;
