@@ -1,5 +1,5 @@
-#ifndef SusyMatrixMethod_DiLeptonMatrixMethod_h
-#define SusyMatrixMethod_DiLeptonMatrixMethod_h
+#ifndef SameSignMatrixMethod_DiLeptonMatrixMethod_h
+#define SameSignMatrixMethod_DiLeptonMatrixMethod_h
 
 /**
  * @author Brett Jackson <Brett.David.Jackson@cern.ch>
@@ -13,8 +13,8 @@
 #include <math.h>
 #include <string>
 
-#include "SusyMatrixMethod/MatrixLepton.h"
-#include "SusyMatrixMethod/FakeRegions.h"
+#include "SameSignMatrixMethod/MatrixLepton.h"
+#include "SameSignMatrixMethod/FakeRegions.h"
 
 class TFile;
 class TH1;
@@ -22,7 +22,7 @@ class TH1F;
 class TArrayD;
 class TAxis;
 
-namespace SusyMatrixMethod
+namespace SameSignMatrixMethod
 {
   enum RATE_PARAM { PT_ETA
                   , PT
@@ -320,4 +320,4 @@ namespace SusyMatrixMethod
   };
 }
 
-#endif /* end of include guard: SusyMatrixMethod_DiLeptonMatrixMethod_h */
+#endif /* end of include guard: SameSignMatrixMethod_DiLeptonMatrixMethod_h */

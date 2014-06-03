@@ -8,23 +8,23 @@
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 
 
-#include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
-#include "SusyMatrixMethod/FakeRegions.h"
+#include "SameSignMatrixMethod/DiLeptonMatrixMethod.h"
+#include "SameSignMatrixMethod/FakeRegions.h"
 #include "TRandom3.h"
 
 namespace FakeStatTool{
 
   enum DileptonType {DT_ee = 0, DT_mm, DT_em, DT_N};
 
-  class StatErrorTool : public SusyMatrixMethod::DiLeptonMatrixMethod
+  class StatErrorTool : public SameSignMatrixMethod::DiLeptonMatrixMethod
   {
     
   public:
     StatErrorTool(std::string fakeFile, 
-		  SusyMatrixMethod::RATE_PARAM rate_param_real_el,
-		  SusyMatrixMethod::RATE_PARAM rate_param_fake_el,
-		  SusyMatrixMethod::RATE_PARAM rate_param_real_mu,
-		  SusyMatrixMethod::RATE_PARAM rate_param_fake_mu
+		  SameSignMatrixMethod::RATE_PARAM rate_param_real_el,
+		  SameSignMatrixMethod::RATE_PARAM rate_param_fake_el,
+		  SameSignMatrixMethod::RATE_PARAM rate_param_real_mu,
+		  SameSignMatrixMethod::RATE_PARAM rate_param_fake_mu
 		  );
     ~StatErrorTool();
     

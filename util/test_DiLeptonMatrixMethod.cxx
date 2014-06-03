@@ -1,4 +1,4 @@
-# include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
+# include "SameSignMatrixMethod/DiLeptonMatrixMethod.h"
 
 #include <iostream>
 #include <string>
@@ -12,7 +12,7 @@
 */
 
 using namespace std;
-namespace smm = SusyMatrixMethod;
+namespace smm = SameSignMatrixMethod;
 namespace sf = susy::fake;
 
 //----------------------------------------------------------
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 {
 
   string inputFilename="data/FinalFakeHist_Apr_10.root";
-  inputFilename = "data/FinalFakeHist_May_16.root";
+  inputFilename = "data/FinalFakeHist_May_20.root";
   size_t nFail=0;
 
   cout<<endl<<" --- test 1D parametrization (pt)     ---"<<endl;

@@ -1,4 +1,4 @@
-SusyMatrixMethod
+SameSignMatrixMethod
 ================
 
 dilepton matrix method inherited from Matt.

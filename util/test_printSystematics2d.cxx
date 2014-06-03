@@ -1,5 +1,5 @@
-#include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
-#include "SusyMatrixMethod/MatrixLepton.h"
+#include "SameSignMatrixMethod/DiLeptonMatrixMethod.h"
+#include "SameSignMatrixMethod/MatrixLepton.h"
 
 #include "TArrayD.h"
 
@@ -18,7 +18,7 @@
 */
 
 using namespace std;
-namespace smm = SusyMatrixMethod;
+namespace smm = SameSignMatrixMethod;
 namespace sf = susy::fake;
 
 //----------------------------------------------------------
