@@ -1,5 +1,6 @@
-#ifndef StatErrorTool_h
-#define StatErrorTool_h
+// -*- c++ -*-
+#ifndef SUSY_FAKE_STATERRORTOOL_H
+#define SUSY_FAKE_STATERRORTOOL_H
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 // This tool aims to handle the cases where we are lacking sufficient  //
@@ -12,19 +13,20 @@
 #include "DileptonMatrixMethod/FakeRegions.h"
 #include "TRandom3.h"
 
-namespace FakeStatTool{
+namespace susy{
+namespace fake{
 
   enum DileptonType {DT_ee = 0, DT_mm, DT_em, DT_N};
 
-  class StatErrorTool : public DileptonMatrixMethod::DiLeptonMatrixMethod
+  class StatErrorTool : public susy::fake::DiLeptonMatrixMethod
   {
     
   public:
     StatErrorTool(std::string fakeFile, 
-		  DileptonMatrixMethod::RATE_PARAM rate_param_real_el,
-		  DileptonMatrixMethod::RATE_PARAM rate_param_fake_el,
-		  DileptonMatrixMethod::RATE_PARAM rate_param_real_mu,
-		  DileptonMatrixMethod::RATE_PARAM rate_param_fake_mu
+		  susy::fake::RATE_PARAM rate_param_real_el,
+		  susy::fake::RATE_PARAM rate_param_fake_el,
+		  susy::fake::RATE_PARAM rate_param_real_mu,
+		  susy::fake::RATE_PARAM rate_param_fake_mu
 		  );
     ~StatErrorTool();
     
@@ -100,8 +102,7 @@ namespace FakeStatTool{
     float m_upper;
 
   };    
-
-
-};
+} // fake
+} // susy
 
 #endif

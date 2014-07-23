@@ -1,4 +1,4 @@
-# include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
+#include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
 
 #include <iostream>
 #include <string>
@@ -12,14 +12,13 @@
 */
 
 using namespace std;
-namespace smm = DileptonMatrixMethod;
 namespace sf = susy::fake;
 
 //----------------------------------------------------------
-bool testParametrization(string filename, smm::RATE_PARAM rp)
+bool testParametrization(string filename, sf::RATE_PARAM rp)
 {
     bool success = false;
-    smm::DiLeptonMatrixMethod matrix;
+    sf::DiLeptonMatrixMethod matrix;
     if(matrix.configure(filename, rp, rp, rp, rp)) {
         float gev2mev(1.0e3);
         bool l0IsSig(true), l0IsEle(false);
@@ -28,19 +27,19 @@ bool testParametrization(string filename, smm::RATE_PARAM rp)
         float l1Pt(25.0), l1Eta(-0.5);
         float metRel(20.0);
         sf::Region region = sf::CR_SSInc1j;
-        smm::SYSTEMATIC sys = smm::SYS_NOM;
+        sf::SYSTEMATIC sys = sf::SYS_NOM;
         float weight = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                            l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
                                            region, metRel*gev2mev, sys);
         float weightUp = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                              l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             region, metRel*gev2mev, smm::SYS_EL_FR_UP);
+                                             region, metRel*gev2mev, sf::SYS_EL_FR_UP);
         float weightDo = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                              l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             region, metRel*gev2mev, smm::SYS_EL_FR_DOWN);
+                                             region, metRel*gev2mev, sf::SYS_EL_FR_DOWN);
         cout<<"weight for"
             <<" "<<sf::region2str(region)<<", "
-            <<" "<<smm::systematic_names[sys]
+            <<" "<<sf::systematic_names[sys]
             <<" : "<<weight
             <<" (SYS_EL_FR_UP "<<weightUp
             <<", "
@@ -60,10 +59,10 @@ int main(int argc, char **argv)
   size_t nFail=0;
 
   cout<<endl<<" --- test 1D parametrization (pt)     ---"<<endl;
-  if(!testParametrization(inputFilename, smm::PT))
+  if(!testParametrization(inputFilename, sf::PT))
       nFail++;
   cout<<endl<<" --- test 2D parametrization (pt eta) ---"<<endl;
-  if(!testParametrization(inputFilename, smm::PT_ETA))
+  if(!testParametrization(inputFilename, sf::PT_ETA))
       nFail++;
   cout<<endl<<" --- Number of failures: "<<nFail<<" --- "<<endl;
   return 0;

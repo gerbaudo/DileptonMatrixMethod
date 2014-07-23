@@ -3,16 +3,16 @@
 
 #include "TH1.h"
 
-using namespace FakeStatTool;
+using namespace susy::fake;
 
 //---------------------------------------------------------------//
 // Constructor
 //---------------------------------------------------------------//
 StatErrorTool::StatErrorTool(std::string fakeFile, 
-			     DileptonMatrixMethod::RATE_PARAM rate_param_real_el,
-			     DileptonMatrixMethod::RATE_PARAM rate_param_fake_el,
-			     DileptonMatrixMethod::RATE_PARAM rate_param_real_mu,
-			     DileptonMatrixMethod::RATE_PARAM rate_param_fake_mu
+			     susy::fake::RATE_PARAM rate_param_real_el,
+			     susy::fake::RATE_PARAM rate_param_fake_el,
+			     susy::fake::RATE_PARAM rate_param_real_mu,
+			     susy::fake::RATE_PARAM rate_param_fake_mu
 			     ) : 
   DiLeptonMatrixMethod(), // Could decouple these, but this is easiest for now
   rand(NULL),

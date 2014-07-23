@@ -1,5 +1,6 @@
-#ifndef DileptonMatrixMethod_MatrixLepton_h
-#define DileptonMatrixMethod_MatrixLepton_h
+// -*- c++ -*-
+#ifndef SUSY_FAKE_MATRIXLEPTON_H
+#define SUSY_FAKE_MATRIXLEPTON_H
 
 /**
  * @author Brett Jackson <Brett.David.Jackson@cern.ch>
@@ -13,8 +14,8 @@
  * https://svnweb.cern.ch/trac/atlasinst/browser/Institutes/UCIrvine/sfarrell/MultiLepMatrixMethod/tags/MultiLepMatrixMethod-00-00-02/Root/MatrixLepton.cxx
  */
 
-namespace DileptonMatrixMethod
-{
+namespace susy{
+namespace fake{
   class MatrixLepton
   {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -32,8 +33,8 @@ namespace DileptonMatrixMethod
       float pt() const;
       float eta() const;
 
-      bool operator< (const DileptonMatrixMethod::MatrixLepton& rhs) const;
-      bool operator> (const DileptonMatrixMethod::MatrixLepton& rhs) const;
+      bool operator< (const susy::fake::MatrixLepton& rhs) const;
+      bool operator> (const susy::fake::MatrixLepton& rhs) const;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     private:
@@ -45,6 +46,7 @@ namespace DileptonMatrixMethod
       float m_pt;
       float m_eta;
   };
-}
+} // fake
+} // susy
 
 #endif

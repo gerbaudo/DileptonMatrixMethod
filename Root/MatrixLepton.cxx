@@ -1,7 +1,7 @@
 #include "DileptonMatrixMethod/MatrixLepton.h"
 
 // -----------------------------------------------------------------------------
-DileptonMatrixMethod::MatrixLepton::MatrixLepton( bool isTight
+susy::fake::MatrixLepton::MatrixLepton( bool isTight
                                             , bool isElectron
                                             , float pt
                                             , float eta
@@ -15,51 +15,51 @@ DileptonMatrixMethod::MatrixLepton::MatrixLepton( bool isTight
 }
 
 // -----------------------------------------------------------------------------
-DileptonMatrixMethod::MatrixLepton::~MatrixLepton()
+susy::fake::MatrixLepton::~MatrixLepton()
 {
   // do nothing
 }
 
 // -----------------------------------------------------------------------------
-bool DileptonMatrixMethod::MatrixLepton::isTight() const
+bool susy::fake::MatrixLepton::isTight() const
 {
   return m_isTight;
 }
 
 // -----------------------------------------------------------------------------
-bool DileptonMatrixMethod::MatrixLepton::isElectron() const
+bool susy::fake::MatrixLepton::isElectron() const
 {
   return m_isElectron;
 }
 
 // -----------------------------------------------------------------------------
-bool DileptonMatrixMethod::MatrixLepton::isMuon() const
+bool susy::fake::MatrixLepton::isMuon() const
 {
   return !m_isElectron;
 }
 
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::MatrixLepton::pt() const
+float susy::fake::MatrixLepton::pt() const
 {
   return m_pt;
 }
 
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::MatrixLepton::eta() const
+float susy::fake::MatrixLepton::eta() const
 {
   return m_eta;
 }
 
 // -----------------------------------------------------------------------------
-bool DileptonMatrixMethod::MatrixLepton::operator<(
-    const DileptonMatrixMethod::MatrixLepton& rhs) const
+bool susy::fake::MatrixLepton::operator<(
+    const susy::fake::MatrixLepton& rhs) const
 {
   return (pt() < rhs.pt());
 }
 
 // -----------------------------------------------------------------------------
-bool DileptonMatrixMethod::MatrixLepton::operator>(
-    const DileptonMatrixMethod::MatrixLepton& rhs) const
+bool susy::fake::MatrixLepton::operator>(
+    const susy::fake::MatrixLepton& rhs) const
 {
   return (pt() > rhs.pt());
 }

@@ -1,5 +1,6 @@
-#ifndef DileptonMatrixMethod_DiLeptonMatrixMethod_h
-#define DileptonMatrixMethod_DiLeptonMatrixMethod_h
+// -*- c++ -*-
+#ifndef SUSY_FAKE_DILEPTONMATRIXMETHOD_H
+#define SUSY_FAKE_DILEPTONMATRIXMETHOD_H
 
 /**
  * @author Brett Jackson <Brett.David.Jackson@cern.ch>
@@ -22,8 +23,8 @@ class TH1F;
 class TArrayD;
 class TAxis;
 
-namespace DileptonMatrixMethod
-{
+namespace susy{
+namespace fake{
   enum RATE_PARAM { PT_ETA
                   , PT
                   };
@@ -318,6 +319,7 @@ namespace DileptonMatrixMethod
       RATE_PARAM m_rate_param_real_mu;
       RATE_PARAM m_rate_param_fake_mu;
   };
-}
+} // fake
+} // susy
 
-#endif /* end of include guard: DileptonMatrixMethod_DiLeptonMatrixMethod_h */
+#endif
