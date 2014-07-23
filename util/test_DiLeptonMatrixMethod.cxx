@@ -1,4 +1,4 @@
-# include "SusyMatrixMethod/DiLeptonMatrixMethod.h"
+# include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
 
 #include <iostream>
 #include <string>
@@ -12,7 +12,7 @@
 */
 
 using namespace std;
-namespace smm = SusyMatrixMethod;
+namespace smm = DileptonMatrixMethod;
 namespace sf = susy::fake;
 
 //----------------------------------------------------------
