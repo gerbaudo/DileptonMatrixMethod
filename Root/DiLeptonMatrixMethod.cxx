@@ -16,6 +16,7 @@
 
 using susy::fake::DiLeptonMatrixMethod;
 using susy::fake::Parametrization;
+using susy::fake::Systematic;
 
 // -----------------------------------------------------------------------------
 susy::fake::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
@@ -120,7 +121,7 @@ float susy::fake::DiLeptonMatrixMethod::getTotalFake(
     bool isTight2, bool isElectron2, float pt2, float eta2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
   susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
@@ -134,7 +135,7 @@ float susy::fake::DiLeptonMatrixMethod::getRR(
     bool isTight2, bool isElectron2, float pt2, float eta2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
   susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
@@ -148,7 +149,7 @@ float susy::fake::DiLeptonMatrixMethod::getRF(
     bool isTight2, bool isElectron2, float pt2, float eta2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
   susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
@@ -162,7 +163,7 @@ float susy::fake::DiLeptonMatrixMethod::getFR(
     bool isTight2, bool isElectron2, float pt2, float eta2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
   susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
@@ -176,7 +177,7 @@ float susy::fake::DiLeptonMatrixMethod::getFF(
     bool isTight2, bool isElectron2, float pt2, float eta2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
   susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
@@ -190,7 +191,7 @@ float susy::fake::DiLeptonMatrixMethod::getTotalFake(
     const MatrixLepton& lep2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   float fake_contribution = getRF(lep1, lep2, region, MetRel, syst);
   fake_contribution += getFR(lep1, lep2, region, MetRel, syst);
@@ -204,7 +205,7 @@ float susy::fake::DiLeptonMatrixMethod::getRR(
     const MatrixLepton& lep2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
@@ -239,7 +240,7 @@ float susy::fake::DiLeptonMatrixMethod::getRF(
     const MatrixLepton& lep2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
@@ -266,7 +267,7 @@ float susy::fake::DiLeptonMatrixMethod::getFR(
     const MatrixLepton& lep2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
@@ -293,7 +294,7 @@ float susy::fake::DiLeptonMatrixMethod::getFF(
     const MatrixLepton& lep2,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
@@ -319,7 +320,7 @@ float susy::fake::DiLeptonMatrixMethod::getFF(
 float susy::fake::DiLeptonMatrixMethod::getRate(
     bool isTight, bool isElectron, float pt, float eta,
     RATE_TYPE rate_type, susy::fake::Region region, float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   susy::fake::MatrixLepton lep(isTight, isElectron, pt, eta);
   return getRate(lep, rate_type, region, MetRel, syst);
@@ -362,7 +363,7 @@ float susy::fake::DiLeptonMatrixMethod::getRate(
     RATE_TYPE rate_type,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
     float rate = 0.0;
     TH1* h_rate = NULL;
@@ -429,26 +430,26 @@ float susy::fake::DiLeptonMatrixMethod::getRateSyst(
     RATE_TYPE rate_type,
     susy::fake::Region region,
     float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
-  if( syst == SYS_NOM ) return 0.0;
-  if ( syst == SYS_N || syst == SYS_N_USER) { std::cout << "WARNING: invalid SYSTEMATIC type\n"; }
+  if( syst == Systematic::SYS_NOM ) return 0.0;
+  if(!Systematic::isValid(syst)) { std::cout << "WARNING: invalid SYSTEMATIC type\n"; }
   if( rate_type == REAL ){ // Real Eff Sys
       float statSys = getRelStatError(lep, rate_type, region);
       if( lep.isElectron() ){
-          if( syst == SYS_EL_RE_UP )   return sqrt( m_el_real_up*m_el_real_up + statSys*statSys);
-          if( syst == SYS_EL_RE_DOWN ) return -sqrt( m_el_real_down*m_el_real_down + statSys*statSys);
+          if( syst == Systematic::SYS_EL_RE_UP )   return sqrt( m_el_real_up*m_el_real_up + statSys*statSys);
+          if( syst == Systematic::SYS_EL_RE_DOWN ) return -sqrt( m_el_real_down*m_el_real_down + statSys*statSys);
       } else {
-          if( syst == SYS_MU_RE_UP )   return sqrt( m_mu_real_up*m_mu_real_up + statSys*statSys);
-          if( syst == SYS_MU_RE_DOWN ) return -sqrt( m_mu_real_down*m_mu_real_down + statSys*statSys);
+          if( syst == Systematic::SYS_MU_RE_UP )   return sqrt( m_mu_real_up*m_mu_real_up + statSys*statSys);
+          if( syst == Systematic::SYS_MU_RE_DOWN ) return -sqrt( m_mu_real_down*m_mu_real_down + statSys*statSys);
     }
       return 0.;
   }
   if( rate_type == FAKE ){ // Fake Rate Sys
-      if(syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO || syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO)
+      if(syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO || syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO)
           return getFracRelativeError(lep, rate_type, region, syst);
       if( lep.isElectron() ){
-          if( syst == SYS_EL_FR_UP ){ // Fake Rate Up
+          if( syst == Systematic::SYS_EL_FR_UP ){ // Fake Rate Up
               float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys > 0 ? etaSys : 0.;
               float statSys = getRelStatError(lep, rate_type, region);
@@ -459,7 +460,7 @@ float susy::fake::DiLeptonMatrixMethod::getRateSyst(
 //                            + m_el_datamc*m_el_datamc
 //                            + m_el_region*m_el_region);
           }
-          if( syst == SYS_EL_FR_DOWN){ // Fake Rate Down
+          if( syst == Systematic::SYS_EL_FR_DOWN){ // Fake Rate Down
               float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys < 0.0 ? etaSys : 0.0;
               float statSys  = getRelStatError(lep, rate_type, region);
@@ -470,18 +471,18 @@ float susy::fake::DiLeptonMatrixMethod::getRateSyst(
 //                                    + m_el_datamc*m_el_datamc
 //                                    + m_el_region*m_el_region);
           }
-          if( syst == SYS_EL_HFLF_UP )   return +m_el_HFLFerr; // HF/LF error
-          if( syst == SYS_EL_HFLF_DOWN ) return -m_el_HFLFerr;
-          if( syst == SYS_EL_ETA ) return m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-          if( syst == SYS_EL_FR_STAT_UP )   return +1.0*getRelStatError(lep, rate_type, region); // Statistical error from maps
-          if( syst == SYS_EL_FR_STAT_DOWN ) return -1.0*getRelStatError(lep, rate_type, region);
-          if( syst == SYS_EL_DATAMC_UP )   return +m_el_datamc; // Data/MC error
-          if( syst == SYS_EL_DATAMC_DOWN ) return -m_el_datamc;
-          if( syst == SYS_EL_REG_UP )   return +m_el_region; // Error from combinatino
-          if( syst == SYS_EL_REG_DOWN ) return -m_el_region;
+          if( syst == Systematic::SYS_EL_HFLF_UP )   return +m_el_HFLFerr; // HF/LF error
+          if( syst == Systematic::SYS_EL_HFLF_DOWN ) return -m_el_HFLFerr;
+          if( syst == Systematic::SYS_EL_ETA ) return m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
+          if( syst == Systematic::SYS_EL_FR_STAT_UP )   return +1.0*getRelStatError(lep, rate_type, region); // Statistical error from maps
+          if( syst == Systematic::SYS_EL_FR_STAT_DOWN ) return -1.0*getRelStatError(lep, rate_type, region);
+          if( syst == Systematic::SYS_EL_DATAMC_UP )   return +m_el_datamc; // Data/MC error
+          if( syst == Systematic::SYS_EL_DATAMC_DOWN ) return -m_el_datamc;
+          if( syst == Systematic::SYS_EL_REG_UP )   return +m_el_region; // Error from combinatino
+          if( syst == Systematic::SYS_EL_REG_DOWN ) return -m_el_region;
           return 0.;
       } else { // end electron
-          if( syst == SYS_MU_FR_UP ){ // Fake Rate Up
+          if( syst == Systematic::SYS_MU_FR_UP ){ // Fake Rate Up
               float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys > 0.0 ? etaSys : 0.0;
               float statSys  = getRelStatError(lep, rate_type, region);
@@ -491,7 +492,7 @@ float susy::fake::DiLeptonMatrixMethod::getRateSyst(
 //                            + m_mu_datamc*m_mu_datamc
 //                            + m_mu_region*m_mu_region);
           }
-          if( syst == SYS_MU_FR_DOWN){ // Fake Rate Down
+          if( syst == Systematic::SYS_MU_FR_DOWN){ // Fake Rate Down
               float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys < 0.0 ? etaSys : 0.0;
               float statSys  = getRelStatError(lep, rate_type, region);
@@ -501,13 +502,13 @@ float susy::fake::DiLeptonMatrixMethod::getRateSyst(
 //                                     + m_mu_datamc*m_mu_datamc
 //                                     + m_mu_region*m_mu_region);
           }
-          if( syst == SYS_MU_ETA ) return m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-          if( syst == SYS_MU_FR_STAT_UP )   return getRelStatError(lep, rate_type, region); // Statistical error from maps
-          if( syst == SYS_MU_FR_STAT_DOWN ) return (-1) * getRelStatError(lep, rate_type, region);
-          if( syst == SYS_MU_DATAMC_UP )   return m_mu_datamc; // Data/MC error
-          if( syst == SYS_MU_DATAMC_DOWN ) return -m_mu_datamc;
-          if( syst == SYS_MU_REG_UP )   return m_mu_region; // Error from combination
-          if( syst == SYS_MU_REG_DOWN ) return -m_mu_region;
+          if( syst == Systematic::SYS_MU_ETA ) return m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
+          if( syst == Systematic::SYS_MU_FR_STAT_UP )   return getRelStatError(lep, rate_type, region); // Statistical error from maps
+          if( syst == Systematic::SYS_MU_FR_STAT_DOWN ) return (-1) * getRelStatError(lep, rate_type, region);
+          if( syst == Systematic::SYS_MU_DATAMC_UP )   return m_mu_datamc; // Data/MC error
+          if( syst == Systematic::SYS_MU_DATAMC_DOWN ) return -m_mu_datamc;
+          if( syst == Systematic::SYS_MU_REG_UP )   return m_mu_region; // Error from combination
+          if( syst == Systematic::SYS_MU_REG_DOWN ) return -m_mu_region;
           return 0.;
       }// end muon
   }// end fake
@@ -630,7 +631,7 @@ void susy::fake::DiLeptonMatrixMethod::printInfo(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     susy::fake::Region region, float MetRel,
-    SYSTEMATIC syst) const
+    susy::fake::Systematic::Value syst) const
 {
   float r1 = getRate(lep1, REAL, region, MetRel, syst);
   float r2 = getRate(lep2, REAL, region, MetRel, syst);
@@ -703,11 +704,6 @@ const TArrayD* DiLeptonMatrixMethod::getEtaBins() const
     return bins;
 }
 //----------------------------------------------------------
-std::string sys2str(const susy::fake::SYSTEMATIC s)
-{
-    return susy::fake::systematic_names[s];
-}
-//----------------------------------------------------------
 std::string lep2str(const susy::fake::MatrixLepton l)
 {
     std::ostringstream oss;
@@ -723,58 +719,58 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
     // this is a useless parameter, it should be dropped everywhere (DG, 2014-05-18 TODO)
     float dummyMetRel(20.0);
     bool isEl(l.isElectron());
-    float nomRate = getRate(l, rt, reg, dummyMetRel, SYS_NOM);
+    float nomRate = getRate(l, rt, reg, dummyMetRel, Systematic::SYS_NOM);
     float statSys = getStatError(l, rt, reg);
-    vector<SYSTEMATIC> syss;
+    vector<Systematic::Value> syss;
     cout<<lep2str(l)<<": "<<endl;
     cout<<"rate : "
-        <<sys2str(SYS_NOM)<<" : "<<nomRate
+        <<Systematic::str(Systematic::SYS_NOM)<<" : "<<nomRate
         <<" stat sys : "<<statSys
         <<endl;
     if(rt==REAL){
         if(isEl){
-            syss.push_back(SYS_EL_RE_UP   );
-            syss.push_back(SYS_EL_RE_DOWN );
+            syss.push_back(Systematic::SYS_EL_RE_UP   );
+            syss.push_back(Systematic::SYS_EL_RE_DOWN );
         } else {
-            syss.push_back(SYS_MU_RE_UP   );
-            syss.push_back(SYS_MU_RE_DOWN );
+            syss.push_back(Systematic::SYS_MU_RE_UP   );
+            syss.push_back(Systematic::SYS_MU_RE_DOWN );
         }
     } else if(rt==FAKE){
         if(isEl){
-            syss.push_back(SYS_EL_FR_UP       );
-            syss.push_back(SYS_EL_FR_DOWN     );
-            syss.push_back(SYS_EL_HFLF_UP     );
-            syss.push_back(SYS_EL_HFLF_DOWN   );
-            syss.push_back(SYS_EL_ETA         );
-            syss.push_back(SYS_EL_FR_STAT_UP  );
-            syss.push_back(SYS_EL_FR_STAT_DOWN);
-            syss.push_back(SYS_EL_DATAMC_UP   );
-            syss.push_back(SYS_EL_DATAMC_DOWN );
-            syss.push_back(SYS_EL_REG_UP      );
-            syss.push_back(SYS_EL_REG_DOWN    );
-            syss.push_back(SYS_EL_FRAC_UP     );
-            syss.push_back(SYS_EL_FRAC_DO     );
-            syss.push_back(SYS_MU_FRAC_UP     );
-            syss.push_back(SYS_MU_FRAC_DO     );
+            syss.push_back(Systematic::SYS_EL_FR_UP       );
+            syss.push_back(Systematic::SYS_EL_FR_DOWN     );
+            syss.push_back(Systematic::SYS_EL_HFLF_UP     );
+            syss.push_back(Systematic::SYS_EL_HFLF_DOWN   );
+            syss.push_back(Systematic::SYS_EL_ETA         );
+            syss.push_back(Systematic::SYS_EL_FR_STAT_UP  );
+            syss.push_back(Systematic::SYS_EL_FR_STAT_DOWN);
+            syss.push_back(Systematic::SYS_EL_DATAMC_UP   );
+            syss.push_back(Systematic::SYS_EL_DATAMC_DOWN );
+            syss.push_back(Systematic::SYS_EL_REG_UP      );
+            syss.push_back(Systematic::SYS_EL_REG_DOWN    );
+            syss.push_back(Systematic::SYS_EL_FRAC_UP     );
+            syss.push_back(Systematic::SYS_EL_FRAC_DO     );
+            syss.push_back(Systematic::SYS_MU_FRAC_UP     );
+            syss.push_back(Systematic::SYS_MU_FRAC_DO     );
         } else { // isEl
-            syss.push_back(SYS_MU_FR_UP        );
-            syss.push_back(SYS_MU_FR_DOWN      );
-            syss.push_back(SYS_MU_ETA          );
-            syss.push_back(SYS_MU_FR_STAT_UP   );
-            syss.push_back(SYS_MU_FR_STAT_DOWN );
-            syss.push_back(SYS_MU_DATAMC_UP    );
-            syss.push_back(SYS_MU_DATAMC_DOWN  );
-            syss.push_back(SYS_MU_REG_UP       );
-            syss.push_back(SYS_MU_REG_DOWN     );
-            syss.push_back(SYS_EL_FRAC_UP      );
-            syss.push_back(SYS_EL_FRAC_DO      );
-            syss.push_back(SYS_MU_FRAC_UP      );
-            syss.push_back(SYS_MU_FRAC_DO      );
+            syss.push_back(Systematic::SYS_MU_FR_UP        );
+            syss.push_back(Systematic::SYS_MU_FR_DOWN      );
+            syss.push_back(Systematic::SYS_MU_ETA          );
+            syss.push_back(Systematic::SYS_MU_FR_STAT_UP   );
+            syss.push_back(Systematic::SYS_MU_FR_STAT_DOWN );
+            syss.push_back(Systematic::SYS_MU_DATAMC_UP    );
+            syss.push_back(Systematic::SYS_MU_DATAMC_DOWN  );
+            syss.push_back(Systematic::SYS_MU_REG_UP       );
+            syss.push_back(Systematic::SYS_MU_REG_DOWN     );
+            syss.push_back(Systematic::SYS_EL_FRAC_UP      );
+            syss.push_back(Systematic::SYS_EL_FRAC_DO      );
+            syss.push_back(Systematic::SYS_MU_FRAC_UP      );
+            syss.push_back(Systematic::SYS_MU_FRAC_DO      );
         } // end isMu
     } // end isFake
     cout<<" fractional variations : ";
     for(size_t s=0; s<syss.size(); ++s)
-        cout<<sys2str(syss[s])<<" : "<<getRateSyst(l, rt, reg, dummyMetRel, syss[s])<<" ";
+        cout<<Systematic::str(syss[s])<<" : "<<getRateSyst(l, rt, reg, dummyMetRel, syss[s])<<" ";
     cout<<endl;
 }
 //----------------------------------------------------------
@@ -811,23 +807,23 @@ const TAxis* DiLeptonMatrixMethod::getEtaAxis() const
 float susy::fake::DiLeptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
                                                                    RATE_TYPE rt,
                                                                    susy::fake::Region region,
-                                                                   SYSTEMATIC syst) const
+                                                                   susy::fake::Systematic::Value syst) const
 {
     float relativeError=0.0;
     if(region==susy::fake::CR_SSInc1j){
         if(rt==FAKE &&
-           (syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO ||
-            syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO )){
+           (syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO ||
+            syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO )){
             bool isEl(lep.isElectron()), isMu(lep.isMuon());
-            bool isElSys(syst==SYS_EL_FRAC_UP || syst==SYS_EL_FRAC_DO);
-            bool isMuSys(syst==SYS_MU_FRAC_UP || syst==SYS_MU_FRAC_DO);
+            bool isElSys(syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO);
+            bool isMuSys(syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO);
             assert(isEl!=isMu);
             int iRegion(getIndexRegion(region));
             TH1* nomHisto = isEl ? m_el_fake_rate[iRegion] : m_mu_fake_rate[iRegion];
             TH1* sysHisto = NULL;
             if((isEl && isElSys) || (isMu && isMuSys)){
-                if(isEl) sysHisto = syst==SYS_EL_FRAC_UP ? m_el_frac_up : m_el_frac_do;
-                if(isMu) sysHisto = syst==SYS_MU_FRAC_UP ? m_mu_frac_up : m_mu_frac_do;
+                if(isEl) sysHisto = syst==Systematic::SYS_EL_FRAC_UP ? m_el_frac_up : m_el_frac_do;
+                if(isMu) sysHisto = syst==Systematic::SYS_MU_FRAC_UP ? m_mu_frac_up : m_mu_frac_do;
                 if(!nomHisto) cout<<"cannot get nom histo"<<endl;
                 if(!sysHisto) cout<<"cannot get sys histo"<<endl;
                 if(nomHisto&&sysHisto){

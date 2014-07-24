@@ -27,23 +27,26 @@ bool testParametrization(string filename, sf::Parametrization::Value rp)
         float l1Pt(25.0), l1Eta(-0.5);
         float metRel(20.0);
         sf::Region region = sf::CR_SSInc1j;
-        sf::SYSTEMATIC sys = sf::SYS_NOM;
+        sf::Systematic::Value sys = sf::Systematic::SYS_NOM;
+        sf::Systematic::Value sysUp = sf::Systematic::SYS_EL_FR_UP;  
+        sf::Systematic::Value sysDo = sf::Systematic::SYS_EL_FR_DOWN;
+      
         float weight = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                            l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
                                            region, metRel*gev2mev, sys);
         float weightUp = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                              l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             region, metRel*gev2mev, sf::SYS_EL_FR_UP);
+                                             region, metRel*gev2mev, sysUp);
         float weightDo = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                              l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             region, metRel*gev2mev, sf::SYS_EL_FR_DOWN);
+                                             region, metRel*gev2mev, sysDo);
         cout<<"weight for"
             <<" "<<sf::region2str(region)<<", "
-            <<" "<<sf::systematic_names[sys]
+            <<" "<<sf::Systematic::str(sys)
             <<" : "<<weight
-            <<" (SYS_EL_FR_UP "<<weightUp
+            <<" ("<<sf::Systematic::str(sysUp)<<" "<<weightUp
             <<", "
-            <<" SYS_EL_FR_DOWN "<<weightDo
+            <<" "<<sf::Systematic::str(sysDo)<<" "<<weightDo
             <<")"
             <<endl;
         success = true;

@@ -17,6 +17,7 @@
 #include "DileptonMatrixMethod/MatrixLepton.h"
 #include "DileptonMatrixMethod/FakeRegions.h"
 #include "DileptonMatrixMethod/Parametrization.h"
+#include "DileptonMatrixMethod/Systematic.h"
 
 class TFile;
 class TH1;
@@ -26,77 +27,7 @@ class TAxis;
 
 namespace susy{
 namespace fake{
-  enum SYSTEMATIC { SYS_NOM    = 0
-                  , SYS_EL_RE_UP
-                  , SYS_EL_RE_DOWN
-                  , SYS_EL_FR_UP
-                  , SYS_EL_FR_DOWN
-                  , SYS_MU_RE_UP
-                  , SYS_MU_RE_DOWN
-                  , SYS_MU_FR_UP
-                  , SYS_MU_FR_DOWN
-                  , SYS_N_USER
-		  , SYS_EL_DATAMC_UP    // Take into account data/mc differences in rates
-		  , SYS_EL_DATAMC_DOWN  // Take into account data/mc differences in rates
-		  , SYS_MU_DATAMC_UP    // Take into account data/mc differences in rates
-		  , SYS_MU_DATAMC_DOWN  // Take into account data/mc differences in rates
-		    //, SYS_EL_METREL       // Any metrel dep
-		    //, SYS_MU_METREL       // Any metrel dep
-		  , SYS_EL_FR_STAT_UP   // Stat error up
-		  , SYS_EL_FR_STAT_DOWN // Stat error down
-		  , SYS_MU_FR_STAT_UP   // Stat error up
-		  , SYS_MU_FR_STAT_DOWN // Stat error down
-		  , SYS_EL_ETA          // Any eta dep
-		  , SYS_MU_ETA          // Any eta dep
-                  , SYS_EL_HFLF_UP      // Needed for HF/LF diff for elec
-                  , SYS_EL_HFLF_DOWN    // Needed for HF/LF diff for elec
-		  , SYS_EL_REG_UP       // Error from percentage in weighted avg
-		  , SYS_EL_REG_DOWN     // Error from percentage in weighted avg
-		  , SYS_MU_REG_UP       // Error from percentage in weighted avg
-		  , SYS_MU_REG_DOWN     // Error from percentage in weighted avg
-                    ,SYS_EL_FRAC_UP
-                    ,SYS_EL_FRAC_DO
-                    ,SYS_MU_FRAC_UP
-                    ,SYS_MU_FRAC_DO
-                  , SYS_N
-                  };
-
-  static std::string systematic_names[] = { "NOM"
-                                         , "EL_RE_UP"
-                                         , "EL_RE_DOWN"
-                                         , "EL_FR_UP"
-                                         , "EL_FR_DOWN"
-                                         , "MU_RE_UP"
-                                         , "MU_RE_DOWN"
-                                         , "MU_FR_UP"
-                                         , "MU_FR_DOWN"
-					 , "SYS_N_USER"
-				         , "EL_DATAMC_UP"
-				         , "EL_DATAMC_DOWN"
-				         , "MU_DATAMC_UP"
-				         , "MU_DATAMC_DOWN"
-					    //, "EL_METREL"
-					    //, "MU_METREL"
-                                         , "EL_FR_STAT_UP"
-                                         , "EL_FR_STAT_DOWN"
-                                         , "MU_FR_STAT_UP"
-                                         , "MU_FR_STAT_DOWN"
-                                         , "EL_ETA"
-                                         , "MU_ETA"
-                                         , "EL_HFLF_UP"
-					 , "EL_HFLF_DOWN"
-					 , "EL_REG_UP"
-				         , "EL_REG_DOWN"
-				         , "MU_REG_UP"
-				         , "MU_REG_DOWN"
-                    ,"EL_FRAC_UP"
-                    ,"EL_FRAC_DO"
-                    ,"MU_FRAC_UP"
-                    ,"MU_FRAC_DO"
-                                         , "SYS_N"
-                                         };
-
-  class DiLeptonMatrixMethod
+class DiLeptonMatrixMethod
   {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     public:
@@ -129,7 +60,7 @@ namespace fake{
                         , bool isTight2, bool isElectron2, float pt2, float eta2
                         , susy::fake::Region region
                         , float MetRel
-                        , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                         ) const;
 
       /**
@@ -139,7 +70,7 @@ namespace fake{
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                 , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
 
       /**
@@ -149,7 +80,7 @@ namespace fake{
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
 
       /**
@@ -159,7 +90,7 @@ namespace fake{
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
 
       /**
@@ -169,7 +100,7 @@ namespace fake{
                  , bool isTight2, bool isElectron2, float pt2, float eta2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
       //! given a region, determine the internal index used to store its histograms; abort if invalid
       static int getIndexRegion(susy::fake::Region region);
@@ -188,7 +119,7 @@ namespace fake{
                    , RATE_TYPE rate_type
                    , susy::fake::Region region
                    , float MetRel
-                   , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                    ) const;
 
       const TArrayD* getPtBins() const;
@@ -204,13 +135,13 @@ namespace fake{
                    , RATE_TYPE
                    , susy::fake::Region region
                    , float MetRel
-                   , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                    ) const;
       float getRateSyst( const MatrixLepton&
                        , RATE_TYPE
            , susy::fake::Region region
                        , float MetRel
-                       , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                        ) const;
 
       int getRateBin( const MatrixLepton& lep,
@@ -223,31 +154,31 @@ namespace fake{
                         , const MatrixLepton& lep2
                         , susy::fake::Region region
                         , float MetRel
-                        , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                         ) const;
       float getRR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
       float getRF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
       float getFR( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
       float getFF( const MatrixLepton& lep1
                  , const MatrixLepton& lep2
                  , susy::fake::Region region
                  , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                  ) const;
 
       // Additional methods needed for systematics
@@ -265,7 +196,7 @@ namespace fake{
                     , const MatrixLepton& lep2
                     , susy::fake::Region region
                     , float MetRel
-                    , SYSTEMATIC syst = SYS_NOM
+                        , susy::fake::Systematic::Value syst = susy::fake::Systematic::SYS_NOM
                     ) const;
 
       // Get systematic value from file -- for internal use
@@ -279,7 +210,8 @@ namespace fake{
                                       const RATE_TYPE &rt,
                                       TH1* &h,
                                       susy::fake::Parametrization::Value &rp) const;
-      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region, SYSTEMATIC syst) const;
+      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region, 
+                                 susy::fake::Systematic::Value syst) const;
 
       // Histograms which hold the real efficiency and fake rates for leptons
       TFile* m_hist_file;
