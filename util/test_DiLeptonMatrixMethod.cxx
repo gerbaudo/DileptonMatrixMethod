@@ -15,7 +15,7 @@ using namespace std;
 namespace sf = susy::fake;
 
 //----------------------------------------------------------
-bool testParametrization(string filename, sf::RATE_PARAM rp)
+bool testParametrization(string filename, sf::Parametrization::Value rp)
 {
     bool success = false;
     sf::DiLeptonMatrixMethod matrix;
@@ -59,10 +59,10 @@ int main(int argc, char **argv)
   size_t nFail=0;
 
   cout<<endl<<" --- test 1D parametrization (pt)     ---"<<endl;
-  if(!testParametrization(inputFilename, sf::PT))
+  if(!testParametrization(inputFilename, sf::Parametrization::PT))
       nFail++;
   cout<<endl<<" --- test 2D parametrization (pt eta) ---"<<endl;
-  if(!testParametrization(inputFilename, sf::PT_ETA))
+  if(!testParametrization(inputFilename, sf::Parametrization::PT_ETA))
       nFail++;
   cout<<endl<<" --- Number of failures: "<<nFail<<" --- "<<endl;
   return 0;

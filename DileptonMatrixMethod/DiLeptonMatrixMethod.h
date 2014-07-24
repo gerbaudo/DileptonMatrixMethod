@@ -16,6 +16,7 @@
 
 #include "DileptonMatrixMethod/MatrixLepton.h"
 #include "DileptonMatrixMethod/FakeRegions.h"
+#include "DileptonMatrixMethod/Parametrization.h"
 
 class TFile;
 class TH1;
@@ -25,10 +26,6 @@ class TAxis;
 
 namespace susy{
 namespace fake{
-  enum RATE_PARAM { PT_ETA
-                  , PT
-                  };
-
   enum SYSTEMATIC { SYS_NOM    = 0
                   , SYS_EL_RE_UP
                   , SYS_EL_RE_DOWN
@@ -113,10 +110,10 @@ namespace fake{
        * congigure the tool with a histogram file
        */
       bool configure( std::string file_name
-                    , RATE_PARAM rate_param_real_el
-                    , RATE_PARAM rate_param_fake_el
-                    , RATE_PARAM rate_param_real_mu
-                    , RATE_PARAM rate_param_fake_mu
+                    , susy::fake::Parametrization::Value rate_param_real_el
+                    , susy::fake::Parametrization::Value rate_param_fake_el
+                    , susy::fake::Parametrization::Value rate_param_real_mu
+                    , susy::fake::Parametrization::Value rate_param_fake_mu
                     );
 
       /**
@@ -217,8 +214,8 @@ namespace fake{
                        ) const;
 
       int getRateBin( const MatrixLepton& lep,
-			TH1* h_rate,
-		      RATE_PARAM rate_param
+                      TH1* h_rate,
+                      susy::fake::Parametrization::Value rate_param
 			) const;
 
       // Get the fake/real contribution for this event -- for internal use
@@ -281,7 +278,7 @@ namespace fake{
                                       const susy::fake::Region reg,
                                       const RATE_TYPE &rt,
                                       TH1* &h,
-                                      RATE_PARAM &rp) const;
+                                      susy::fake::Parametrization::Value &rp) const;
       float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region, SYSTEMATIC syst) const;
 
       // Histograms which hold the real efficiency and fake rates for leptons
@@ -313,11 +310,11 @@ namespace fake{
       double m_el_HFLFerr;
 
       // rate parameterization that describes how the rates are binned
-      //RATE_PARAM m_rate_param;
-      RATE_PARAM m_rate_param_real_el;
-      RATE_PARAM m_rate_param_fake_el;
-      RATE_PARAM m_rate_param_real_mu;
-      RATE_PARAM m_rate_param_fake_mu;
+      //Parametrization::Value m_rate_param;
+      Parametrization::Value m_rate_param_real_el;
+      Parametrization::Value m_rate_param_fake_el;
+      Parametrization::Value m_rate_param_real_mu;
+      Parametrization::Value m_rate_param_fake_mu;
   };
 } // fake
 } // susy

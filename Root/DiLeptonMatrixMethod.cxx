@@ -15,6 +15,7 @@
 #include <sstream>
 
 using susy::fake::DiLeptonMatrixMethod;
+using susy::fake::Parametrization;
 
 // -----------------------------------------------------------------------------
 susy::fake::DiLeptonMatrixMethod::DiLeptonMatrixMethod():
@@ -51,10 +52,10 @@ susy::fake::DiLeptonMatrixMethod::~DiLeptonMatrixMethod()
 
 // -----------------------------------------------------------------------------
 bool susy::fake::DiLeptonMatrixMethod::configure( std::string file_name
-                                                      , RATE_PARAM rate_param_real_el
-                                                      , RATE_PARAM rate_param_fake_el
-                                                      , RATE_PARAM rate_param_real_mu
-                                                      , RATE_PARAM rate_param_fake_mu
+                                                      , Parametrization::Value rate_param_real_el
+                                                      , Parametrization::Value rate_param_fake_el
+                                                      , Parametrization::Value rate_param_real_mu
+                                                      , Parametrization::Value rate_param_fake_mu
                                                       )
 {
   // store the rate parameterization and systematic
@@ -86,10 +87,10 @@ bool susy::fake::DiLeptonMatrixMethod::configure( std::string file_name
       cout<<"DiLeptonMatrixMethod::configure: mixed parametrization not implemented"<<endl;
       return false;
   }
-  const RATE_PARAM rp = rate_param_real_el;
+  const Parametrization::Value rp = rate_param_real_el;
   std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
   std::string s_mu_real("mu_real_eff_"), s_mu_fake("mu_fake_rate_");
-  if(rp==PT_ETA) { // todo: use string replacement (eff->eff2d, rate->rate2d)
+  if(rp==Parametrization::PT_ETA) { // todo: use string replacement (eff->eff2d, rate->rate2d)
       s_el_real = "el_real_eff2d_"; s_el_fake = "el_fake_rate2d_";
       s_mu_real = "mu_real_eff2d_"; s_mu_fake = "mu_fake_rate2d_";
   }
@@ -328,7 +329,7 @@ float susy::fake::DiLeptonMatrixMethod::getRate(
 bool susy::fake::DiLeptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
                                                                         const susy::fake::Region reg,
                                                                         const RATE_TYPE &rt,
-                                                                        TH1* &h, RATE_PARAM &rp) const
+                                                                        TH1* &h, Parametrization::Value &rp) const
 {
     bool found=false;
     int iRegion(getIndexRegion(reg));
@@ -365,7 +366,7 @@ float susy::fake::DiLeptonMatrixMethod::getRate(
 {
     float rate = 0.0;
     TH1* h_rate = NULL;
-    RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
+    Parametrization::Value rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
     if(getHistoAndParametrization(lep, region, rate_type, h_rate, rate_param)) {
         int rate_bin = getRateBin(lep, h_rate, rate_param);
         rate = h_rate->GetBinContent(rate_bin);
@@ -381,10 +382,10 @@ float susy::fake::DiLeptonMatrixMethod::getRate(
 // -----------------------------------------------------------------------------
 int susy::fake::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
 							TH1* h_rate,
-							RATE_PARAM rate_param) const
+							Parametrization::Value rate_param) const
 {
   // Handle 2-D param
-  if( rate_param == PT_ETA ){
+    if( rate_param == Parametrization::PT_ETA ){
     int max_bin_x = h_rate->GetXaxis()->GetNbins();
     float max_x   = h_rate->GetXaxis()->GetBinCenter(max_bin_x);
     int max_bin_y = h_rate->GetYaxis()->GetNbins();
@@ -403,7 +404,7 @@ int susy::fake::DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
   }
 
   // Handle 1-D param
-  if( rate_param == PT ){
+    if( rate_param == Parametrization::PT ){
     int max_bin_x = h_rate->GetXaxis()->GetNbins();
     float max_x   = h_rate->GetXaxis()->GetBinCenter(max_bin_x);
 
@@ -602,7 +603,7 @@ float susy::fake::DiLeptonMatrixMethod::getStatError(const MatrixLepton& lep
 {
     float error = 0.0;
     TH1* h_rate = NULL;
-    RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
+    Parametrization::Value rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
     if(getHistoAndParametrization(lep, region, rate_type, h_rate, rate_param)) {
         int rate_bin = getRateBin(lep, h_rate, rate_param);
         error = h_rate->GetBinError(rate_bin);
@@ -614,7 +615,7 @@ float susy::fake::DiLeptonMatrixMethod::getRelStatError(const MatrixLepton &lep,
 {
     float rate(0.0), error(0.0), relativeError(0.0);
     TH1* h_rate = NULL;
-    RATE_PARAM rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
+    Parametrization::Value rate_param = m_rate_param_real_el; // all 4 must be the same; checked at configuration (DG todo improve this)
     if(getHistoAndParametrization(lep, region, rt, h_rate, rate_param)) {
         int rate_bin = getRateBin(lep, h_rate, rate_param);
         rate = h_rate->GetBinContent(rate_bin);
@@ -780,7 +781,7 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
 const TH1* DiLeptonMatrixMethod::getFirstPtEtaHisto() const
 {
     const TH1 *first2dhisto=0;
-    if(m_rate_param_fake_el==PT_ETA){
+    if(m_rate_param_fake_el==Parametrization::PT_ETA){
         if(susy::fake::NumberOfSignalRegions>0) first2dhisto = m_el_fake_rate[0];
         else cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto: error, need at least one signal region"<<endl;
     } else {
@@ -830,8 +831,8 @@ float susy::fake::DiLeptonMatrixMethod::getFracRelativeError(const MatrixLepton 
                 if(!nomHisto) cout<<"cannot get nom histo"<<endl;
                 if(!sysHisto) cout<<"cannot get sys histo"<<endl;
                 if(nomHisto&&sysHisto){
-                    int nomBin = getRateBin(lep, nomHisto, PT_ETA); // TODO : assert rate_param is pt_eta [DG 2014]
-                    int sysBin = getRateBin(lep, sysHisto, PT_ETA);
+                    int nomBin = getRateBin(lep, nomHisto, Parametrization::PT_ETA); // TODO : assert rate_param is pt_eta [DG 2014]
+                    int sysBin = getRateBin(lep, sysHisto, Parametrization::PT_ETA);
                     float nom = nomHisto->GetBinContent(nomBin);
                     float sys = sysHisto->GetBinContent(sysBin);
                     if(nom) relativeError=(sys-nom)/nom;

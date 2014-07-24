@@ -10,6 +10,7 @@
 
 
 #include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
+#include "DileptonMatrixMethod/Parametrization.h"
 #include "DileptonMatrixMethod/FakeRegions.h"
 #include "TRandom3.h"
 
@@ -23,10 +24,10 @@ namespace fake{
     
   public:
     StatErrorTool(std::string fakeFile, 
-		  susy::fake::RATE_PARAM rate_param_real_el,
-		  susy::fake::RATE_PARAM rate_param_fake_el,
-		  susy::fake::RATE_PARAM rate_param_real_mu,
-		  susy::fake::RATE_PARAM rate_param_fake_mu
+		  susy::fake::Parametrization::Value rate_param_real_el,
+		  susy::fake::Parametrization::Value rate_param_fake_el,
+		  susy::fake::Parametrization::Value rate_param_real_mu,
+		  susy::fake::Parametrization::Value rate_param_fake_mu
 		  );
     ~StatErrorTool();
     

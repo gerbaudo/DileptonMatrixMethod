@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   
   bool isEl(false), isMu(false);
 
-  const sf::RATE_PARAM rp = sf::PT_ETA;
+  const sf::Parametrization::Value rp = sf::Parametrization::PT_ETA;
   sf::DiLeptonMatrixMethod matrix;
   if(matrix.configure(inputFilename, rp, rp, rp, rp)) {
       cout<<endl<<" --- Fake systematic uncertainties --- "<<endl;
