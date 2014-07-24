@@ -13,9 +13,12 @@
 
 using namespace std;
 namespace sf = susy::fake;
+using sf::Parametrization;
+using sf::Region;
+using sf::Systematic;
 
 //----------------------------------------------------------
-bool testParametrization(string filename, sf::Parametrization::Value rp)
+bool testParametrization(string filename, Parametrization::Value rp)
 {
     bool success = false;
     sf::DiLeptonMatrixMethod matrix;
@@ -26,10 +29,10 @@ bool testParametrization(string filename, sf::Parametrization::Value rp)
         float l0Pt(30.0), l0Eta(+0.5);
         float l1Pt(25.0), l1Eta(-0.5);
         float metRel(20.0);
-        sf::Region region = sf::CR_SSInc1j;
-        sf::Systematic::Value sys = sf::Systematic::SYS_NOM;
-        sf::Systematic::Value sysUp = sf::Systematic::SYS_EL_FR_UP;  
-        sf::Systematic::Value sysDo = sf::Systematic::SYS_EL_FR_DOWN;
+        Region region = sf::CR_SSInc1j;
+        Systematic::Value sys = Systematic::SYS_NOM;
+        Systematic::Value sysUp = Systematic::SYS_EL_FR_UP;  
+        Systematic::Value sysDo = Systematic::SYS_EL_FR_DOWN;
       
         float weight = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                            l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
@@ -42,11 +45,11 @@ bool testParametrization(string filename, sf::Parametrization::Value rp)
                                              region, metRel*gev2mev, sysDo);
         cout<<"weight for"
             <<" "<<sf::region2str(region)<<", "
-            <<" "<<sf::Systematic::str(sys)
+            <<" "<<Systematic::str(sys)
             <<" : "<<weight
-            <<" ("<<sf::Systematic::str(sysUp)<<" "<<weightUp
+            <<" ("<<Systematic::str(sysUp)<<" "<<weightUp
             <<", "
-            <<" "<<sf::Systematic::str(sysDo)<<" "<<weightDo
+            <<" "<<Systematic::str(sysDo)<<" "<<weightDo
             <<")"
             <<endl;
         success = true;
@@ -62,10 +65,10 @@ int main(int argc, char **argv)
   size_t nFail=0;
 
   cout<<endl<<" --- test 1D parametrization (pt)     ---"<<endl;
-  if(!testParametrization(inputFilename, sf::Parametrization::PT))
+  if(!testParametrization(inputFilename, Parametrization::PT))
       nFail++;
   cout<<endl<<" --- test 2D parametrization (pt eta) ---"<<endl;
-  if(!testParametrization(inputFilename, sf::Parametrization::PT_ETA))
+  if(!testParametrization(inputFilename, Parametrization::PT_ETA))
       nFail++;
   cout<<endl<<" --- Number of failures: "<<nFail<<" --- "<<endl;
   return 0;
