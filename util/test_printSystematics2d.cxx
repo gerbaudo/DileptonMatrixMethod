@@ -46,33 +46,14 @@ void printSystematics(sf::DiLeptonMatrixMethod & matrix, bool isEl, bool isMu)
     cout<<endl;
     bool isTight(false), isElectron(true);
     float gev2mev(1.0e3); // the matrix is stored in GeV, but the inputs are supposed to be in MeV...how nice
+    const std::string regionName = "CR_SSInc1j";
     for(size_t i=0; i<ptBins.size(); ++i)
         for(size_t j=0; j<etaBins.size(); ++j){
             float pt(ptBins[i]), eta(etaBins[j]);
             sf::MatrixLepton l(isTight, isElectron, pt*gev2mev, eta);
             sf::DiLeptonMatrixMethod::RATE_TYPE rt = sf::DiLeptonMatrixMethod::FAKE;
-            sf::Region reg = sf::CR_SSInc1j;
-            matrix.printRateSystematics(l, rt, reg);
+            matrix.printRateSystematics(l, rt, matrix.getIndexRegion(regionName));
         }
-/*
-        float gev2mev(1.0e3);
-        bool l0IsSig(true), l0IsEle(false);
-        bool l1IsSig(false), l1IsEle(true);
-        float l0Pt(30.0), l0Eta(+0.5);
-        float l1Pt(25.0), l1Eta(-0.5);
-        float dummyMetRel(20.0);
-        sf::Region region = sf::CR_SSInc1j;
-        sf::SYSTEMATIC sys = sf::SYS_NOM;
-        float weight = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
-                                           l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                           region, metRel*gev2mev, sys);
-        cout<<"weight for"
-            <<" "<<sf::region2str(region)<<", "
-            <<" "<<sf::systematic_names[sys]
-            <<" : "<<weight
-            <<endl;
-        success = true;
-*/
 }
 //----------------------------------------------------------
 int main(int argc, char **argv)
@@ -83,8 +64,10 @@ int main(int argc, char **argv)
   bool isEl(false), isMu(false);
 
   const sf::Parametrization::Value rp = sf::Parametrization::PT_ETA;
+  std::vector<std::string> regions;
+  regions.push_back("CR_SSInc1j");
   sf::DiLeptonMatrixMethod matrix;
-  if(matrix.configure(inputFilename, rp, rp, rp, rp)) {
+  if(matrix.configure(inputFilename, regions, rp, rp, rp, rp)) {
       cout<<endl<<" --- Fake systematic uncertainties --- "<<endl;
 
       cout<<endl<<" --- Fake electron  --- "<<endl;

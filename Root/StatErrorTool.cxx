@@ -3,6 +3,9 @@
 
 #include "TH1.h"
 
+#include <iostream>
+#include <math.h>
+
 using namespace susy::fake;
 using susy::fake::Parametrization;
 
@@ -26,6 +29,7 @@ StatErrorTool::StatErrorTool(std::string fakeFile,
   rand = new TRandom3();
 
   // Load the rates
+/* TODO
   configure(fakeFile, 
 	    rate_param_real_el,
 	    rate_param_fake_el,
@@ -33,7 +37,7 @@ StatErrorTool::StatErrorTool(std::string fakeFile,
 	    rate_param_fake_mu
 	    ); 
   loadRates();
-  
+*/  
 }
 
 //---------------------------------------------------------------//  

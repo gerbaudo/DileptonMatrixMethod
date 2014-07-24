@@ -9,15 +9,13 @@
  * Class to perform the matrix method fake estimate
  */
 
-#include <iostream>
-#include <map>
-#include <math.h>
-#include <string>
 
 #include "DileptonMatrixMethod/MatrixLepton.h"
-#include "DileptonMatrixMethod/FakeRegions.h"
 #include "DileptonMatrixMethod/Parametrization.h"
 #include "DileptonMatrixMethod/Systematic.h"
+
+#include <vector>
+#include <string>
 
 class TFile;
 class TH1;
@@ -32,57 +30,59 @@ class DiLeptonMatrixMethod
     public:
       DiLeptonMatrixMethod();
       ~DiLeptonMatrixMethod();
-
+      /// maximum number of configurable selection regions
+      static const size_t kNmaxRegions=64;
       /// configure the tool with a histogram file
-      bool configure(std::string file_name,
-                     Parametrization::Value rate_param_real_el,
-                     Parametrization::Value rate_param_fake_el,
-                     Parametrization::Value rate_param_real_mu,
-                     Parametrization::Value rate_param_fake_mu);
-
+      /**
+         Find the necessary histograms for the requested
+         regions, and store them in the internal pointers. If you are
+         requesting signal regions for which the histograms are not
+         there in the input file, the tool will warn you.
+      */
+      bool configure(const std::string &file_name,
+                     const std::vector<std::string> &region_names,
+                     Parametrization::Value real_el,
+                     Parametrization::Value fake_el,
+                     Parametrization::Value real_mu,
+                     Parametrization::Value fake_mu);
       /// Get the total fake contribution for this event -- called by the user
-      float getTotalFake( bool isTight1, bool isElectron1, float pt1, float eta1
-                        , bool isTight2, bool isElectron2, float pt2, float eta2
-                        , Region region
-                        , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                        ) const;
+      float getTotalFake(bool isTight1, bool isElectron1, float pt1, float eta1,
+                         bool isTight2, bool isElectron2, float pt2, float eta2,
+                         const size_t regionIndex,
+                         float MetRel,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
 
       /// Get the RR contribution for this event -- called by the user
-      float getRR( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , Region region
-                 , float MetRel
-                 , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
+      float getRR(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
       /// Get the RF contribution for this event -- called by the user
-      float getRF( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , Region region
-                 , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
+      float getRF(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
       /**
        * Get the FR contribution for this event -- called by the user
        */
-      float getFR( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , Region region
-                 , float MetRel
-                 , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
+      float getFR(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
       /// Get the FF contribution for this event -- called by the user
-      float getFF( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , Region region
-                 , float MetRel
-                 , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
+      float getFF(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
       /// given a region, determine the internal index used to store its histograms; abort if invalid
-      static int getIndexRegion(Region region);
+      size_t getIndexRegion(const std::string &regionName) const;
 
       enum RATE_TYPE { REAL
                      , FAKE
@@ -92,77 +92,68 @@ class DiLeptonMatrixMethod
       /**
          Specific rate depends on type of lepton supplied and the RATE_TYPE parameter
       */
-      float getRate( bool isTight
-                   , bool isElectron
-                   , float pt
-                   , float eta
-                   , RATE_TYPE rate_type
-                   , Region region
-                   , float MetRel
-                   , Systematic::Value syst = Systematic::SYS_NOM
-                   ) const;
+      float getRate(bool isTight,
+                    bool isElectron,
+                    float pt,
+                    float eta,
+                    RATE_TYPE rate_type,                     
+                    size_t regionIndex,
+                    float MetRel,
+                    Systematic::Value syst = Systematic::SYS_NOM) const;
 
       const TArrayD* getPtBins() const;
       const TArrayD* getEtaBins() const;
-      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, Region &r) const;
+      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, size_t regionIndex) const;
   protected:
       // Get the rate for this lepton -- real/fake for electron or muon
       // Specific rate depends on type of lepton supplied and the
       // RATE_TYPE parameter
       // for internal use
-      float getRate( const MatrixLepton&
-                   , RATE_TYPE
-                   , Region region
-                   , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                   ) const;
-      float getRateSyst( const MatrixLepton&
-                       , RATE_TYPE
-           , Region region
-                       , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                       ) const;
+      float getRate(const MatrixLepton&,
+                    RATE_TYPE,
+                    size_t regionIndex,
+                    float MetRel,
+                    Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getRateSyst(const MatrixLepton&,
+                        RATE_TYPE,
+                        size_t regionIndex,
+                        float MetRel,
+                        Systematic::Value syst = Systematic::SYS_NOM) const;
 
-      int getRateBin( const MatrixLepton& lep,
-                      TH1* h_rate,
-                      Parametrization::Value rate_param
-			) const;
+      int getRateBin(const MatrixLepton& lep,
+                     TH1* h_rate,
+                     Parametrization::Value rate_param) const;
 
       // Get the fake/real contribution for this event -- for internal use
-      float getTotalFake( const MatrixLepton& lep1
-                        , const MatrixLepton& lep2
-                        , Region region
-                        , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                        ) const;
-      float getRR( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , Region region
-                 , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
-      float getRF( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , Region region
-                 , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
-      float getFR( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , Region region
-                 , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
-      float getFF( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , Region region
-                 , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                 ) const;
+      float getTotalFake(const MatrixLepton& lep1,
+                         const MatrixLepton& lep2,
+                         size_t regionIndex,
+                         float MetRel,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getRR(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getRF(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getFR(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getFF(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, Region) const;
-      float getRelStatError(const MatrixLepton&, RATE_TYPE, Region) const;
+      float getStatError(const MatrixLepton&, RATE_TYPE, size_t regionIndex) const;
+      float getRelStatError(const MatrixLepton&, RATE_TYPE, size_t regionIndex) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
       int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
@@ -171,33 +162,35 @@ class DiLeptonMatrixMethod
       int getLL(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
 
       // Verbose output
-      void printInfo( const MatrixLepton& lep1
-                    , const MatrixLepton& lep2
-                    , Region region
-                    , float MetRel
-                        , Systematic::Value syst = Systematic::SYS_NOM
-                    ) const;
-
-      // Get systematic value from file -- for internal use
-      void loadSysFromFile();
+      void printInfo(const MatrixLepton& lep1,
+                     const MatrixLepton& lep2,
+                     size_t regionIndex,
+                     float MetRel,
+                     Systematic::Value syst = Systematic::SYS_NOM) const;
+      /// retrieve nominal histos and paramerers
+      bool loadNominalFromFile(const std::vector<std::string> &region_names);
+      /// Get systematic value from file -- for internal use
+      bool loadSysFromFile();
 
       const TH1* getFirstPtEtaHisto() const; /// get the first available pt_eta histo
       const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
       const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
       bool getHistoAndParametrization(const MatrixLepton &lep,
-                                      const Region reg,
+                                      const size_t regionIndex,
                                       const RATE_TYPE &rt,
                                       TH1* &h,
                                       Parametrization::Value &rp) const;
-      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, Region region, 
+      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, size_t regionIndex,
                                  Systematic::Value syst) const;
 
-      // Histograms which hold the real efficiency and fake rates for leptons
+      /// input file holding the real efficiency and fake rates for leptons
       TFile* m_hist_file;
-      TH1* m_el_real_eff [NumberOfSignalRegions];
-      TH1* m_el_fake_rate[NumberOfSignalRegions];
-      TH1* m_mu_real_eff [NumberOfSignalRegions];
-      TH1* m_mu_fake_rate[NumberOfSignalRegions];
+      /// names of the signal regions for which we can compute the fake weight
+      std::vector<std::string> m_signalRegions;
+      std::vector<TH1*> m_el_real_eff;
+      std::vector<TH1*> m_el_fake_rate;
+      std::vector<TH1*> m_mu_real_eff;
+      std::vector<TH1*> m_mu_fake_rate;
       TH1* m_el_frac_up;
       TH1* m_el_frac_do;
       TH1* m_mu_frac_up;
@@ -214,10 +207,10 @@ class DiLeptonMatrixMethod
       double m_mu_datamc;
       double m_el_region;
       double m_mu_region;
-      TH1F* m_el_metrel;
-      TH1F* m_mu_metrel;
-      TH1F* m_el_eta;
-      TH1F* m_mu_eta;
+      TH1* m_el_metrel;   ///< Parameterized vs Met Rel for syst (obsolete?)
+      TH1* m_mu_metrel;
+      TH1* m_el_eta;     ///< Parameterized vs Eta for syst (obsolete?)
+      TH1* m_mu_eta;
       double m_el_HFLFerr;
 
       // rate parameterization that describes how the rates are binned

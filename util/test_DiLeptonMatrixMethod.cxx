@@ -14,7 +14,6 @@
 using namespace std;
 namespace sf = susy::fake;
 using sf::Parametrization;
-using sf::Region;
 using sf::Systematic;
 
 //----------------------------------------------------------
@@ -22,29 +21,32 @@ bool testParametrization(string filename, Parametrization::Value rp)
 {
     bool success = false;
     sf::DiLeptonMatrixMethod matrix;
-    if(matrix.configure(filename, rp, rp, rp, rp)) {
+    std::vector<std::string> regions;
+    const std::string regionName = "CR_SSInc1j";
+    regions.push_back(regionName);
+    if(matrix.configure(filename, regions, rp, rp, rp, rp)) {
         float gev2mev(1.0e3);
         bool l0IsSig(true), l0IsEle(false);
         bool l1IsSig(false), l1IsEle(true);
         float l0Pt(30.0), l0Eta(+0.5);
         float l1Pt(25.0), l1Eta(-0.5);
         float metRel(20.0);
-        Region region = sf::CR_SSInc1j;
+        size_t iRegion = matrix.getIndexRegion(regionName);
         Systematic::Value sys = Systematic::SYS_NOM;
-        Systematic::Value sysUp = Systematic::SYS_EL_FR_UP;  
+        Systematic::Value sysUp = Systematic::SYS_EL_FR_UP;
         Systematic::Value sysDo = Systematic::SYS_EL_FR_DOWN;
-      
+
         float weight = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                            l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                           region, metRel*gev2mev, sys);
+                                           iRegion, metRel*gev2mev, sys);
         float weightUp = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                              l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             region, metRel*gev2mev, sysUp);
+                                             iRegion, metRel*gev2mev, sysUp);
         float weightDo = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
                                              l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             region, metRel*gev2mev, sysDo);
+                                             iRegion, metRel*gev2mev, sysDo);
         cout<<"weight for"
-            <<" "<<sf::region2str(region)<<", "
+            <<" "<<regionName<<", "
             <<" "<<Systematic::str(sys)
             <<" : "<<weight
             <<" ("<<Systematic::str(sysUp)<<" "<<weightUp
