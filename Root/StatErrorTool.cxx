@@ -3,17 +3,20 @@
 
 #include "TH1.h"
 
+#include <iostream>
+#include <math.h>
+
 using namespace susy::fake;
+using susy::fake::Parametrization;
 
 //---------------------------------------------------------------//
 // Constructor
 //---------------------------------------------------------------//
 StatErrorTool::StatErrorTool(std::string fakeFile, 
-			     susy::fake::RATE_PARAM rate_param_real_el,
-			     susy::fake::RATE_PARAM rate_param_fake_el,
-			     susy::fake::RATE_PARAM rate_param_real_mu,
-			     susy::fake::RATE_PARAM rate_param_fake_mu
-			     ) : 
+                             Parametrization::Value rate_param_real_el,
+                             Parametrization::Value rate_param_fake_el,
+                             Parametrization::Value rate_param_real_mu,
+                             Parametrization::Value rate_param_fake_mu) :
   DiLeptonMatrixMethod(), // Could decouple these, but this is easiest for now
   rand(NULL),
   m_upper(1.29)
@@ -26,6 +29,7 @@ StatErrorTool::StatErrorTool(std::string fakeFile,
   rand = new TRandom3();
 
   // Load the rates
+/* TODO
   configure(fakeFile, 
 	    rate_param_real_el,
 	    rate_param_fake_el,
@@ -33,7 +37,7 @@ StatErrorTool::StatErrorTool(std::string fakeFile,
 	    rate_param_fake_mu
 	    ); 
   loadRates();
-  
+*/  
 }
 
 //---------------------------------------------------------------//  

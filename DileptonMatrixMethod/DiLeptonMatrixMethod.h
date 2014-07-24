@@ -9,13 +9,13 @@
  * Class to perform the matrix method fake estimate
  */
 
-#include <iostream>
-#include <map>
-#include <math.h>
-#include <string>
 
 #include "DileptonMatrixMethod/MatrixLepton.h"
-#include "DileptonMatrixMethod/FakeRegions.h"
+#include "DileptonMatrixMethod/Parametrization.h"
+#include "DileptonMatrixMethod/Systematic.h"
+
+#include <vector>
+#include <string>
 
 class TFile;
 class TH1;
@@ -25,237 +25,135 @@ class TAxis;
 
 namespace susy{
 namespace fake{
-  enum RATE_PARAM { PT_ETA
-                  , PT
-                  };
-
-  enum SYSTEMATIC { SYS_NOM    = 0
-                  , SYS_EL_RE_UP
-                  , SYS_EL_RE_DOWN
-                  , SYS_EL_FR_UP
-                  , SYS_EL_FR_DOWN
-                  , SYS_MU_RE_UP
-                  , SYS_MU_RE_DOWN
-                  , SYS_MU_FR_UP
-                  , SYS_MU_FR_DOWN
-                  , SYS_N_USER
-		  , SYS_EL_DATAMC_UP    // Take into account data/mc differences in rates
-		  , SYS_EL_DATAMC_DOWN  // Take into account data/mc differences in rates
-		  , SYS_MU_DATAMC_UP    // Take into account data/mc differences in rates
-		  , SYS_MU_DATAMC_DOWN  // Take into account data/mc differences in rates
-		    //, SYS_EL_METREL       // Any metrel dep
-		    //, SYS_MU_METREL       // Any metrel dep
-		  , SYS_EL_FR_STAT_UP   // Stat error up
-		  , SYS_EL_FR_STAT_DOWN // Stat error down
-		  , SYS_MU_FR_STAT_UP   // Stat error up
-		  , SYS_MU_FR_STAT_DOWN // Stat error down
-		  , SYS_EL_ETA          // Any eta dep
-		  , SYS_MU_ETA          // Any eta dep
-                  , SYS_EL_HFLF_UP      // Needed for HF/LF diff for elec
-                  , SYS_EL_HFLF_DOWN    // Needed for HF/LF diff for elec
-		  , SYS_EL_REG_UP       // Error from percentage in weighted avg
-		  , SYS_EL_REG_DOWN     // Error from percentage in weighted avg
-		  , SYS_MU_REG_UP       // Error from percentage in weighted avg
-		  , SYS_MU_REG_DOWN     // Error from percentage in weighted avg
-                    ,SYS_EL_FRAC_UP
-                    ,SYS_EL_FRAC_DO
-                    ,SYS_MU_FRAC_UP
-                    ,SYS_MU_FRAC_DO
-                  , SYS_N
-                  };
-
-  static std::string systematic_names[] = { "NOM"
-                                         , "EL_RE_UP"
-                                         , "EL_RE_DOWN"
-                                         , "EL_FR_UP"
-                                         , "EL_FR_DOWN"
-                                         , "MU_RE_UP"
-                                         , "MU_RE_DOWN"
-                                         , "MU_FR_UP"
-                                         , "MU_FR_DOWN"
-					 , "SYS_N_USER"
-				         , "EL_DATAMC_UP"
-				         , "EL_DATAMC_DOWN"
-				         , "MU_DATAMC_UP"
-				         , "MU_DATAMC_DOWN"
-					    //, "EL_METREL"
-					    //, "MU_METREL"
-                                         , "EL_FR_STAT_UP"
-                                         , "EL_FR_STAT_DOWN"
-                                         , "MU_FR_STAT_UP"
-                                         , "MU_FR_STAT_DOWN"
-                                         , "EL_ETA"
-                                         , "MU_ETA"
-                                         , "EL_HFLF_UP"
-					 , "EL_HFLF_DOWN"
-					 , "EL_REG_UP"
-				         , "EL_REG_DOWN"
-				         , "MU_REG_UP"
-				         , "MU_REG_DOWN"
-                    ,"EL_FRAC_UP"
-                    ,"EL_FRAC_DO"
-                    ,"MU_FRAC_UP"
-                    ,"MU_FRAC_DO"
-                                         , "SYS_N"
-                                         };
-
-  class DiLeptonMatrixMethod
+class DiLeptonMatrixMethod
   {
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     public:
-      /**
-       * constructor/destructor
-       */
       DiLeptonMatrixMethod();
       ~DiLeptonMatrixMethod();
-
+      /// maximum number of configurable selection regions
+      static const size_t kNmaxRegions=64;
+      /// configure the tool with a histogram file
       /**
-       * congigure the tool with a histogram file
-       */
-      bool configure( std::string file_name
-                    , RATE_PARAM rate_param_real_el
-                    , RATE_PARAM rate_param_fake_el
-                    , RATE_PARAM rate_param_real_mu
-                    , RATE_PARAM rate_param_fake_mu
-                    );
+         Find the necessary histograms for the requested
+         regions, and store them in the internal pointers. If you are
+         requesting signal regions for which the histograms are not
+         there in the input file, the tool will warn you.
+      */
+      bool configure(const std::string &file_name,
+                     const std::vector<std::string> &region_names,
+                     Parametrization::Value real_el,
+                     Parametrization::Value fake_el,
+                     Parametrization::Value real_mu,
+                     Parametrization::Value fake_mu);
+      /// Get the total fake contribution for this event -- called by the user
+      float getTotalFake(bool isTight1, bool isElectron1, float pt1, float eta1,
+                         bool isTight2, bool isElectron2, float pt2, float eta2,
+                         const size_t regionIndex,
+                         float MetRel,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
 
-      /**
-       * set the units for the rates file
-       */
-      // void setMeV();
-      // void setGeV();
+      /// Get the RR contribution for this event -- called by the user
+      float getRR(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
-      /**
-       * Get the total fake contribution for this event -- called by the user
-       */
-      float getTotalFake( bool isTight1, bool isElectron1, float pt1, float eta1
-                        , bool isTight2, bool isElectron2, float pt2, float eta2
-                        , susy::fake::Region region
-                        , float MetRel
-                        , SYSTEMATIC syst = SYS_NOM
-                        ) const;
-
-      /**
-       * Get the RR contribution for this event -- called by the user
-       */
-      float getRR( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
-
-      /**
-       * Get the RF contribution for this event -- called by the user
-       */
-      float getRF( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
+      /// Get the RF contribution for this event -- called by the user
+      float getRF(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
       /**
        * Get the FR contribution for this event -- called by the user
        */
-      float getFR( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
+      float getFR(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
-      /**
-       * Get the FF contribution for this event -- called by the user
-       */
-      float getFF( bool isTight1, bool isElectron1, float pt1, float eta1
-                 , bool isTight2, bool isElectron2, float pt2, float eta2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
-      //! given a region, determine the internal index used to store its histograms; abort if invalid
-      static int getIndexRegion(susy::fake::Region region);
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /// Get the FF contribution for this event -- called by the user
+      float getFF(bool isTight1, bool isElectron1, float pt1, float eta1,
+                  bool isTight2, bool isElectron2, float pt2, float eta2,
+                  const size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      /// given a region, determine the internal index used to store its histograms; abort if invalid
+      size_t getIndexRegion(const std::string &regionName) const;
+
       enum RATE_TYPE { REAL
                      , FAKE
                      };
 
-      // Get the rate for this lepton -- real/fake for electron or muon
-      // Specific rate depends on type of lepton supplied and the
-      // RATE_TYPE parameter
-      float getRate( bool isTight
-                   , bool isElectron
-                   , float pt
-                   , float eta
-                   , RATE_TYPE rate_type
-                   , susy::fake::Region region
-                   , float MetRel
-                   , SYSTEMATIC syst = SYS_NOM
-                   ) const;
+      /// Get the rate for this lepton -- real/fake for electron or muon
+      /**
+         Specific rate depends on type of lepton supplied and the RATE_TYPE parameter
+      */
+      float getRate(bool isTight,
+                    bool isElectron,
+                    float pt,
+                    float eta,
+                    RATE_TYPE rate_type,                     
+                    size_t regionIndex,
+                    float MetRel,
+                    Systematic::Value syst = Systematic::SYS_NOM) const;
 
       const TArrayD* getPtBins() const;
       const TArrayD* getEtaBins() const;
-      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, susy::fake::Region &r) const;
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, size_t regionIndex) const;
   protected:
       // Get the rate for this lepton -- real/fake for electron or muon
       // Specific rate depends on type of lepton supplied and the
       // RATE_TYPE parameter
       // for internal use
-      float getRate( const MatrixLepton&
-                   , RATE_TYPE
-                   , susy::fake::Region region
-                   , float MetRel
-                   , SYSTEMATIC syst = SYS_NOM
-                   ) const;
-      float getRateSyst( const MatrixLepton&
-                       , RATE_TYPE
-           , susy::fake::Region region
-                       , float MetRel
-                       , SYSTEMATIC syst = SYS_NOM
-                       ) const;
+      float getRate(const MatrixLepton&,
+                    RATE_TYPE,
+                    size_t regionIndex,
+                    float MetRel,
+                    Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getRateSyst(const MatrixLepton&,
+                        RATE_TYPE,
+                        size_t regionIndex,
+                        float MetRel,
+                        Systematic::Value syst = Systematic::SYS_NOM) const;
 
-      int getRateBin( const MatrixLepton& lep,
-			TH1* h_rate,
-		      RATE_PARAM rate_param
-			) const;
+      int getRateBin(const MatrixLepton& lep,
+                     TH1* h_rate,
+                     Parametrization::Value rate_param) const;
 
       // Get the fake/real contribution for this event -- for internal use
-      float getTotalFake( const MatrixLepton& lep1
-                        , const MatrixLepton& lep2
-                        , susy::fake::Region region
-                        , float MetRel
-                        , SYSTEMATIC syst = SYS_NOM
-                        ) const;
-      float getRR( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
-      float getRF( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
-      float getFR( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
-      float getFF( const MatrixLepton& lep1
-                 , const MatrixLepton& lep2
-                 , susy::fake::Region region
-                 , float MetRel
-                 , SYSTEMATIC syst = SYS_NOM
-                 ) const;
+      float getTotalFake(const MatrixLepton& lep1,
+                         const MatrixLepton& lep2,
+                         size_t regionIndex,
+                         float MetRel,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getRR(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getRF(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getFR(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getFF(const MatrixLepton& lep1,
+                  const MatrixLepton& lep2,
+                  size_t regionIndex,
+                  float MetRel,
+                  Systematic::Value syst = Systematic::SYS_NOM) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
-      float getRelStatError(const MatrixLepton&, RATE_TYPE, susy::fake::Region) const;
+      float getStatError(const MatrixLepton&, RATE_TYPE, size_t regionIndex) const;
+      float getRelStatError(const MatrixLepton&, RATE_TYPE, size_t regionIndex) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
       int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
@@ -264,32 +162,35 @@ namespace fake{
       int getLL(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
 
       // Verbose output
-      void printInfo( const MatrixLepton& lep1
-                    , const MatrixLepton& lep2
-                    , susy::fake::Region region
-                    , float MetRel
-                    , SYSTEMATIC syst = SYS_NOM
-                    ) const;
-
-      // Get systematic value from file -- for internal use
-      void loadSysFromFile();
+      void printInfo(const MatrixLepton& lep1,
+                     const MatrixLepton& lep2,
+                     size_t regionIndex,
+                     float MetRel,
+                     Systematic::Value syst = Systematic::SYS_NOM) const;
+      /// retrieve nominal histos and paramerers
+      bool loadNominalFromFile(const std::vector<std::string> &region_names);
+      /// Get systematic value from file -- for internal use
+      bool loadSysFromFile();
 
       const TH1* getFirstPtEtaHisto() const; /// get the first available pt_eta histo
       const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
       const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
       bool getHistoAndParametrization(const MatrixLepton &lep,
-                                      const susy::fake::Region reg,
+                                      const size_t regionIndex,
                                       const RATE_TYPE &rt,
                                       TH1* &h,
-                                      RATE_PARAM &rp) const;
-      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, susy::fake::Region region, SYSTEMATIC syst) const;
+                                      Parametrization::Value &rp) const;
+      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, size_t regionIndex,
+                                 Systematic::Value syst) const;
 
-      // Histograms which hold the real efficiency and fake rates for leptons
+      /// input file holding the real efficiency and fake rates for leptons
       TFile* m_hist_file;
-      TH1* m_el_real_eff [susy::fake::NumberOfSignalRegions];
-      TH1* m_el_fake_rate[susy::fake::NumberOfSignalRegions];
-      TH1* m_mu_real_eff [susy::fake::NumberOfSignalRegions];
-      TH1* m_mu_fake_rate[susy::fake::NumberOfSignalRegions];
+      /// names of the signal regions for which we can compute the fake weight
+      std::vector<std::string> m_signalRegions;
+      std::vector<TH1*> m_el_real_eff;
+      std::vector<TH1*> m_el_fake_rate;
+      std::vector<TH1*> m_mu_real_eff;
+      std::vector<TH1*> m_mu_fake_rate;
       TH1* m_el_frac_up;
       TH1* m_el_frac_do;
       TH1* m_mu_frac_up;
@@ -306,18 +207,18 @@ namespace fake{
       double m_mu_datamc;
       double m_el_region;
       double m_mu_region;
-      TH1F* m_el_metrel;
-      TH1F* m_mu_metrel;
-      TH1F* m_el_eta;
-      TH1F* m_mu_eta;
+      TH1* m_el_metrel;   ///< Parameterized vs Met Rel for syst (obsolete?)
+      TH1* m_mu_metrel;
+      TH1* m_el_eta;     ///< Parameterized vs Eta for syst (obsolete?)
+      TH1* m_mu_eta;
       double m_el_HFLFerr;
 
       // rate parameterization that describes how the rates are binned
-      //RATE_PARAM m_rate_param;
-      RATE_PARAM m_rate_param_real_el;
-      RATE_PARAM m_rate_param_fake_el;
-      RATE_PARAM m_rate_param_real_mu;
-      RATE_PARAM m_rate_param_fake_mu;
+      //Parametrization::Value m_rate_param;
+      Parametrization::Value m_rate_param_real_el;
+      Parametrization::Value m_rate_param_fake_el;
+      Parametrization::Value m_rate_param_real_mu;
+      Parametrization::Value m_rate_param_fake_mu;
   };
 } // fake
 } // susy
