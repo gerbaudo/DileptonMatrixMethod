@@ -342,7 +342,7 @@ int DileptonMatrixMethod::getRateBin(const Lepton& lep,
     float max_y   = h_rate->GetYaxis()->GetBinCenter(max_bin_y);
 
     // Reset x-var
-    float var_x = lep.pt() / 1000.0;
+    float var_x = lep.pt();
     var_x = var_x > max_x ? max_x : var_x;
 
     // Reset y-var
@@ -359,7 +359,7 @@ int DileptonMatrixMethod::getRateBin(const Lepton& lep,
     float max_x   = h_rate->GetXaxis()->GetBinCenter(max_bin_x);
 
     // Reset x-var
-    float var_x = lep.pt() / 1000.0;
+    float var_x = lep.pt();
     var_x = var_x > max_x ? max_x : var_x;
 
     return h_rate->FindBin(var_x);

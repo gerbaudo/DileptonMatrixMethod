@@ -45,12 +45,12 @@ void printSystematics(sf::DileptonMatrixMethod & matrix, bool isEl, bool isMu)
     copy(etaBins.begin(), etaBins.end(), ostream_iterator<double>(cout, ", "));
     cout<<endl;
     bool isTight(false), isElectron(true);
-    float gev2mev(1.0e3); // the matrix is stored in GeV, but the inputs are supposed to be in MeV...how nice
+    float gev(1.0);
     const std::string regionName = "CR_SSInc1j";
     for(size_t i=0; i<ptBins.size(); ++i)
         for(size_t j=0; j<etaBins.size(); ++j){
             float pt(ptBins[i]), eta(etaBins[j]);
-            sf::Lepton l(isTight, isElectron, pt*gev2mev, eta);
+            sf::Lepton l(isTight, isElectron, pt*gev, eta);
             sf::DileptonMatrixMethod::RATE_TYPE rt = sf::DileptonMatrixMethod::FAKE;
             matrix.printRateSystematics(l, rt, matrix.getIndexRegion(regionName));
         }

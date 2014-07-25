@@ -26,7 +26,7 @@ bool testParametrization(string filename, Parametrization::Value rp)
     const std::string regionName = "CR_SSInc1j";
     regions.push_back(regionName);
     if(matrix.configure(filename, regions, rp, rp, rp, rp)) {
-        float gev2mev(1.0e3);
+        float gev(1.0);
         bool l0IsSig(true), l0IsEle(false);
         bool l1IsSig(false), l1IsEle(true);
         float l0Pt(30.0), l0Eta(+0.5);
@@ -36,11 +36,11 @@ bool testParametrization(string filename, Parametrization::Value rp)
         Systematic::Value sys = Systematic::SYS_NOM;
         Systematic::Value sysUp = Systematic::SYS_EL_FR_UP;
         Systematic::Value sysDo = Systematic::SYS_EL_FR_DOWN;
-        Lepton l0(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta);
-        Lepton l1(l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta);
-        float weight   = matrix.getTotalFake(l0, l1, iRegion, metRel*gev2mev, sys);
-        float weightUp = matrix.getTotalFake(l0, l1, iRegion, metRel*gev2mev, sysUp);
-        float weightDo = matrix.getTotalFake(l0, l1, iRegion, metRel*gev2mev, sysDo);
+        Lepton l0(l0IsSig, l0IsEle, l0Pt*gev, l0Eta);
+        Lepton l1(l1IsSig, l1IsEle, l1Pt*gev, l1Eta);
+        float weight   = matrix.getTotalFake(l0, l1, iRegion, metRel*gev, sys);
+        float weightUp = matrix.getTotalFake(l0, l1, iRegion, metRel*gev, sysUp);
+        float weightDo = matrix.getTotalFake(l0, l1, iRegion, metRel*gev, sysDo);
         cout<<"weight for"
             <<" "<<regionName<<", "
             <<" "<<Systematic::str(sys)
