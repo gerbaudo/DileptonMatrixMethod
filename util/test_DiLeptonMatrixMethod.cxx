@@ -1,4 +1,4 @@
-#include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
+#include "DileptonMatrixMethod/DileptonMatrixMethod.h"
 
 #include <iostream>
 #include <string>
@@ -20,7 +20,7 @@ using sf::Systematic;
 bool testParametrization(string filename, Parametrization::Value rp)
 {
     bool success = false;
-    sf::DiLeptonMatrixMethod matrix;
+    sf::DileptonMatrixMethod matrix;
     std::vector<std::string> regions;
     const std::string regionName = "CR_SSInc1j";
     regions.push_back(regionName);

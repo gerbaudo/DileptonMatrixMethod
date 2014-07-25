@@ -25,11 +25,11 @@ class TAxis;
 
 namespace susy{
 namespace fake{
-class DiLeptonMatrixMethod
+class DileptonMatrixMethod
   {
     public:
-      DiLeptonMatrixMethod();
-      ~DiLeptonMatrixMethod();
+      DileptonMatrixMethod();
+      ~DileptonMatrixMethod();
       /// maximum number of configurable selection regions
       static const size_t kNmaxRegions=64;
       /// configure the tool with a histogram file

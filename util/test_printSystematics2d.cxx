@@ -1,4 +1,4 @@
-#include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
+#include "DileptonMatrixMethod/DileptonMatrixMethod.h"
 #include "DileptonMatrixMethod/MatrixLepton.h"
 
 #include "TArrayD.h"
@@ -31,7 +31,7 @@ vector<double>  bin_edges2bin_centers(const TArrayD* binEdges)
     return binCenters;
 }
 //----------------------------------------------------------
-void printSystematics(sf::DiLeptonMatrixMethod & matrix, bool isEl, bool isMu)
+void printSystematics(sf::DileptonMatrixMethod & matrix, bool isEl, bool isMu)
 {
     if(isEl==isMu) cout<<"pick either el or mu"<<endl;
     assert(isEl!=isMu);
@@ -51,7 +51,7 @@ void printSystematics(sf::DiLeptonMatrixMethod & matrix, bool isEl, bool isMu)
         for(size_t j=0; j<etaBins.size(); ++j){
             float pt(ptBins[i]), eta(etaBins[j]);
             sf::MatrixLepton l(isTight, isElectron, pt*gev2mev, eta);
-            sf::DiLeptonMatrixMethod::RATE_TYPE rt = sf::DiLeptonMatrixMethod::FAKE;
+            sf::DileptonMatrixMethod::RATE_TYPE rt = sf::DileptonMatrixMethod::FAKE;
             matrix.printRateSystematics(l, rt, matrix.getIndexRegion(regionName));
         }
 }
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   const sf::Parametrization::Value rp = sf::Parametrization::PT_ETA;
   std::vector<std::string> regions;
   regions.push_back("CR_SSInc1j");
-  sf::DiLeptonMatrixMethod matrix;
+  sf::DileptonMatrixMethod matrix;
   if(matrix.configure(inputFilename, regions, rp, rp, rp, rp)) {
       cout<<endl<<" --- Fake systematic uncertainties --- "<<endl;
 

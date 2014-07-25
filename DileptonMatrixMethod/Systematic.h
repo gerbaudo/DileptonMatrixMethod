@@ -10,7 +10,7 @@ namespace fake{
 /// Possible fake matrix systematic variations
 /**
    Note that some systematic variations might need additional input
-   histograms. If they are not available, the DiLeptonMatrixMethod
+   histograms. If they are not available, the DileptonMatrixMethod
    class will warn you when configuring.
 
    The ones indicated with 'histo' below require additional input

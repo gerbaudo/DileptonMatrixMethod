@@ -1,4 +1,4 @@
-#include "DileptonMatrixMethod/DiLeptonMatrixMethod.h"
+#include "DileptonMatrixMethod/DileptonMatrixMethod.h"
 
 #include "TParameter.h"
 #include "TVectorD.h"
@@ -16,12 +16,12 @@
 #include <iterator>  // ostream_iterator, distance
 #include <sstream>
 
-using susy::fake::DiLeptonMatrixMethod;
+using susy::fake::DileptonMatrixMethod;
 using susy::fake::Parametrization;
 using susy::fake::Systematic;
 
 // -----------------------------------------------------------------------------
-DiLeptonMatrixMethod::DiLeptonMatrixMethod():
+DileptonMatrixMethod::DileptonMatrixMethod():
     m_hist_file(NULL),
     m_el_frac_up(NULL),
     m_el_frac_do(NULL),
@@ -40,7 +40,7 @@ DiLeptonMatrixMethod::DiLeptonMatrixMethod():
 }
 
 // -----------------------------------------------------------------------------
-DiLeptonMatrixMethod::~DiLeptonMatrixMethod()
+DileptonMatrixMethod::~DileptonMatrixMethod()
 {
   // Clean up pointers to member histograms
   std::cout << "checking m_hist_file\n";
@@ -50,7 +50,7 @@ DiLeptonMatrixMethod::~DiLeptonMatrixMethod()
     std::cout << "deleting m_hist_file\n";
     // delete m_hist_file;
   }
-  std::cout << "done with ~DiLeptonMatrixMethod\n";
+  std::cout << "done with ~DileptonMatrixMethod\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,7 +86,7 @@ struct RetrieveOrNull {
     }
 };
 // -----------------------------------------------------------------------------
-bool DiLeptonMatrixMethod::configure(const std::string &file_name,
+bool DileptonMatrixMethod::configure(const std::string &file_name,
                                      const std::vector<std::string> &region_names,
                                      Parametrization::Value real_el,
                                      Parametrization::Value fake_el,
@@ -100,9 +100,9 @@ bool DiLeptonMatrixMethod::configure(const std::string &file_name,
     m_hist_file = TFile::Open(file_name.c_str(), "OPEN");
     bool invalidInputFile = (!m_hist_file || !m_hist_file->IsOpen());
     if(invalidParamChoice){
-        cout<<"DiLeptonMatrixMethod::configure: mixed parametrization not implemented"<<endl;
+        cout<<"DileptonMatrixMethod::configure: mixed parametrization not implemented"<<endl;
     } else if(invalidInputFile) {
-        cout<<"DiLeptonMatrixMethod::configure: failed to open fake rate file: "<<file_name<<endl;
+        cout<<"DileptonMatrixMethod::configure: failed to open fake rate file: "<<file_name<<endl;
     } else {
         m_rate_param_real_el = real_el;
         m_rate_param_fake_el = fake_el;
@@ -115,7 +115,7 @@ bool DiLeptonMatrixMethod::configure(const std::string &file_name,
     return success;
 }
 // -----------------------------------------------------------------------------
-bool DiLeptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &region_names)
+bool DileptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &region_names)
 {
     bool success = false;
     RetrieveOrNull retrieve(m_hist_file);
@@ -140,18 +140,18 @@ bool DiLeptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &r
             m_mu_real_eff .push_back(mu_real_eff );
             m_mu_fake_rate.push_back(mu_fake_rate);
         } else {
-            cout<<"DiLeptonMatrixMethod: missing nominal histos for '"<<regionName<<"': skipping this region"<<endl;
+            cout<<"DileptonMatrixMethod: missing nominal histos for '"<<regionName<<"': skipping this region"<<endl;
         }
     }
     if(retrieve.anythingMissing()){
-        cout<<"DiLeptonMatrixMethod::loadNominalFromFile(): missing the following histograms:"<<endl;
+        cout<<"DileptonMatrixMethod::loadNominalFromFile(): missing the following histograms:"<<endl;
         copy(retrieve.miss_.begin(), retrieve.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
         success = false;
     }
     return success;
 }
 //-----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getTotalFake(
+float DileptonMatrixMethod::getTotalFake(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
     size_t regionIndex,
@@ -165,7 +165,7 @@ float DiLeptonMatrixMethod::getTotalFake(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRR(
+float DileptonMatrixMethod::getRR(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
     size_t regionIndex,
@@ -179,7 +179,7 @@ float DiLeptonMatrixMethod::getRR(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRF(
+float DileptonMatrixMethod::getRF(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
     size_t regionIndex,
@@ -193,7 +193,7 @@ float DiLeptonMatrixMethod::getRF(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getFR(
+float DileptonMatrixMethod::getFR(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
     size_t regionIndex,
@@ -207,7 +207,7 @@ float DiLeptonMatrixMethod::getFR(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getFF(
+float DileptonMatrixMethod::getFF(
     bool isTight1, bool isElectron1, float pt1, float eta1,
     bool isTight2, bool isElectron2, float pt2, float eta2,
     size_t regionIndex,
@@ -221,7 +221,7 @@ float DiLeptonMatrixMethod::getFF(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getTotalFake(
+float DileptonMatrixMethod::getTotalFake(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     size_t regionIndex,
@@ -235,7 +235,7 @@ float DiLeptonMatrixMethod::getTotalFake(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRR(
+float DileptonMatrixMethod::getRR(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     size_t regionIndex,
@@ -270,7 +270,7 @@ float DiLeptonMatrixMethod::getRR(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRF(
+float DileptonMatrixMethod::getRF(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     size_t regionIndex,
@@ -297,7 +297,7 @@ float DiLeptonMatrixMethod::getRF(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getFR(
+float DileptonMatrixMethod::getFR(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     size_t regionIndex,
@@ -324,7 +324,7 @@ float DiLeptonMatrixMethod::getFR(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getFF(
+float DileptonMatrixMethod::getFF(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     size_t regionIndex,
@@ -352,7 +352,7 @@ float DiLeptonMatrixMethod::getFF(
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRate(
+float DileptonMatrixMethod::getRate(
     bool isTight, bool isElectron, float pt, float eta,
     RATE_TYPE rate_type, size_t regionIndex, float MetRel,
     Systematic::Value syst) const
@@ -362,7 +362,7 @@ float DiLeptonMatrixMethod::getRate(
 }
 
 // --------------------------------------------------------
-bool DiLeptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
+bool DileptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
                                                       const size_t regionIndex,
                                                       const RATE_TYPE &rt,
                                                       TH1* &h, Parametrization::Value &rp) const
@@ -394,7 +394,7 @@ bool DiLeptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
     return found;
 }
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRate(
+float DileptonMatrixMethod::getRate(
     const MatrixLepton& lep,
     RATE_TYPE rate_type,
     const size_t regionIndex,
@@ -411,13 +411,13 @@ float DiLeptonMatrixMethod::getRate(
         if( rate > 1.0 ) rate = 1.0;
         if( rate < 0.0 ) rate = 1e-5;
     } else {
-        cout<<"DiLeptonMatrixMethod::getRate: cannot get histo"<<endl;
+        cout<<"DileptonMatrixMethod::getRate: cannot get histo"<<endl;
     }
   return rate;
 }
 
 // -----------------------------------------------------------------------------
-int DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
+int DileptonMatrixMethod::getRateBin( const MatrixLepton& lep,
 							TH1* h_rate,
 							Parametrization::Value rate_param) const
 {
@@ -461,7 +461,7 @@ int DiLeptonMatrixMethod::getRateBin( const MatrixLepton& lep,
 }
 
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getRateSyst(
+float DileptonMatrixMethod::getRateSyst(
     const MatrixLepton& lep,
     RATE_TYPE rate_type,
     const size_t regionIndex,
@@ -553,7 +553,7 @@ float DiLeptonMatrixMethod::getRateSyst(
 }
 
 // -----------------------------------------------------------------------------
-int DiLeptonMatrixMethod::getTT( const MatrixLepton& lep1
+int DileptonMatrixMethod::getTT( const MatrixLepton& lep1
                                                  , const MatrixLepton& lep2
                                                  ) const
 {
@@ -562,7 +562,7 @@ int DiLeptonMatrixMethod::getTT( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-int DiLeptonMatrixMethod::getTL( const MatrixLepton& lep1
+int DileptonMatrixMethod::getTL( const MatrixLepton& lep1
                                                  , const MatrixLepton& lep2
                                                  ) const
 {
@@ -571,7 +571,7 @@ int DiLeptonMatrixMethod::getTL( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-int DiLeptonMatrixMethod::getLT( const MatrixLepton& lep1
+int DileptonMatrixMethod::getLT( const MatrixLepton& lep1
                                                  , const MatrixLepton& lep2
                                                  ) const
 {
@@ -580,7 +580,7 @@ int DiLeptonMatrixMethod::getLT( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-int DiLeptonMatrixMethod::getLL( const MatrixLepton& lep1
+int DileptonMatrixMethod::getLL( const MatrixLepton& lep1
                                                  , const MatrixLepton& lep2
                                                  ) const
 {
@@ -589,7 +589,7 @@ int DiLeptonMatrixMethod::getLL( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-bool DiLeptonMatrixMethod::loadSysFromFile()
+bool DileptonMatrixMethod::loadSysFromFile()
 {
   RetrieveOrZero roz(m_hist_file);
   m_el_real_up   = roz("el_real_up");
@@ -602,7 +602,7 @@ bool DiLeptonMatrixMethod::loadSysFromFile()
   m_el_region    = roz("el_region");
   m_mu_region    = roz("mu_region");
   if(roz.anythingMissing()) {
-    cout<<"DiLeptonMatrixMethod::loadSysFromFile(): missing the following systematics:"<<endl;
+    cout<<"DileptonMatrixMethod::loadSysFromFile(): missing the following systematics:"<<endl;
     copy(roz.miss_.begin(), roz.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
     cout<<"Will use 0.0 for these"<<endl;
   }
@@ -616,13 +616,13 @@ bool DiLeptonMatrixMethod::loadSysFromFile()
   m_el_eta     = ron("el_eta_sys");
   m_mu_eta     = ron("mu_eta_sys");
   if(ron.anythingMissing()) {
-      cout<<"DiLeptonMatrixMethod::loadSysFromFile(): missing the following systematic histograms:"<<endl;
+      cout<<"DileptonMatrixMethod::loadSysFromFile(): missing the following systematic histograms:"<<endl;
       copy(ron.miss_.begin(), ron.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
   }  
   return (!roz.anythingMissing() && !ron.anythingMissing());
 }
 // -----------------------------------------------------------------------------
-float DiLeptonMatrixMethod::getStatError(const MatrixLepton& lep
+float DileptonMatrixMethod::getStatError(const MatrixLepton& lep
                                          , RATE_TYPE rate_type
                                          , const size_t regionIndex) const
 
@@ -637,7 +637,7 @@ float DiLeptonMatrixMethod::getStatError(const MatrixLepton& lep
   return error;
 }
 // ---------------------------------------------------------
-float DiLeptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt, 
+float DileptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt, 
                                             const size_t regionIndex) const
 {
     float rate(0.0), error(0.0), relativeError(0.0);
@@ -648,12 +648,12 @@ float DiLeptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE r
         rate = h_rate->GetBinContent(rate_bin);
         error = h_rate->GetBinError(rate_bin);
         if(rate!=0.0) relativeError = error/rate;
-        else cout<<"DiLeptonMatrixMethod::getRelStatError: rate "<<rate<<" returning "<<relativeError<<endl;
+        else cout<<"DileptonMatrixMethod::getRelStatError: rate "<<rate<<" returning "<<relativeError<<endl;
     }
     return relativeError;
 }
 // -----------------------------------------------------------------------------
-void DiLeptonMatrixMethod::printInfo(
+void DileptonMatrixMethod::printInfo(
     const MatrixLepton& lep1,
     const MatrixLepton& lep2,
     const size_t regionIndex,
@@ -700,7 +700,7 @@ void DiLeptonMatrixMethod::printInfo(
   std::cout << "total fake: " << getTotalFake(lep1,lep2,regionIndex,syst) << "\n";
 }
 // -----------------------------------------------------------------------------
-size_t DiLeptonMatrixMethod::getIndexRegion(const std::string &regionName) const
+size_t DileptonMatrixMethod::getIndexRegion(const std::string &regionName) const
 {
     typedef std::vector<std::string>::const_iterator vsit_t;
     vsit_t begin = m_signalRegions.begin();
@@ -709,26 +709,26 @@ size_t DiLeptonMatrixMethod::getIndexRegion(const std::string &regionName) const
     if(it!=end) {
       return std::distance(begin, it);
     } else {
-      std::cout<<"DiLeptonMatrixMethod::getIndexRegion :"
+      std::cout<<"DileptonMatrixMethod::getIndexRegion :"
                <<" error, the region '"<<regionName<<"'"
                <<" is not in the SignalRegions list"<<endl;
       assert(false);
     }
 }
 // -----------------------------------------------------------------------------
-const TArrayD* DiLeptonMatrixMethod::getPtBins() const
+const TArrayD* DileptonMatrixMethod::getPtBins() const
 {
     const TArrayD *bins = 0;
     if(const TAxis *ax = getPtAxis()) bins = ax->GetXbins();
-    else cout<<"DiLeptonMatrixMethod::getPtBins(): error, invalid axis"<<endl;
+    else cout<<"DileptonMatrixMethod::getPtBins(): error, invalid axis"<<endl;
     return bins;
 }
 //----------------------------------------------------------
-const TArrayD* DiLeptonMatrixMethod::getEtaBins() const
+const TArrayD* DileptonMatrixMethod::getEtaBins() const
 {
     const TArrayD *bins = 0;
     if(const TAxis *ax = getEtaAxis()) bins = ax->GetXbins();
-    else cout<<"DiLeptonMatrixMethod::getEtaBins(): error, invalid axis"<<endl;
+    else cout<<"DileptonMatrixMethod::getEtaBins(): error, invalid axis"<<endl;
     return bins;
 }
 //----------------------------------------------------------
@@ -742,7 +742,7 @@ std::string lep2str(const susy::fake::MatrixLepton l)
     return oss.str();
 }
 //----------------------------------------------------------
-void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, size_t regionIndex) const
+void DileptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, size_t regionIndex) const
 {
     // this is a useless parameter, it should be dropped everywhere (DG, 2014-05-18 TODO)
     float dummyMetRel(20.0);
@@ -802,39 +802,39 @@ void DiLeptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE
     cout<<endl;
 }
 //----------------------------------------------------------
-const TH1* DiLeptonMatrixMethod::getFirstPtEtaHisto() const
+const TH1* DileptonMatrixMethod::getFirstPtEtaHisto() const
 {
     const TH1 *first2dhisto=0;
     if(m_rate_param_fake_el==Parametrization::PT_ETA){
         if(m_el_fake_rate.size()>0 && m_el_fake_rate[0])
             first2dhisto = m_el_fake_rate[0];
         else
-            cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto: error, need at least one signal region"<<endl;
+            cout<<"DileptonMatrixMethod::getFirstPtEtaHisto: error, need at least one signal region"<<endl;
     } else {
-        cout<<"DiLeptonMatrixMethod::getFirstPtEtaHisto can only be called with the 2d parametrization."
+        cout<<"DileptonMatrixMethod::getFirstPtEtaHisto can only be called with the 2d parametrization."
             <<" Returning "<<first2dhisto
             <<endl;
     }
     return first2dhisto;
 }
 //----------------------------------------------------------
-const TAxis* DiLeptonMatrixMethod::getPtAxis() const
+const TAxis* DileptonMatrixMethod::getPtAxis() const
 {
     const TAxis* ax = 0;
     if(const TH2* histo2d = static_cast<const TH2*>(getFirstPtEtaHisto())) ax = histo2d->GetXaxis();
-    else cout<<"DiLeptonMatrixMethod::getPtAxis() : error, invalid histo2d, returning "<<ax<<endl;
+    else cout<<"DileptonMatrixMethod::getPtAxis() : error, invalid histo2d, returning "<<ax<<endl;
     return ax;
 }
 //----------------------------------------------------------
-const TAxis* DiLeptonMatrixMethod::getEtaAxis() const
+const TAxis* DileptonMatrixMethod::getEtaAxis() const
 {
     const TAxis* ax = 0;
     if(const TH2* histo2d = static_cast<const TH2*>(getFirstPtEtaHisto())) ax = histo2d->GetYaxis();
-    else cout<<"DiLeptonMatrixMethod::getEtaAxis() : error, invalid histo2d, returning "<<ax<<endl;
+    else cout<<"DileptonMatrixMethod::getEtaAxis() : error, invalid histo2d, returning "<<ax<<endl;
     return ax;
 }
 //----------------------------------------------------------
-float DiLeptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
+float DileptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
                                                  RATE_TYPE rt,
                                                  size_t regionIndex,
                                                  susy::fake::Systematic::Value syst) const
