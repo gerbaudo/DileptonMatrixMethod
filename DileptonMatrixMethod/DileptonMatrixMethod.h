@@ -30,8 +30,6 @@ class DileptonMatrixMethod
     public:
       DileptonMatrixMethod();
       ~DileptonMatrixMethod();
-      /// maximum number of configurable selection regions
-      static const size_t kNmaxRegions=64;
       /// configure the tool with a histogram file
       /**
          Find the necessary histograms for the requested
