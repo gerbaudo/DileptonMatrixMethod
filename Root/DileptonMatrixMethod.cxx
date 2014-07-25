@@ -117,7 +117,6 @@ bool DileptonMatrixMethod::configure(const std::string &file_name,
 // -----------------------------------------------------------------------------
 bool DileptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &region_names)
 {
-    bool success = false;
     RetrieveOrNull retrieve(m_hist_file);
     const Parametrization::Value rp = m_rate_param_real_el;
     std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
@@ -146,8 +145,8 @@ bool DileptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &r
     if(retrieve.anythingMissing()){
         cout<<"DileptonMatrixMethod::loadNominalFromFile(): missing the following histograms:"<<endl;
         copy(retrieve.miss_.begin(), retrieve.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
-        success = false;
     }
+    bool success = region_names.size()==m_signalRegions.size();
     return success;
 }
 //-----------------------------------------------------------------------------

@@ -55,6 +55,8 @@ bool testParametrization(string filename, Parametrization::Value rp)
             <<")"
             <<endl;
         success = true;
+    } else {
+        cout<<"Failed to configure, cannot test"<<endl;
     }
     return success;
 }
