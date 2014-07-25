@@ -15,6 +15,7 @@ using namespace std;
 namespace sf = susy::fake;
 using sf::Parametrization;
 using sf::Systematic;
+using sf::Lepton;
 
 //----------------------------------------------------------
 bool testParametrization(string filename, Parametrization::Value rp)
@@ -35,16 +36,11 @@ bool testParametrization(string filename, Parametrization::Value rp)
         Systematic::Value sys = Systematic::SYS_NOM;
         Systematic::Value sysUp = Systematic::SYS_EL_FR_UP;
         Systematic::Value sysDo = Systematic::SYS_EL_FR_DOWN;
-
-        float weight = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
-                                           l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                           iRegion, metRel*gev2mev, sys);
-        float weightUp = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
-                                             l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             iRegion, metRel*gev2mev, sysUp);
-        float weightDo = matrix.getTotalFake(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta,
-                                             l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta,
-                                             iRegion, metRel*gev2mev, sysDo);
+        Lepton l0(l0IsSig, l0IsEle, l0Pt*gev2mev, l0Eta);
+        Lepton l1(l1IsSig, l1IsEle, l1Pt*gev2mev, l1Eta);
+        float weight   = matrix.getTotalFake(l0, l1, iRegion, metRel*gev2mev, sys);
+        float weightUp = matrix.getTotalFake(l0, l1, iRegion, metRel*gev2mev, sysUp);
+        float weightDo = matrix.getTotalFake(l0, l1, iRegion, metRel*gev2mev, sysDo);
         cout<<"weight for"
             <<" "<<regionName<<", "
             <<" "<<Systematic::str(sys)
