@@ -24,6 +24,10 @@ namespace fake{
    The format of the names expected for the input histograms is the
    one specified in generateNominalHistoname()
 
+   To explore a given fake input file, and determine for which regions
+   the fake estimate is available, use
+   `python/print_available_regions.py`
+
    Cleanup and rewrite, davide.gerbaudo@gmail.com, July 2014.
 
    @author Brett Jackson <Brett.David.Jackson@cern.ch>
