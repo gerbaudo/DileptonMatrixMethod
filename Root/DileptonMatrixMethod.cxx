@@ -20,6 +20,14 @@ using susy::fake::DileptonMatrixMethod;
 using susy::fake::Parametrization;
 using susy::fake::Systematic;
 
+//----------------------------------------------------------
+float sum_in_quadrature(const float* elements, const size_t num_elements)
+{
+    float sum=0.0;
+    for(size_t i=0; i<num_elements; ++i)
+        sum += (elements[i]*elements[i]);
+    return sqrt(sum);
+}
 // -----------------------------------------------------------------------------
 DileptonMatrixMethod::DileptonMatrixMethod():
     m_hist_file(NULL),
@@ -486,27 +494,16 @@ float DileptonMatrixMethod::getRateSyst(
          syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO )
           return getFracRelativeError(lep, rate_type, regionIndex, syst);
       if( lep.isElectron() ){
-          if( syst == Systematic::SYS_EL_FR_UP ){ // Fake Rate Up
+          if(syst==Systematic::SYS_EL_FR_UP ||
+             syst==Systematic::SYS_EL_FR_DOWN){ // Fake Rate el
+              float updown = syst==Systematic::SYS_EL_FR_UP ? +1.0 : -1.0;
               float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys > 0 ? etaSys : 0.;
               float statSys = getRelStatError(lep, rate_type, regionIndex);
-              return +1.0*sqrt(statSys*statSys);
-//               return sqrt( m_el_HFLFerr*m_el_HFLFerr //add in quadrature
-//                            + statSys*statSys
-//                            + etaSys*etaSys
-//                            + m_el_datamc*m_el_datamc
-//                            + m_el_region*m_el_region);
-          }
-          if( syst == Systematic::SYS_EL_FR_DOWN){ // Fake Rate Down
-              float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-              etaSys = etaSys < 0.0 ? etaSys : 0.0;
-              float statSys  = getRelStatError(lep, rate_type, regionIndex);
-              return -1.0*sqrt(statSys*statSys);
-//               return (-1.0) * sqrt(m_el_HFLFerr*m_el_HFLFerr // add in quadrature
-//                                    + statSys*statSys
-//                                    + etaSys*etaSys
-//                                    + m_el_datamc*m_el_datamc
-//                                    + m_el_region*m_el_region);
+              //float errors[] = {statSys, m_el_HFLFerr, etaSys, m_el_datamc, m_el_region};
+              float errors[] = {statSys}; // other components now included in stat or obsolete (eta parametrization)
+              int num_errors = sizeof(errors)/sizeof(errors[0]);
+              return updown*sum_in_quadrature(errors, num_errors);
           }
           if( syst == Systematic::SYS_EL_HFLF_UP )   return +m_el_HFLFerr; // HF/LF error
           if( syst == Systematic::SYS_EL_HFLF_DOWN ) return -m_el_HFLFerr;
@@ -519,25 +516,16 @@ float DileptonMatrixMethod::getRateSyst(
           if( syst == Systematic::SYS_EL_REG_DOWN ) return -m_el_region;
           return 0.;
       } else { // end electron
-          if( syst == Systematic::SYS_MU_FR_UP ){ // Fake Rate Up
+          if(syst==Systematic::SYS_MU_FR_UP ||
+             syst==Systematic::SYS_MU_FR_DOWN){ // Fake Rate mu
+              float updown = syst==Systematic::SYS_MU_FR_UP ? +1.0 : -1.0;
               float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
               etaSys = etaSys > 0.0 ? etaSys : 0.0;
               float statSys  = getRelStatError(lep, rate_type, regionIndex);
-              return +1.0*sqrt(statSys*statSys);
-//               return sqrt( statSys*statSys
-//                            + etaSys*etaSys
-//                            + m_mu_datamc*m_mu_datamc
-//                            + m_mu_region*m_mu_region);
-          }
-          if( syst == Systematic::SYS_MU_FR_DOWN){ // Fake Rate Down
-              float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-              etaSys = etaSys < 0.0 ? etaSys : 0.0;
-              float statSys  = getRelStatError(lep, rate_type, regionIndex);
-              return -1.0*sqrt(statSys*statSys);
-//               return (-1.0) * sqrt( statSys*statSys
-//                                     + etaSys*etaSys
-//                                     + m_mu_datamc*m_mu_datamc
-//                                     + m_mu_region*m_mu_region);
+              //float errors[] = {statSys, etaSys, m_mu_datamc, m_mu_region};
+              float errors[] = {statSys}; // other components now included in stat or obsolete (eta parametrization)
+              int num_errors = sizeof(errors)/sizeof(errors[0]);
+              return updown*sum_in_quadrature(errors, num_errors);
           }
           if( syst == Systematic::SYS_MU_ETA ) return m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
           if( syst == Systematic::SYS_MU_FR_STAT_UP )   return getRelStatError(lep, rate_type, regionIndex); // Statistical error from maps
@@ -618,7 +606,7 @@ bool DileptonMatrixMethod::loadSysFromFile()
   if(ron.anythingMissing()) {
       cout<<"DileptonMatrixMethod::loadSysFromFile(): missing the following systematic histograms:"<<endl;
       copy(ron.miss_.begin(), ron.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
-  }  
+  }
   return (!roz.anythingMissing() && !ron.anythingMissing());
 }
 // -----------------------------------------------------------------------------
@@ -637,7 +625,7 @@ float DileptonMatrixMethod::getStatError(const MatrixLepton& lep
   return error;
 }
 // ---------------------------------------------------------
-float DileptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt, 
+float DileptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt,
                                             const size_t regionIndex) const
 {
     float rate(0.0), error(0.0), relativeError(0.0);
@@ -874,4 +862,4 @@ float DileptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
     }
     return relativeError;
 }
-// -----------------------------------------------------------------------------
+//----------------------------------------------------------
