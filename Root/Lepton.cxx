@@ -1,65 +1,77 @@
 #include "DileptonMatrixMethod/Lepton.h"
 
-// -----------------------------------------------------------------------------
-susy::fake::Lepton::Lepton( bool isTight
-                                            , bool isElectron
-                                            , float pt
-                                            , float eta
-                                            )
-                                            : m_isTight(isTight)
-                                            , m_isElectron(isElectron)
-                                            , m_pt(pt)
-                                            , m_eta(eta)
+using susy::fake::Lepton;
+//----------------------------------------------------------
+Lepton::Lepton(bool isTight, bool isElectron, float pt, float eta):
+    m_isTight(isTight),
+    m_isElectron(isElectron),
+    m_pt(pt),
+    m_eta(eta)
 {
-  // do nothing
 }
-
-// -----------------------------------------------------------------------------
-susy::fake::Lepton::~Lepton()
+//----------------------------------------------------------
+bool Lepton::isTight() const
 {
-  // do nothing
+    return m_isTight;
 }
-
-// -----------------------------------------------------------------------------
-bool susy::fake::Lepton::isTight() const
+//----------------------------------------------------------
+bool Lepton::isElectron() const
 {
-  return m_isTight;
+    return m_isElectron;
 }
-
-// -----------------------------------------------------------------------------
-bool susy::fake::Lepton::isElectron() const
+//----------------------------------------------------------
+bool Lepton::isMuon() const
 {
-  return m_isElectron;
+    return !m_isElectron;
 }
-
-// -----------------------------------------------------------------------------
-bool susy::fake::Lepton::isMuon() const
+//----------------------------------------------------------
+float Lepton::pt() const
 {
-  return !m_isElectron;
+    return m_pt;
 }
-
-// -----------------------------------------------------------------------------
-float susy::fake::Lepton::pt() const
+//----------------------------------------------------------
+float Lepton::eta() const
 {
-  return m_pt;
+    return m_eta;
 }
-
-// -----------------------------------------------------------------------------
-float susy::fake::Lepton::eta() const
+//----------------------------------------------------------
+bool Lepton::operator<(const Lepton& rhs) const
 {
-  return m_eta;
+    return (pt() < rhs.pt());
 }
-
-// -----------------------------------------------------------------------------
-bool susy::fake::Lepton::operator<(
-    const susy::fake::Lepton& rhs) const
+//----------------------------------------------------------
+bool Lepton::operator>(const Lepton& rhs) const
 {
-  return (pt() < rhs.pt());
+    return (pt() > rhs.pt());
 }
-
-// -----------------------------------------------------------------------------
-bool susy::fake::Lepton::operator>(
-    const susy::fake::Lepton& rhs) const
+//----------------------------------------------------------
+Lepton& Lepton::isTight(bool v)
 {
-  return (pt() > rhs.pt());
+    m_isTight=v;
+    return *this;
 }
+//----------------------------------------------------------
+Lepton& Lepton::isEl(bool v)
+{
+    m_isElectron = v;
+    return *this;
+}
+//----------------------------------------------------------
+Lepton& Lepton::isMu(bool v)
+{
+    m_isElectron = !v;
+    return *this;
+}
+//----------------------------------------------------------
+Lepton& Lepton::pt(float v)
+{
+    m_pt = v;
+    return *this;
+}
+//----------------------------------------------------------
+Lepton& Lepton::eta(float v)
+{
+    m_eta = v;
+    return *this;
+}
+//----------------------------------------------------------
