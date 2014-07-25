@@ -1,5 +1,5 @@
 #include "DileptonMatrixMethod/DileptonMatrixMethod.h"
-#include "DileptonMatrixMethod/MatrixLepton.h"
+#include "DileptonMatrixMethod/Lepton.h"
 
 #include "TArrayD.h"
 
@@ -50,7 +50,7 @@ void printSystematics(sf::DileptonMatrixMethod & matrix, bool isEl, bool isMu)
     for(size_t i=0; i<ptBins.size(); ++i)
         for(size_t j=0; j<etaBins.size(); ++j){
             float pt(ptBins[i]), eta(etaBins[j]);
-            sf::MatrixLepton l(isTight, isElectron, pt*gev2mev, eta);
+            sf::Lepton l(isTight, isElectron, pt*gev2mev, eta);
             sf::DileptonMatrixMethod::RATE_TYPE rt = sf::DileptonMatrixMethod::FAKE;
             matrix.printRateSystematics(l, rt, matrix.getIndexRegion(regionName));
         }

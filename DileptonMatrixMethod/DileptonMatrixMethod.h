@@ -10,7 +10,7 @@
  */
 
 
-#include "DileptonMatrixMethod/MatrixLepton.h"
+#include "DileptonMatrixMethod/Lepton.h"
 #include "DileptonMatrixMethod/Parametrization.h"
 #include "DileptonMatrixMethod/Systematic.h"
 
@@ -101,67 +101,67 @@ class DileptonMatrixMethod
 
       const TArrayD* getPtBins() const;
       const TArrayD* getEtaBins() const;
-      void printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, size_t regionIndex) const;
+      void printRateSystematics(const Lepton &l, RATE_TYPE &rt, size_t regionIndex) const;
   protected:
       // Get the rate for this lepton -- real/fake for electron or muon
       // Specific rate depends on type of lepton supplied and the
       // RATE_TYPE parameter
       // for internal use
-      float getRate(const MatrixLepton&,
+      float getRate(const Lepton&,
                     RATE_TYPE,
                     size_t regionIndex,
                     float MetRel,
                     Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getRateSyst(const MatrixLepton&,
+      float getRateSyst(const Lepton&,
                         RATE_TYPE,
                         size_t regionIndex,
                         float MetRel,
                         Systematic::Value syst = Systematic::SYS_NOM) const;
 
-      int getRateBin(const MatrixLepton& lep,
+      int getRateBin(const Lepton& lep,
                      TH1* h_rate,
                      Parametrization::Value rate_param) const;
 
       // Get the fake/real contribution for this event -- for internal use
-      float getTotalFake(const MatrixLepton& lep1,
-                         const MatrixLepton& lep2,
+      float getTotalFake(const Lepton& lep1,
+                         const Lepton& lep2,
                          size_t regionIndex,
                          float MetRel,
                          Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getRR(const MatrixLepton& lep1,
-                  const MatrixLepton& lep2,
+      float getRR(const Lepton& lep1,
+                  const Lepton& lep2,
                   size_t regionIndex,
                   float MetRel,
                   Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getRF(const MatrixLepton& lep1,
-                  const MatrixLepton& lep2,
+      float getRF(const Lepton& lep1,
+                  const Lepton& lep2,
                   size_t regionIndex,
                   float MetRel,
                   Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getFR(const MatrixLepton& lep1,
-                  const MatrixLepton& lep2,
+      float getFR(const Lepton& lep1,
+                  const Lepton& lep2,
                   size_t regionIndex,
                   float MetRel,
                   Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getFF(const MatrixLepton& lep1,
-                  const MatrixLepton& lep2,
+      float getFF(const Lepton& lep1,
+                  const Lepton& lep2,
                   size_t regionIndex,
                   float MetRel,
                   Systematic::Value syst = Systematic::SYS_NOM) const;
 
       // Additional methods needed for systematics
-      float getStatError(const MatrixLepton&, RATE_TYPE, size_t regionIndex) const;
-      float getRelStatError(const MatrixLepton&, RATE_TYPE, size_t regionIndex) const;
+      float getStatError(const Lepton&, RATE_TYPE, size_t regionIndex) const;
+      float getRelStatError(const Lepton&, RATE_TYPE, size_t regionIndex) const;
 
       // Determine if the event is TT/TL/LT/LL -- for internal use
-      int getTT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
-      int getTL(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
-      int getLT(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
-      int getLL(const MatrixLepton& lep1, const MatrixLepton& lep2) const;
+      int getTT(const Lepton& lep1, const Lepton& lep2) const;
+      int getTL(const Lepton& lep1, const Lepton& lep2) const;
+      int getLT(const Lepton& lep1, const Lepton& lep2) const;
+      int getLL(const Lepton& lep1, const Lepton& lep2) const;
 
       // Verbose output
-      void printInfo(const MatrixLepton& lep1,
-                     const MatrixLepton& lep2,
+      void printInfo(const Lepton& lep1,
+                     const Lepton& lep2,
                      size_t regionIndex,
                      float MetRel,
                      Systematic::Value syst = Systematic::SYS_NOM) const;
@@ -173,12 +173,12 @@ class DileptonMatrixMethod
       const TH1* getFirstPtEtaHisto() const; /// get the first available pt_eta histo
       const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
       const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
-      bool getHistoAndParametrization(const MatrixLepton &lep,
+      bool getHistoAndParametrization(const Lepton &lep,
                                       const size_t regionIndex,
                                       const RATE_TYPE &rt,
                                       TH1* &h,
                                       Parametrization::Value &rp) const;
-      float getFracRelativeError(const MatrixLepton &lep, RATE_TYPE rt, size_t regionIndex,
+      float getFracRelativeError(const Lepton &lep, RATE_TYPE rt, size_t regionIndex,
                                  Systematic::Value syst) const;
 
       /// input file holding the real efficiency and fake rates for leptons

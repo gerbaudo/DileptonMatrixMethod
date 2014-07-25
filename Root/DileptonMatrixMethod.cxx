@@ -166,8 +166,8 @@ float DileptonMatrixMethod::getTotalFake(
     float MetRel,
     Systematic::Value syst) const
 {
-  susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
-  susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
+  susy::fake::Lepton lep1(isTight1, isElectron1, pt1, eta1);
+  susy::fake::Lepton lep2(isTight2, isElectron2, pt2, eta2);
 
   return getTotalFake(lep1, lep2, regionIndex, MetRel, syst);
 }
@@ -180,8 +180,8 @@ float DileptonMatrixMethod::getRR(
     float MetRel,
     Systematic::Value syst) const
 {
-  susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
-  susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
+  susy::fake::Lepton lep1(isTight1, isElectron1, pt1, eta1);
+  susy::fake::Lepton lep2(isTight2, isElectron2, pt2, eta2);
 
   return getRR(lep1, lep2, regionIndex, MetRel, syst);
 }
@@ -194,8 +194,8 @@ float DileptonMatrixMethod::getRF(
     float MetRel,
     Systematic::Value syst) const
 {
-  susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
-  susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
+  susy::fake::Lepton lep1(isTight1, isElectron1, pt1, eta1);
+  susy::fake::Lepton lep2(isTight2, isElectron2, pt2, eta2);
 
   return getRF(lep1, lep2, regionIndex, MetRel, syst);
 }
@@ -208,8 +208,8 @@ float DileptonMatrixMethod::getFR(
     float MetRel,
     Systematic::Value syst) const
 {
-  susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
-  susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
+  susy::fake::Lepton lep1(isTight1, isElectron1, pt1, eta1);
+  susy::fake::Lepton lep2(isTight2, isElectron2, pt2, eta2);
 
   return getFR(lep1, lep2, regionIndex, MetRel, syst);
 }
@@ -222,16 +222,16 @@ float DileptonMatrixMethod::getFF(
     float MetRel,
     Systematic::Value syst) const
 {
-  susy::fake::MatrixLepton lep1(isTight1, isElectron1, pt1, eta1);
-  susy::fake::MatrixLepton lep2(isTight2, isElectron2, pt2, eta2);
+  susy::fake::Lepton lep1(isTight1, isElectron1, pt1, eta1);
+  susy::fake::Lepton lep2(isTight2, isElectron2, pt2, eta2);
 
   return getFF(lep1, lep2, regionIndex, MetRel, syst);
 }
 
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getTotalFake(
-    const MatrixLepton& lep1,
-    const MatrixLepton& lep2,
+    const Lepton& lep1,
+    const Lepton& lep2,
     size_t regionIndex,
     float MetRel,
     Systematic::Value syst) const
@@ -244,8 +244,8 @@ float DileptonMatrixMethod::getTotalFake(
 
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getRR(
-    const MatrixLepton& lep1,
-    const MatrixLepton& lep2,
+    const Lepton& lep1,
+    const Lepton& lep2,
     size_t regionIndex,
     float MetRel,
     Systematic::Value syst) const
@@ -279,8 +279,8 @@ float DileptonMatrixMethod::getRR(
 
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getRF(
-    const MatrixLepton& lep1,
-    const MatrixLepton& lep2,
+    const Lepton& lep1,
+    const Lepton& lep2,
     size_t regionIndex,
     float MetRel,
     Systematic::Value syst) const
@@ -306,8 +306,8 @@ float DileptonMatrixMethod::getRF(
 
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getFR(
-    const MatrixLepton& lep1,
-    const MatrixLepton& lep2,
+    const Lepton& lep1,
+    const Lepton& lep2,
     size_t regionIndex,
     float MetRel,
     Systematic::Value syst) const
@@ -333,8 +333,8 @@ float DileptonMatrixMethod::getFR(
 
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getFF(
-    const MatrixLepton& lep1,
-    const MatrixLepton& lep2,
+    const Lepton& lep1,
+    const Lepton& lep2,
     size_t regionIndex,
     float MetRel,
     Systematic::Value syst) const
@@ -365,12 +365,12 @@ float DileptonMatrixMethod::getRate(
     RATE_TYPE rate_type, size_t regionIndex, float MetRel,
     Systematic::Value syst) const
 {
-  susy::fake::MatrixLepton lep(isTight, isElectron, pt, eta);
+  susy::fake::Lepton lep(isTight, isElectron, pt, eta);
   return getRate(lep, rate_type, regionIndex, MetRel, syst);
 }
 
 // --------------------------------------------------------
-bool DileptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
+bool DileptonMatrixMethod::getHistoAndParametrization(const Lepton &lep,
                                                       const size_t regionIndex,
                                                       const RATE_TYPE &rt,
                                                       TH1* &h, Parametrization::Value &rp) const
@@ -403,7 +403,7 @@ bool DileptonMatrixMethod::getHistoAndParametrization(const MatrixLepton &lep,
 }
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getRate(
-    const MatrixLepton& lep,
+    const Lepton& lep,
     RATE_TYPE rate_type,
     const size_t regionIndex,
     float MetRel,
@@ -425,7 +425,7 @@ float DileptonMatrixMethod::getRate(
 }
 
 // -----------------------------------------------------------------------------
-int DileptonMatrixMethod::getRateBin( const MatrixLepton& lep,
+int DileptonMatrixMethod::getRateBin( const Lepton& lep,
 							TH1* h_rate,
 							Parametrization::Value rate_param) const
 {
@@ -470,7 +470,7 @@ int DileptonMatrixMethod::getRateBin( const MatrixLepton& lep,
 
 // -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getRateSyst(
-    const MatrixLepton& lep,
+    const Lepton& lep,
     RATE_TYPE rate_type,
     const size_t regionIndex,
     float MetRel,
@@ -541,8 +541,8 @@ float DileptonMatrixMethod::getRateSyst(
 }
 
 // -----------------------------------------------------------------------------
-int DileptonMatrixMethod::getTT( const MatrixLepton& lep1
-                                                 , const MatrixLepton& lep2
+int DileptonMatrixMethod::getTT( const Lepton& lep1
+                                                 , const Lepton& lep2
                                                  ) const
 {
   if (lep1.isTight() && lep2.isTight()) return 1;
@@ -550,8 +550,8 @@ int DileptonMatrixMethod::getTT( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-int DileptonMatrixMethod::getTL( const MatrixLepton& lep1
-                                                 , const MatrixLepton& lep2
+int DileptonMatrixMethod::getTL( const Lepton& lep1
+                                                 , const Lepton& lep2
                                                  ) const
 {
   if (lep1.isTight() && !lep2.isTight()) return 1;
@@ -559,8 +559,8 @@ int DileptonMatrixMethod::getTL( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-int DileptonMatrixMethod::getLT( const MatrixLepton& lep1
-                                                 , const MatrixLepton& lep2
+int DileptonMatrixMethod::getLT( const Lepton& lep1
+                                                 , const Lepton& lep2
                                                  ) const
 {
   if (!lep1.isTight() && lep2.isTight()) return 1;
@@ -568,8 +568,8 @@ int DileptonMatrixMethod::getLT( const MatrixLepton& lep1
 }
 
 // -----------------------------------------------------------------------------
-int DileptonMatrixMethod::getLL( const MatrixLepton& lep1
-                                                 , const MatrixLepton& lep2
+int DileptonMatrixMethod::getLL( const Lepton& lep1
+                                                 , const Lepton& lep2
                                                  ) const
 {
   if (!lep1.isTight() && !lep2.isTight()) return 1;
@@ -610,7 +610,7 @@ bool DileptonMatrixMethod::loadSysFromFile()
   return (!roz.anythingMissing() && !ron.anythingMissing());
 }
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::getStatError(const MatrixLepton& lep
+float DileptonMatrixMethod::getStatError(const Lepton& lep
                                          , RATE_TYPE rate_type
                                          , const size_t regionIndex) const
 
@@ -625,7 +625,7 @@ float DileptonMatrixMethod::getStatError(const MatrixLepton& lep
   return error;
 }
 // ---------------------------------------------------------
-float DileptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE rt,
+float DileptonMatrixMethod::getRelStatError(const Lepton &lep, RATE_TYPE rt,
                                             const size_t regionIndex) const
 {
     float rate(0.0), error(0.0), relativeError(0.0);
@@ -642,8 +642,8 @@ float DileptonMatrixMethod::getRelStatError(const MatrixLepton &lep, RATE_TYPE r
 }
 // -----------------------------------------------------------------------------
 void DileptonMatrixMethod::printInfo(
-    const MatrixLepton& lep1,
-    const MatrixLepton& lep2,
+    const Lepton& lep1,
+    const Lepton& lep2,
     const size_t regionIndex,
     float MetRel,
     Systematic::Value syst) const
@@ -720,7 +720,7 @@ const TArrayD* DileptonMatrixMethod::getEtaBins() const
     return bins;
 }
 //----------------------------------------------------------
-std::string lep2str(const susy::fake::MatrixLepton l)
+std::string lep2str(const susy::fake::Lepton l)
 {
     std::ostringstream oss;
     oss<<(l.isElectron() ? "el" : "mu")
@@ -730,7 +730,7 @@ std::string lep2str(const susy::fake::MatrixLepton l)
     return oss.str();
 }
 //----------------------------------------------------------
-void DileptonMatrixMethod::printRateSystematics(const MatrixLepton &l, RATE_TYPE &rt, size_t regionIndex) const
+void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, size_t regionIndex) const
 {
     // this is a useless parameter, it should be dropped everywhere (DG, 2014-05-18 TODO)
     float dummyMetRel(20.0);
@@ -822,7 +822,7 @@ const TAxis* DileptonMatrixMethod::getEtaAxis() const
     return ax;
 }
 //----------------------------------------------------------
-float DileptonMatrixMethod::getFracRelativeError(const MatrixLepton &lep,
+float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
                                                  RATE_TYPE rt,
                                                  size_t regionIndex,
                                                  susy::fake::Systematic::Value syst) const

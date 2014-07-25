@@ -1,6 +1,6 @@
 // -*- c++ -*-
-#ifndef SUSY_FAKE_MATRIXLEPTON_H
-#define SUSY_FAKE_MATRIXLEPTON_H
+#ifndef SUSY_FAKE_LEPTON_H
+#define SUSY_FAKE_LEPTON_H
 
 /**
  * @author Brett Jackson <Brett.David.Jackson@cern.ch>
@@ -16,12 +16,11 @@
 
 namespace susy{
 namespace fake{
-  class MatrixLepton
+  class Lepton
   {
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     public:
-      MatrixLepton(bool isTight, bool isElectron, float pt, float eta);
-      ~MatrixLepton();
+      Lepton(bool isTight, bool isElectron, float pt, float eta);
+      ~Lepton();
 
       bool isTight() const;
 
@@ -33,10 +32,9 @@ namespace fake{
       float pt() const;
       float eta() const;
 
-      bool operator< (const susy::fake::MatrixLepton& rhs) const;
-      bool operator> (const susy::fake::MatrixLepton& rhs) const;
+      bool operator< (const Lepton& rhs) const;
+      bool operator> (const Lepton& rhs) const;
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     private:
       // Is this lepton tight?
       bool m_isTight;
