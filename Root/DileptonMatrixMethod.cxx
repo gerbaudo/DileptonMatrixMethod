@@ -104,6 +104,7 @@ bool DileptonMatrixMethod::configure(const std::string &file_name,
     } else if(invalidInputFile) {
         cout<<"DileptonMatrixMethod::configure: failed to open fake rate file: "<<file_name<<endl;
     } else {
+        cout<<"DileptonMatrixMethod::configure with input '"<<file_name<<"'"<<endl;
         m_rate_param_real_el = real_el;
         m_rate_param_fake_el = fake_el;
         m_rate_param_real_mu = real_mu;
