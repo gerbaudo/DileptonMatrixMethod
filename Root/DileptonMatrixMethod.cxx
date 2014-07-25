@@ -128,18 +128,14 @@ bool DileptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &r
 {
     RetrieveOrNull retrieve(m_hist_file);
     const Parametrization::Value rp = m_rate_param_real_el;
-    std::string s_el_real("el_real_eff_"), s_el_fake("el_fake_rate_");
-    std::string s_mu_real("mu_real_eff_"), s_mu_fake("mu_fake_rate_");
-    if(rp==Parametrization::PT_ETA) { // todo: use string replacement (eff->eff2d, rate->rate2d)
-        s_el_real = "el_real_eff2d_"; s_el_fake = "el_fake_rate2d_";
-        s_mu_real = "mu_real_eff2d_"; s_mu_fake = "mu_fake_rate2d_";
-    }
     for(size_t r=0; r<region_names.size(); ++r) { // Get the Real eff and Fake rate for electrons and muons
         const std::string &regionName = region_names[r];
-        TH1* el_real_eff   = retrieve(s_el_real + regionName);
-        TH1* el_fake_rate  = retrieve(s_el_fake + regionName);
-        TH1* mu_real_eff   = retrieve(s_mu_real + regionName);
-        TH1* mu_fake_rate  = retrieve(s_mu_fake + regionName);
+        bool isEl(true), isMu(!isEl); // see convention in generateNominalHistoname
+        bool isReal(true), isFake(!isReal);
+        TH1* el_real_eff   = retrieve(generateNominalHistoname(isEl, isReal, rp, regionName));
+        TH1* el_fake_rate  = retrieve(generateNominalHistoname(isEl, isFake, rp, regionName));
+        TH1* mu_real_eff   = retrieve(generateNominalHistoname(isMu, isReal, rp, regionName));
+        TH1* mu_fake_rate  = retrieve(generateNominalHistoname(isMu, isFake, rp, regionName));
         bool allHistosFound = (el_real_eff && el_fake_rate && mu_real_eff && mu_fake_rate);
         if(allHistosFound){
             m_signalRegions.push_back(regionName);
@@ -752,5 +748,24 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
             <<"not for '"<<region<<"'; returning "<<relativeError<<endl;
     }
     return relativeError;
+}
+//----------------------------------------------------------
+std::string DileptonMatrixMethod::generateNominalHistoname(bool isEl, bool isReal,
+                                                           const Parametrization::Value &p,
+                                                           const std::string &region)
+{
+    std::string histoname;
+    if(p==Parametrization::PT) {
+        if     ( isEl &&  isReal) histoname = ("el_real_eff_" +region);
+        else if( isEl && !isReal) histoname = ("el_fake_rate_"+region);
+        else if(!isEl &&  isReal) histoname = ("mu_real_eff_" +region);
+        else if(!isEl && !isReal) histoname = ("mu_fake_rate_"+region);
+    } else if(p==Parametrization::PT_ETA) {
+        if     ( isEl &&  isReal) histoname = ("el_real_eff2d_" +region);
+        else if( isEl && !isReal) histoname = ("el_fake_rate2d_"+region);
+        else if(!isEl &&  isReal) histoname = ("mu_real_eff2d_" +region);
+        else if(!isEl && !isReal) histoname = ("mu_fake_rate2d_"+region);
+    }
+    return histoname;
 }
 //----------------------------------------------------------

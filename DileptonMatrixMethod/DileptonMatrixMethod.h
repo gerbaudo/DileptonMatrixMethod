@@ -2,14 +2,6 @@
 #ifndef SUSY_FAKE_DILEPTONMATRIXMETHOD_H
 #define SUSY_FAKE_DILEPTONMATRIXMETHOD_H
 
-/**
- * @author Brett Jackson <Brett.David.Jackson@cern.ch>
- * @data July 2012
- *
- * Class to perform the matrix method fake estimate
- */
-
-
 #include "DileptonMatrixMethod/Lepton.h"
 #include "DileptonMatrixMethod/Parametrization.h"
 #include "DileptonMatrixMethod/Systematic.h"
@@ -25,6 +17,20 @@ class TAxis;
 
 namespace susy{
 namespace fake{
+/**
+   Class to perform the matrix method fake estimate.
+
+   All physical quantities [E] are expressed in GeV.
+   The format of the names expected for the input histograms is the
+   one specified in generateNominalHistoname()
+
+   Cleanup and rewrite, davide.gerbaudo@gmail.com, July 2014.
+
+   @author Brett Jackson <Brett.David.Jackson@cern.ch>
+   @data July 2012
+*/
+
+
 class DileptonMatrixMethod
   {
   public:
@@ -70,6 +76,16 @@ class DileptonMatrixMethod
       const TArrayD* getPtBins() const;
       const TArrayD* getEtaBins() const;
       void printRateSystematics(const Lepton &l, RATE_TYPE &rt, size_t regionIndex) const;
+      ///< name of the nominal histogram for a given region, parametrization, and lepton type
+      /**
+         Either el or mu; either real or fake.
+         Histogram names for the systematic variations are slighly
+         different. They are currently hardcoded in
+         DileptonMatrixMethod::loadSysFromFile()
+       */
+      static std::string generateNominalHistoname(bool isEl, bool isReal,
+                                                  const Parametrization::Value &p,
+                                                  const std::string &region);
   protected:
       // Get the rate for this lepton -- real/fake for electron or muon
       // Specific rate depends on type of lepton supplied and the
