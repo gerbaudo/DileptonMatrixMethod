@@ -23,7 +23,7 @@ bool testParametrization(string filename, Parametrization::Value rp)
     bool success = false;
     sf::DileptonMatrixMethod matrix;
     std::vector<std::string> regions;
-    const std::string regionName = "CR_SSInc1j";
+    const std::string regionName = "emuInc"; //"CR_SSInc1j";
     regions.push_back(regionName);
     if(matrix.configure(filename, regions, rp, rp, rp, rp)) {
         float gev(1.0);
@@ -60,8 +60,7 @@ bool testParametrization(string filename, Parametrization::Value rp)
 int main(int argc, char **argv)
 {
 
-  string inputFilename="data/FinalFakeHist_Apr_10.root";
-  inputFilename = "data/FinalFakeHist_May_16.root";
+  string inputFilename="data/FakeMatrix_Jul_26.root";
   size_t nFail=0;
 
   cout<<endl<<" --- test 1D parametrization (pt)     ---"<<endl;
