@@ -60,7 +60,7 @@ bool testParametrization(string filename, Parametrization::Value rp)
 int main(int argc, char **argv)
 {
 
-  string inputFilename="data/FakeMatrix_Jul_26.root";
+  string inputFilename="${ROOTCOREBIN}/data/DileptonMatrixMethod/FakeMatrix_Jul_26.root";
   size_t nFail=0;
 
   cout<<endl<<" --- test 1D parametrization (pt)     ---"<<endl;

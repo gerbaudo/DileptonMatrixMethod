@@ -59,7 +59,7 @@ void printSystematics(sf::DileptonMatrixMethod & matrix, bool isEl, bool isMu)
 int main(int argc, char **argv)
 {
 
-  string inputFilename="data/FinalFakeHist_May_20.root";
+  string inputFilename="${ROOTCOREBIN}/data/DileptonMatrixMethod/FinalFakeHist_May_20.root";
 
   bool isEl(false), isMu(false);
 

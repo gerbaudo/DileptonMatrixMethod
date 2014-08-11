@@ -7,7 +7,7 @@
 #include "TFile.h"
 #include "TH1F.h"
 #include "TH2.h"
-
+#include "TSystem.h"
 
 #include <iostream>
 #include <math.h>
@@ -105,14 +105,15 @@ bool DileptonMatrixMethod::configure(const std::string &file_name,
     bool invalidParamChoice = (real_el != fake_el ||
                                fake_el != real_mu ||
                                real_mu != fake_mu );
-    m_hist_file = TFile::Open(file_name.c_str(), "OPEN");
+    string fname = gSystem->ExpandPathName(file_name.c_str());
+    m_hist_file = TFile::Open(fname.c_str(), "OPEN");
     bool invalidInputFile = (!m_hist_file || !m_hist_file->IsOpen());
     if(invalidParamChoice){
         cout<<"DileptonMatrixMethod::configure: mixed parametrization not implemented"<<endl;
     } else if(invalidInputFile) {
-        cout<<"DileptonMatrixMethod::configure: failed to open fake rate file: "<<file_name<<endl;
+        cout<<"DileptonMatrixMethod::configure: failed to open fake rate file: "<<fname<<endl;
     } else {
-        cout<<"DileptonMatrixMethod::configure with input '"<<file_name<<"'"<<endl;
+        cout<<"DileptonMatrixMethod::configure with input '"<<fname<<"'"<<endl;
         m_rate_param_real_el = real_el;
         m_rate_param_fake_el = fake_el;
         m_rate_param_real_mu = real_mu;
