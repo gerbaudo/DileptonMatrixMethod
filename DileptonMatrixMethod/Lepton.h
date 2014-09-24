@@ -2,6 +2,7 @@
 #ifndef SUSY_FAKE_LEPTON_H
 #define SUSY_FAKE_LEPTON_H
 
+#include <string>
 
 namespace susy{
 namespace fake{
@@ -33,6 +34,7 @@ public:
     Lepton& isMu(bool v); ///< isMu setter
     Lepton& pt(float v); ///< pt setter (in GeV)
     Lepton& eta(float v); ///< eta setter
+    std::string str() const; ///< string representation
 private:
     bool m_isTight; ///< whether it satisfies the tight requirements
     bool m_isElectron; ///< either it's an electron or a muon

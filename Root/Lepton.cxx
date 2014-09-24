@@ -1,5 +1,7 @@
 #include "DileptonMatrixMethod/Lepton.h"
 
+#include <sstream>      // std::ostringstream
+
 using susy::fake::Lepton;
 //----------------------------------------------------------
 Lepton::Lepton(bool isTight, bool isElectron, float pt, float eta):
@@ -75,3 +77,13 @@ Lepton& Lepton::eta(float v)
     return *this;
 }
 //----------------------------------------------------------
+std::string Lepton::str() const
+{
+    std::ostringstream oss;
+    oss<<(m_isTight ? "tight":"loose")
+       <<" "<<(m_isElectron ? "el":"mu")
+       <<" "<<m_pt
+       <<" "<<m_eta;
+    return oss.str();
+}
+//-----------------------------------------
