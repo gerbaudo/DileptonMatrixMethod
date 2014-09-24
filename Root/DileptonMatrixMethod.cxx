@@ -109,7 +109,8 @@ bool DileptonMatrixMethod::configure(const std::string &file_name,
     m_hist_file = TFile::Open(fname.c_str(), "OPEN");
     bool invalidInputFile = (!m_hist_file || !m_hist_file->IsOpen());
     if(invalidParamChoice){
-        cout<<"DileptonMatrixMethod::configure: mixed parametrization not implemented"<<endl;
+        cout<<"DileptonMatrixMethod::configure: mixed parametrization not implemented"<<endl
+            <<"\t You should use `configure1d` or `configure2d` instead."<<endl;
     } else if(invalidInputFile) {
         cout<<"DileptonMatrixMethod::configure: failed to open fake rate file: "<<fname<<endl;
     } else {
@@ -123,6 +124,20 @@ bool DileptonMatrixMethod::configure(const std::string &file_name,
             cout<<"Warning: some systematic uncertainty will not be available"<<endl;
     }
     return success;
+}
+//------------------------------------------------------------------------------
+bool DileptonMatrixMethod::configure1d(const std::string &file_name,
+                                       const std::vector<std::string> &region_names)
+{
+    Parametrization::Value p = Parametrization::PT;
+    return configure(file_name, region_names, p, p, p, p);
+}
+//------------------------------------------------------------------------------
+bool DileptonMatrixMethod::configure2d(const std::string &file_name,
+                                       const std::vector<std::string> &region_names)
+{
+    Parametrization::Value p = Parametrization::PT_ETA;
+    return configure(file_name, region_names, p, p, p, p);
 }
 // -----------------------------------------------------------------------------
 bool DileptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &region_names)

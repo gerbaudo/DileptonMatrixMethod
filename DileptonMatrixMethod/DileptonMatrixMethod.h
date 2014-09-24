@@ -57,6 +57,12 @@ class DileptonMatrixMethod
                      Parametrization::Value fake_el,
                      Parametrization::Value real_mu,
                      Parametrization::Value fake_mu);
+      /// configure with 1D, pt-dependent parametrization
+      bool configure1d(const std::string &file_name,
+                       const std::vector<std::string> &region_names);
+      /// configure with 1D, pt-eta-dependent parametrization
+      bool configure2d(const std::string &file_name,
+                       const std::vector<std::string> &region_names);
       float getRR(const Lepton& lep1, const Lepton& lep2,
                   size_t regionIndex, float MetRel,
                   Systematic::Value syst = Systematic::SYS_NOM) const;
