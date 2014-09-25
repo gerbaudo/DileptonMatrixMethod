@@ -113,6 +113,8 @@ def print_example_input():
     <isElectron 1> <isElectron 2> <isTight 1> <isTight 2> <pt 1> <pt 2> <eta 1> <eta 2>
     """
     print """
+# format:
+# <isElectron 1> <isElectron 2> <isTight 1> <isTight 2> <pt 1> <pt 2> <eta 1> <eta 2>
 # ee TT
 1 1 1 1 35.0 25.0 1.5 0.9
 # emu TL
