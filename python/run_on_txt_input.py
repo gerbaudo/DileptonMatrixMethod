@@ -41,7 +41,7 @@ def main():
     region_index = matrix.getIndexRegion(region)
     l0 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
     l1 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
-
+    pt_unit = 1.0e3 if options.mev2gev-conversion else 1.0
     input_stream = open(file_name) if file_name else sys.stdin
     for line in input_stream.readlines():
         line = line.strip()
@@ -50,8 +50,8 @@ def main():
             parameters = parse_input_line(line)
             l0El, l0Tight, l0pt, l0eta = parameters[ ::2]
             l1El, l1Tight, l1pt, l1eta = parameters[1::2]
-            l0 = l0.isEl(l0El).isTight(l0Tight).pt(l0pt).eta(l0eta)
-            l1 = l1.isEl(l1El).isTight(l1Tight).pt(l1pt).eta(l1eta)
+            l0 = l0.isEl(l0El).isTight(l0Tight).pt(l0pt*pt_unit).eta(l0eta)
+            l1 = l1.isEl(l1El).isTight(l1Tight).pt(l1pt*pt_unit).eta(l1eta)
             weight = matrix.getTotalFake(l0, l1, region_index, systematic)
             print "weight {0:10.6f} l0 {1} l1 {2}".format(weight, l0.str(), l1.str())
         elif verbose:
@@ -75,6 +75,8 @@ or
     parser.add_option('--param-pt', action='store_true', default=False, help='use 1d parametrization (vs. pt). Default one.')
     parser.add_option('--param-pt-eta', action='store_true', default=False, help='use 2d parametrization (vs. pt and eta)')
     parser.add_option('--print-example-input', action='store_true', default=False, help='print example input to stdout')
+    parser.add_option('--mev2gev-conversion', action='store_true', default=False,
+                      help='assume the input matrix has pt in MeV (previous format, pt values are now in GeV)')
     parser.add_option('-v', '--verbose', action='store_true', default=False, help='print more details about what is going on')
     (options, args) = parser.parse_args()
     if options.input and not os.path.exists(options.input) : parser.error("invalid input '{0}'".format(options.input))
