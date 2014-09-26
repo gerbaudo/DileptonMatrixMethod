@@ -41,7 +41,7 @@ def main():
     region_index = matrix.getIndexRegion(region)
     l0 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
     l1 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
-    pt_unit = 1.0e3 if options.mev2gev-conversion else 1.0
+    pt_unit = 1.0e3 if options.mev2gev else 1.0
     input_stream = open(file_name) if file_name else sys.stdin
     for line in input_stream.readlines():
         line = line.strip()
@@ -75,7 +75,7 @@ or
     parser.add_option('--param-pt', action='store_true', default=False, help='use 1d parametrization (vs. pt). Default one.')
     parser.add_option('--param-pt-eta', action='store_true', default=False, help='use 2d parametrization (vs. pt and eta)')
     parser.add_option('--print-example-input', action='store_true', default=False, help='print example input to stdout')
-    parser.add_option('--mev2gev-conversion', action='store_true', default=False,
+    parser.add_option('--mev2gev', action='store_true', default=False,
                       help='assume the input matrix has pt in MeV (previous format, pt values are now in GeV)')
     parser.add_option('-v', '--verbose', action='store_true', default=False, help='print more details about what is going on')
     (options, args) = parser.parse_args()
