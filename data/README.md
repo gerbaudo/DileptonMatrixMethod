@@ -1,6 +1,9 @@
 Summary of the various matrices.
 As a rule of thumb, always pick the latest one.
 
+- FakeMatrix_Oct_28.root lfv with updated muon SF (use with 1d param)
+- Nov_04: same as Oct_28, but now also with flat 1.0 elec qcd scale factor
+- Oct_28: with muon scale factor from same-sign
 - FinalFakeHist_Feb_02.root : after bugfix github.com/gerbaudo/SusyTest0/commit/ffbd20a6, otherwise same as Jan_31
 - FinalFakeHist_Jan_31.root : channel-agnostic prediction with n_j>0 extraction region
 - FinalFakeHist_Jan_29.root : add channel-agnostic sr/cr; tag Jan_29
