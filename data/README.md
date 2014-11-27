@@ -1,6 +1,7 @@
 Summary of the various matrices.
 As a rule of thumb, always pick the latest one.
 
+- FakeMatrix_Nov_26.root razor with flat qcd sf (both el and mu), no mdr cut in composition
 - FakeMatrix_Oct_28.root lfv with updated muon SF (use with 1d param)
 - Nov_04: same as Oct_28, but now also with flat 1.0 elec qcd scale factor
 - Oct_28: with muon scale factor from same-sign
