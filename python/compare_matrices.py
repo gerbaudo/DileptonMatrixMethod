@@ -54,11 +54,16 @@ def binContents(h) :
     return [h.GetBinContent(b) for b in getBinIndices(h)]
 
 def print_histos_comparison(common_histos={'region':[]}, input_file1=None, input_file2=None):
+    def bc_format(bc, precision):
+        # return ('{:<'+str(precision+3)+'.'+str(precision)+'}').format(bc)
+        return ('{:.'+str(precision)+'}').format(bc).ljust(precision+len('0.0'))
+    def ratio_format(a, b, precision):
+        width = precision+len('0.0')
+        return (('{:.'+str(precision)+'}').format(a/b) if b else '--').ljust(width)
     def formatted_histo_contents(h, precision=4):
-        def bc_format(bc):
-            # return ('{:<'+str(precision+3)+'.'+str(precision)+'}').format(bc)
-            return ('{:.'+str(precision)+'}').format(bc).ljust(precision+len('0.0'))
-        return ' '.join(bc_format(bc) for bc in binContents(h))
+        return ' '.join(bc_format(bc, precision) for bc in binContents(h))
+    def formatted_histos_ratio(h_num, h_den, precision=4):
+        return ' '.join(ratio_format(n, d, precision) for n,d in zip(binContents(h_num), binContents(h_den)))
     for region, histos in common_histos.iteritems():
         print
         print '--- '+region+' ---'
@@ -67,8 +72,9 @@ def print_histos_comparison(common_histos={'region':[]}, input_file1=None, input
             h2 = input_file2.Get(hn)
             print
             print '--  '+hn+'  --'
-            print "1) {0}".format(formatted_histo_contents(h1) if h1 else '--')
-            print "2) {0}".format(formatted_histo_contents(h2) if h2 else '--')
+            print "1)   {0}".format(formatted_histo_contents(h1) if h1 else '--')
+            print "2)   {0}".format(formatted_histo_contents(h2) if h2 else '--')
+            print "2/1) {0}".format(formatted_histos_ratio(h2, h1))
 
 if __name__=='__main__':
     main()
