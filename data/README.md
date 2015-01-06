@@ -1,6 +1,8 @@
 Summary of the various matrices.
 As a rule of thumb, always pick the latest one.
 
+- FakeMatrix_Dec_10 : for hlfv, same as Dec_09, hf-sf=1.3
+- FakeMatrix_Dec_09 : for hlfv, updated efficiencies and compositions (both Dec_01); hf-sf=1.0
 - FakeMatrix_Dec_03 : for razor, weighted avg razor and same-sign; hf-sf=1.0, mdr>20
 - FakeMatrix_Nov_26.root razor with flat qcd sf (both el and mu), no mdr cut in composition
 - FakeMatrix_Oct_28.root lfv with updated muon SF (use with 1d param)
