@@ -25,7 +25,7 @@ def main():
                 
 def get_histonames(input_file):
     keys = input_file.GetListOfKeys()
-    return [k.GetName() for k in keys if isTH(k.GetClassName())]
+    return list(set([k.GetName() for k in keys if isTH(k.GetClassName())]))
 
 def isTH(classname):
     if not hasattr(isTH, 'th1') : isTH.th1 = r.TH1.Class() # cache function attr
