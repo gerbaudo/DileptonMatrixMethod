@@ -693,6 +693,22 @@ void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, 
     cout<<endl;
 }
 //----------------------------------------------------------
+const TH1* DileptonMatrixMethod::getFirstPtHisto() const
+{
+    const TH1 *first1dhisto=0;
+    if(m_rate_param_fake_el==Parametrization::PT){
+        if(m_el_fake_rate.size()>0 && m_el_fake_rate[0])
+            first1dhisto = m_el_fake_rate[0];
+        else
+            cout<<"DileptonMatrixMethod::getFirstPtHisto: error, need at least one signal region"<<endl;
+    } else {
+        cout<<"DileptonMatrixMethod::getFirstPtHisto can only be called with the 1d parametrization."
+            <<" Returning "<<first1dhisto
+            <<endl;
+    }
+    return first1dhisto;
+}
+//----------------------------------------------------------
 const TH1* DileptonMatrixMethod::getFirstPtEtaHisto() const
 {
     const TH1 *first2dhisto=0;
@@ -712,8 +728,14 @@ const TH1* DileptonMatrixMethod::getFirstPtEtaHisto() const
 const TAxis* DileptonMatrixMethod::getPtAxis() const
 {
     const TAxis* ax = 0;
-    if(const TH2* histo2d = static_cast<const TH2*>(getFirstPtEtaHisto())) ax = histo2d->GetXaxis();
-    else cout<<"DileptonMatrixMethod::getPtAxis() : error, invalid histo2d, returning "<<ax<<endl;
+    bool use_pt_eta = m_rate_param_fake_el==Parametrization::PT_ETA;
+    const TH1* histo = static_cast<const TH1*>(use_pt_eta ?
+                                               getFirstPtEtaHisto() :
+                                               getFirstPtHisto());
+    if
+        (histo) ax = histo->GetXaxis();
+    else
+        cout<<"DileptonMatrixMethod::getPtAxis() : error, invalid histo, returning "<<ax<<endl;
     return ax;
 }
 //----------------------------------------------------------

@@ -137,6 +137,7 @@ class DileptonMatrixMethod
       bool loadSysFromFile();
 
       const TH1* getFirstPtEtaHisto() const; /// get the first available pt_eta histo
+      const TH1* getFirstPtHisto() const; /// get the first available pt histo
       const TAxis* getPtAxis() const;  /// only consider pt_eta histos; assume all histos have the same binning
       const TAxis* getEtaAxis() const; /// only consider pt_eta histos; assume all histos have the same binning
       bool getHistoAndParametrization(const Lepton &lep,
