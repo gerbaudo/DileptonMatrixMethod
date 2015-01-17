@@ -10,11 +10,9 @@ namespace fake{
 /// Possible fake matrix systematic variations
 /**
    Note that some systematic variations might need additional input
-   histograms. If they are not available, the DileptonMatrixMethod
-   class will warn you when configuring.
-
-   The ones indicated with 'histo' below require additional input
-   histograms.
+   histograms, see Systematic::requiresHistogram. If they are not
+   available, the DileptonMatrixMethod class will warn you when
+   configuring.
 
    @author  davide.gerbaudo@gmail.com
    @data July 2014
