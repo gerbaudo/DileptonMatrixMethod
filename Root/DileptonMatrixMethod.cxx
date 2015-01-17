@@ -503,10 +503,10 @@ bool DileptonMatrixMethod::loadSysFromFile()
     cout<<"Will use 0.0 for these"<<endl;
   }
   RetrieveOrNull ron(m_hist_file);
-  m_el_frac_up = ron("el_fake_rate2d_CR_SSInc1j_frac_up");
-  m_el_frac_do = ron("el_fake_rate2d_CR_SSInc1j_frac_do");
-  m_mu_frac_up = ron("mu_fake_rate2d_CR_SSInc1j_frac_up");
-  m_mu_frac_do = ron("mu_fake_rate2d_CR_SSInc1j_frac_do");
+  m_el_frac_up = ron("el_fake_rate_razor_frac_up");
+  m_el_frac_do = ron("el_fake_rate_razor_frac_do");
+  m_mu_frac_up = ron("mu_fake_rate_razor_frac_up");
+  m_mu_frac_do = ron("mu_fake_rate_razor_frac_do");
   m_el_metrel  = ron("el_metrel_sys");
   m_mu_metrel  = ron("mu_metrel_sys");
   m_el_eta     = ron("el_eta_sys");
@@ -754,8 +754,8 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
 {
     float relativeError=0.0;
     const std::string &region = m_signalRegions[regionIndex];
-    bool validRegion = (region=="CR_SSInc1j");
-    bool validParam = (m_rate_param_real_el==Parametrization::PT_ETA);
+    bool validRegion = (region=="razor");
+    bool validParam = (m_rate_param_real_el==Parametrization::PT);
     if(validRegion && validParam){
         if(rt==FAKE &&
            (syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO ||
@@ -782,7 +782,7 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
             }
         } // end if(FAKE); assume real is negligible
     } else {
-        cout<<"getFracRelativeError: implemented only for CR_SSInc1j 2D param,"
+        cout<<"getFracRelativeError: implemented only for razor 1D param,"
             <<"not for '"<<region<<"'; returning "<<relativeError<<endl;
     }
     return relativeError;
