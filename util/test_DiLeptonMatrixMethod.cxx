@@ -31,16 +31,15 @@ bool testParametrization(string filename, Parametrization::Value rp)
         bool l1IsSig(false), l1IsEle(true);
         float l0Pt(30.0), l0Eta(+0.5);
         float l1Pt(25.0), l1Eta(-0.5);
-        float metRel(20.0);
         size_t iRegion = matrix.getIndexRegion(regionName);
         Systematic::Value sys = Systematic::SYS_NOM;
         Systematic::Value sysUp = Systematic::SYS_EL_FR_UP;
         Systematic::Value sysDo = Systematic::SYS_EL_FR_DOWN;
         Lepton l0(l0IsSig, l0IsEle, l0Pt*gev, l0Eta);
         Lepton l1(l1IsSig, l1IsEle, l1Pt*gev, l1Eta);
-        float weight   = matrix.getTotalFake(l0, l1, iRegion, metRel*gev, sys);
-        float weightUp = matrix.getTotalFake(l0, l1, iRegion, metRel*gev, sysUp);
-        float weightDo = matrix.getTotalFake(l0, l1, iRegion, metRel*gev, sysDo);
+        float weight   = matrix.getTotalFake(l0, l1, iRegion, sys);
+        float weightUp = matrix.getTotalFake(l0, l1, iRegion, sysUp);
+        float weightDo = matrix.getTotalFake(l0, l1, iRegion, sysDo);
         cout<<"weight for"
             <<" "<<regionName<<", "
             <<" "<<Systematic::str(sys)

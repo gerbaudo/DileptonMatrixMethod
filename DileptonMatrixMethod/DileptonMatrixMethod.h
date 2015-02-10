@@ -63,21 +63,9 @@ class DileptonMatrixMethod
       /// configure with 1D, pt-eta-dependent parametrization
       bool configure2d(const std::string &file_name,
                        const std::vector<std::string> &region_names);
-      float getRR(const Lepton& lep1, const Lepton& lep2,
-                  size_t regionIndex, float MetRel,
-                  Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getRF(const Lepton& lep1, const Lepton& lep2,
-                  size_t regionIndex, float MetRel,
-                  Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getFR(const Lepton& lep1, const Lepton& lep2,
-                  size_t regionIndex, float MetRel,
-                  Systematic::Value syst = Systematic::SYS_NOM) const;
-      float getFF(const Lepton& lep1, const Lepton& lep2,
-                  size_t regionIndex, float MetRel,
-                  Systematic::Value syst = Systematic::SYS_NOM) const;
-      /// Get the total fake contribution for this event
+      /// Sum all contributions that include one fake lepton (RealFake + FakeReal + FakeFake)
       float getTotalFake(const Lepton& l1, const Lepton& l2, const size_t regionIndex,
-                         float MetRel, Systematic::Value syst = Systematic::SYS_NOM) const;
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
       /// given a region, determine the internal index used to store its histograms; abort if invalid
       size_t getIndexRegion(const std::string &regionName) const;
       /// names of the available signal regions
@@ -86,6 +74,37 @@ class DileptonMatrixMethod
       const TArrayD* getPtBins() const;
       const TArrayD* getEtaBins() const;
       void printRateSystematics(const Lepton &l, RATE_TYPE &rt, size_t regionIndex) const;
+      /// Formulas for 4x4 matrix method (implying two leptons)
+      /**
+         Inverted 4x4 matrix can be found in http://cdsweb.cern.ch/record/1328921
+         f1,2 = loose to tight fake rate for lepton1,2
+         r1,2 = loose to tight real efficiency for lepton1,2
+         ntt = number of events where both leptons pass tight criteria
+         ntl = number of events where only first lepton passes tight criteria
+         nlt = number of events where only second lepton passes tight criteria
+         nll = number of events where both leptons fail tight criteria
+         These formulas can be called with two equivalent signatures:
+         - using Lepton objects as inputs; this is the recommended type-safe input.
+         - using the matrix parameters as inputs (f1, f2, r1, r2, ntt, ntl, nlt, nll)
+           This is used mostly for debugging purposes.
+      */
+      float getNrealreal(const Lepton& lep1, const Lepton& lep2, size_t regionIndex,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getNrealfake(const Lepton& lep1, const Lepton& lep2, size_t regionIndex,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getNfakereal(const Lepton& lep1, const Lepton& lep2, size_t regionIndex,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
+      float getNfakefake(const Lepton& lep1, const Lepton& lep2, size_t regionIndex,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
+      /// same as getN* above, but with the matrix elements as inputs
+      float getNrealreal(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
+                         const float &r1, const float &r2, const float &f1, const float &f2) const;
+      float getNrealfake(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
+                         const float &r1, const float &r2, const float &f1, const float &f2) const;
+      float getNfakereal(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
+                         const float &r1, const float &r2, const float &f1, const float &f2) const;
+      float getNfakefake(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
+                         const float &r1, const float &r2, const float &f1, const float &f2) const;
       ///< name of the nominal histogram for a given region, parametrization, and lepton type
       /**
          Either el or mu; either real or fake.
@@ -104,12 +123,10 @@ class DileptonMatrixMethod
       float getRate(const Lepton&,
                     RATE_TYPE,
                     size_t regionIndex,
-                    float MetRel,
                     Systematic::Value syst = Systematic::SYS_NOM) const;
       float getRateSyst(const Lepton&,
                         RATE_TYPE,
                         size_t regionIndex,
-                        float MetRel,
                         Systematic::Value syst = Systematic::SYS_NOM) const;
 
       int getRateBin(const Lepton& lep,
@@ -129,7 +146,6 @@ class DileptonMatrixMethod
       void printInfo(const Lepton& lep1,
                      const Lepton& lep2,
                      size_t regionIndex,
-                     float MetRel,
                      Systematic::Value syst = Systematic::SYS_NOM) const;
       /// retrieve nominal histos and paramerers
       bool loadNominalFromFile(const std::vector<std::string> &region_names);
@@ -172,8 +188,6 @@ class DileptonMatrixMethod
       double m_mu_datamc;
       double m_el_region;
       double m_mu_region;
-      TH1* m_el_metrel;   ///< Parameterized vs Met Rel for syst (obsolete?)
-      TH1* m_mu_metrel;
       TH1* m_el_eta;     ///< Parameterized vs Eta for syst (obsolete?)
       TH1* m_mu_eta;
       double m_el_HFLFerr;

@@ -39,7 +39,6 @@ DileptonMatrixMethod::DileptonMatrixMethod():
     m_mu_real_up(0.0), m_mu_real_down(0.0),
     m_el_datamc(0.0), m_mu_datamc(0.0),
     m_el_region(0.0), m_mu_region(0.0),
-    m_el_metrel(NULL), m_mu_metrel(NULL),
     m_el_eta(NULL), m_mu_eta(NULL),
     m_el_HFLFerr(0.0)
 
@@ -171,38 +170,41 @@ bool DileptonMatrixMethod::loadNominalFromFile(const std::vector<std::string> &r
     return success;
 }
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::getTotalFake(
-    const Lepton& lep1,
-    const Lepton& lep2,
-    size_t regionIndex,
-    float MetRel,
-    Systematic::Value syst) const
+float DileptonMatrixMethod::getTotalFake(const Lepton& lep1,
+                                         const Lepton& lep2,
+                                         size_t regionIndex,
+                                         Systematic::Value syst) const
 {
-  float fake_contribution = getRF(lep1, lep2, regionIndex, MetRel, syst);
-  fake_contribution += getFR(lep1, lep2, regionIndex, MetRel, syst);
-  fake_contribution += getFF(lep1, lep2, regionIndex, MetRel, syst);
+  float fake_contribution = getNrealfake(lep1, lep2, regionIndex, syst);
+  fake_contribution += getNfakereal(lep1, lep2, regionIndex, syst);
+  fake_contribution += getNfakefake(lep1, lep2, regionIndex, syst);
   return fake_contribution;
 }
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::getRR(const Lepton& lep1, const Lepton& lep2,
-                                  size_t regionIndex, float MetRel,
-                                  Systematic::Value syst) const
+float DileptonMatrixMethod::getNrealreal(const int &n_tt, const int &n_tl,
+                                         const int &n_lt, const int &n_ll,
+                                         const float &r1, const float &r2,
+                                         const float &f1, const float &f2) const
+{
+    return r1*r2/(r1-f1)/(r2-f2)*( (1.-f1)*(1.-f2)*n_tt
+                                   + (f1-1.)*f2*n_tl
+                                   + f1*(f2-1.)*n_lt
+                                   + f1*f2*n_ll);
+}
+// -----------------------------------------------------------------------------
+float DileptonMatrixMethod::getNrealreal(const Lepton& lep1, const Lepton& lep2,
+                                         size_t regionIndex, Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
   int n_lt = getLT(lep1, lep2);
   int n_ll = getLL(lep1, lep2);
 
-  float r1 = getRate(lep1, REAL, regionIndex, MetRel, syst);
-  float r2 = getRate(lep2, REAL, regionIndex, MetRel, syst);
+  float r1 = getRate(lep1, REAL, regionIndex, syst);
+  float r2 = getRate(lep2, REAL, regionIndex, syst);
 
-  float f1 = getRate(lep1, FAKE, regionIndex, MetRel, syst);
-  float f2 = getRate(lep2, FAKE, regionIndex, MetRel, syst);
-  float rr = r1*r2/(r1-f1)/(r2-f2)*( (1.-f1)*(1.-f2)*n_tt
-                                   + (f1-1.)*f2*n_tl
-                                   + f1*(f2-1.)*n_lt
-                                   + f1*f2*n_ll
-                                   );
+  float f1 = getRate(lep1, FAKE, regionIndex, syst);
+  float f2 = getRate(lep2, FAKE, regionIndex, syst);
 
   int num_electrons = 0;
   if (lep1.isElectron()) ++num_electrons;
@@ -212,80 +214,93 @@ float DileptonMatrixMethod::getRR(const Lepton& lep1, const Lepton& lep2,
   else if (num_electrons == 1) event_type = "emu";
   else if (num_electrons == 0) event_type = "mumu";
 
-  return rr;
+  return getNrealreal(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2);
 }
 
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::getRF(const Lepton& lep1, const Lepton& lep2,
-                                  size_t regionIndex, float MetRel,
-                                  Systematic::Value syst) const
+float DileptonMatrixMethod::getNrealfake(const int &n_tt, const int &n_tl,
+                                         const int &n_lt, const int &n_ll,
+                                         const float &r1, const float &r2,
+                                         const float &f1, const float &f2) const
+{
+  return r1*f2/(r1-f1)/(r2-f2)*( (f1-1.)*(1.-r2)*n_tt
+                                 + (1.-f1)*r2*n_tl
+                                 + f1*(1.-r2)*n_lt
+                                 - f1*r2*n_ll);
+}
+// -----------------------------------------------------------------------------
+float DileptonMatrixMethod::getNrealfake(const Lepton& lep1, const Lepton& lep2,
+                                         size_t regionIndex, Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
   int n_lt = getLT(lep1, lep2);
   int n_ll = getLL(lep1, lep2);
 
-  float r1 = getRate(lep1, REAL, regionIndex, MetRel, syst);
-  float r2 = getRate(lep2, REAL, regionIndex, MetRel, syst);
+  float r1 = getRate(lep1, REAL, regionIndex, syst);
+  float r2 = getRate(lep2, REAL, regionIndex, syst);
 
-  float f1 = getRate(lep1, FAKE, regionIndex, MetRel, syst);
-  float f2 = getRate(lep2, FAKE, regionIndex, MetRel, syst);
+  float f1 = getRate(lep1, FAKE, regionIndex, syst);
+  float f2 = getRate(lep2, FAKE, regionIndex, syst);
 
-  float rf = r1*f2/(r1-f1)/(r2-f2)*( (f1-1.)*(1.-r2)*n_tt
-                                   + (1.-f1)*r2*n_tl
-                                   + f1*(1.-r2)*n_lt
-                                   - f1*r2*n_ll
-                                   );
-  return rf;
+  return getNrealfake(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2);
 }
-
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::getFR(const Lepton& lep1, const Lepton& lep2,
-                                  size_t regionIndex, float MetRel,
-                                  Systematic::Value syst) const
+float DileptonMatrixMethod::getNfakereal(const int &n_tt, const int &n_tl,
+                                         const int &n_lt, const int &n_ll,
+                                         const float &r1, const float &r2,
+                                         const float &f1, const float &f2) const
+{
+  return f1*r2/(r1-f1)/(r2-f2)*( (r1-1.)*(1.-f2)*n_tt
+                                 + (1.-r1)*f2*n_tl
+                                 + r1*(1.-f2)*n_lt
+                                 - r1*f2*n_ll);
+}
+// -----------------------------------------------------------------------------
+float DileptonMatrixMethod::getNfakereal(const Lepton& lep1, const Lepton& lep2,
+                                         size_t regionIndex, Systematic::Value syst) const
 {
   int n_tt = getTT(lep1, lep2);
   int n_tl = getTL(lep1, lep2);
   int n_lt = getLT(lep1, lep2);
   int n_ll = getLL(lep1, lep2);
 
-  float r1 = getRate(lep1, REAL, regionIndex, MetRel, syst);
-  float r2 = getRate(lep2, REAL, regionIndex, MetRel, syst);
+  float r1 = getRate(lep1, REAL, regionIndex, syst);
+  float r2 = getRate(lep2, REAL, regionIndex, syst);
 
-  float f1 = getRate(lep1, FAKE, regionIndex, MetRel, syst);
-  float f2 = getRate(lep2, FAKE, regionIndex, MetRel, syst);
+  float f1 = getRate(lep1, FAKE, regionIndex, syst);
+  float f2 = getRate(lep2, FAKE, regionIndex, syst);
 
-  float fr = f1*r2/(r1-f1)/(r2-f2)*( (r1-1.)*(1.-f2)*n_tt
-                                   + (1.-r1)*f2*n_tl
-                                   + r1*(1.-f2)*n_lt
-                                   - r1*f2*n_ll
-                                   );
-  return fr;
+  return getNfakereal(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2);
 }
 
 // -----------------------------------------------------------------------------
-float DileptonMatrixMethod::getFF(const Lepton& lep1, const Lepton& lep2,
-                                  size_t regionIndex, float MetRel,
-                                  Systematic::Value syst) const
+float DileptonMatrixMethod::getNfakefake(const int &n_tt, const int &n_tl,
+                                         const int &n_lt, const int &n_ll,
+                                         const float &r1, const float &r2,
+                                         const float &f1, const float &f2) const
 {
-  int n_tt = getTT(lep1, lep2);
-  int n_tl = getTL(lep1, lep2);
-  int n_lt = getLT(lep1, lep2);
-  int n_ll = getLL(lep1, lep2);
-
-  float r1 = getRate(lep1, REAL, regionIndex, MetRel, syst);
-  float r2 = getRate(lep2, REAL, regionIndex, MetRel, syst);
-
-  float f1 = getRate(lep1, FAKE, regionIndex, MetRel, syst);
-  float f2 = getRate(lep2, FAKE, regionIndex, MetRel, syst);
-
-  float ff = f1*f2/(r1-f1)/(r2-f2)*( (1.-r1)*(1.-r2)*n_tt
+    return f1*f2/(r1-f1)/(r2-f2)*( (1.-r1)*(1.-r2)*n_tt
                                    + (r1-1.)*r2*n_tl
                                    + r1*(r2-1.)*n_lt
-                                   + r1*r2*n_ll
-                                   );
+                                   + r1*r2*n_ll);
+}
+// -----------------------------------------------------------------------------
+float DileptonMatrixMethod::getNfakefake(const Lepton& lep1, const Lepton& lep2,
+                                         size_t regionIndex, Systematic::Value syst) const
+{
+  int n_tt = getTT(lep1, lep2);
+  int n_tl = getTL(lep1, lep2);
+  int n_lt = getLT(lep1, lep2);
+  int n_ll = getLL(lep1, lep2);
 
-  return ff;
+  float r1 = getRate(lep1, REAL, regionIndex, syst);
+  float r2 = getRate(lep2, REAL, regionIndex, syst);
+
+  float f1 = getRate(lep1, FAKE, regionIndex, syst);
+  float f2 = getRate(lep2, FAKE, regionIndex, syst);
+
+  return getNfakefake(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2);
 }
 // --------------------------------------------------------
 bool DileptonMatrixMethod::getHistoAndParametrization(const Lepton &lep,
@@ -323,7 +338,6 @@ bool DileptonMatrixMethod::getHistoAndParametrization(const Lepton &lep,
 float DileptonMatrixMethod::getRate(const Lepton& lep,
                                     RATE_TYPE rate_type,
                                     const size_t regionIndex,
-                                    float MetRel,
                                     Systematic::Value syst) const
 {
     float rate = 0.0;
@@ -332,7 +346,7 @@ float DileptonMatrixMethod::getRate(const Lepton& lep,
     if(getHistoAndParametrization(lep, regionIndex, rate_type, h_rate, rate_param)) {
         int rate_bin = getRateBin(lep, h_rate, rate_param);
         rate = h_rate->GetBinContent(rate_bin);
-        rate *= (1.0+getRateSyst(lep, rate_type, regionIndex, MetRel, syst));
+        rate *= (1.0+getRateSyst(lep, rate_type, regionIndex, syst));
         if( rate > 1.0 ) rate = 1.0;
         if( rate < 0.0 ) rate = 1e-5;
     } else {
@@ -389,7 +403,6 @@ int DileptonMatrixMethod::getRateBin(const Lepton& lep,
 float DileptonMatrixMethod::getRateSyst(const Lepton& lep,
                                         RATE_TYPE rate_type,
                                         const size_t regionIndex,
-                                        float MetRel,
                                         Systematic::Value syst) const
 {
   if( syst == Systematic::SYS_NOM ) return 0.0;
@@ -507,8 +520,6 @@ bool DileptonMatrixMethod::loadSysFromFile()
   m_el_frac_do = ron("el_fake_rate_razor_frac_do");
   m_mu_frac_up = ron("mu_fake_rate_razor_frac_up");
   m_mu_frac_do = ron("mu_fake_rate_razor_frac_do");
-  m_el_metrel  = ron("el_metrel_sys");
-  m_mu_metrel  = ron("mu_metrel_sys");
   m_el_eta     = ron("el_eta_sys");
   m_mu_eta     = ron("mu_eta_sys");
   if(ron.anythingMissing()) {
@@ -548,14 +559,13 @@ float DileptonMatrixMethod::getRelStatError(const Lepton &lep, RATE_TYPE rt, con
 void DileptonMatrixMethod::printInfo(const Lepton& lep1,
                                      const Lepton& lep2,
                                      const size_t regionIndex,
-                                     float MetRel,
                                      Systematic::Value syst) const
 {
-  float r1 = getRate(lep1, REAL, regionIndex, MetRel, syst);
-  float r2 = getRate(lep2, REAL, regionIndex, MetRel, syst);
+  float r1 = getRate(lep1, REAL, regionIndex, syst);
+  float r2 = getRate(lep2, REAL, regionIndex, syst);
 
-  float f1 = getRate(lep1, FAKE, regionIndex, MetRel, syst);
-  float f2 = getRate(lep2, FAKE, regionIndex, MetRel, syst);
+  float f1 = getRate(lep1, FAKE, regionIndex, syst);
+  float f2 = getRate(lep2, FAKE, regionIndex, syst);
 
   int num_electrons = 0;
   if (lep1.isElectron()) ++num_electrons;
@@ -582,12 +592,11 @@ void DileptonMatrixMethod::printInfo(const Lepton& lep1,
             << "\tr: "        << r2
             << "\tf: "        << f2
             << "\n";
-  std::cout << "Met Rel: "    << MetRel << "\n";
   std::cout << "event type: " << event_type << "\n";
-  std::cout << "rr: " << getRR(lep1,lep2,regionIndex,syst) << "\n";
-  std::cout << "rf: " << getRF(lep1,lep2,regionIndex,syst) << "\n";
-  std::cout << "fr: " << getFR(lep1,lep2,regionIndex,syst) << "\n";
-  std::cout << "ff: " << getFF(lep1,lep2,regionIndex,syst) << "\n";
+  std::cout << "rr: " << getNrealreal(lep1,lep2,regionIndex,syst) << "\n";
+  std::cout << "rf: " << getNrealfake(lep1,lep2,regionIndex,syst) << "\n";
+  std::cout << "fr: " << getNfakereal(lep1,lep2,regionIndex,syst) << "\n";
+  std::cout << "ff: " << getNfakefake(lep1,lep2,regionIndex,syst) << "\n";
   std::cout << "total fake: " << getTotalFake(lep1,lep2,regionIndex,syst) << "\n";
 }
 // -----------------------------------------------------------------------------
@@ -635,10 +644,8 @@ std::string lep2str(const susy::fake::Lepton l)
 //----------------------------------------------------------
 void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, size_t regionIndex) const
 {
-    // this is a useless parameter, it should be dropped everywhere (DG, 2014-05-18 TODO)
-    float dummyMetRel(20.0);
     bool isEl(l.isElectron());
-    float nomRate = getRate(l, rt, regionIndex, dummyMetRel, Systematic::SYS_NOM);
+    float nomRate = getRate(l, rt, regionIndex, Systematic::SYS_NOM);
     float statSys = getStatError(l, rt, regionIndex);
     vector<Systematic::Value> syss;
     cout<<lep2str(l)<<": "<<endl;
@@ -689,7 +696,7 @@ void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, 
     } // end isFake
     cout<<" fractional variations : ";
     for(size_t s=0; s<syss.size(); ++s)
-        cout<<Systematic::str(syss[s])<<" : "<<getRateSyst(l, rt, regionIndex, dummyMetRel, syss[s])<<" ";
+        cout<<Systematic::str(syss[s])<<" : "<<getRateSyst(l, rt, regionIndex, syss[s])<<" ";
     cout<<endl;
 }
 //----------------------------------------------------------
