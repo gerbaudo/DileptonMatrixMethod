@@ -324,21 +324,27 @@ bool DileptonMatrixMethod::getHistoAndParametrization(const Lepton &lep,
                 h  = m_el_real_eff[regionIndex];
                 rp = m_rate_param_real_el;
                 found = true;
-            } else {
+            } else if(lep.isMuon()){
                 h  = m_mu_real_eff[regionIndex];
                 rp = m_rate_param_real_mu;
                 found = true;
+            } else {
+                cout<<"getHistoAndParametrization: invalid lepton type (real, must be either el or mu)"<<endl;
             }
         } else if(rt==FAKE) {
             if (lep.isElectron()) {
                 h  = m_el_fake_rate[regionIndex];
                 rp = m_rate_param_fake_el;
                 found = true;
-            } else {
+            } else if(lep.isMuon()) {
                 h  = m_mu_fake_rate[regionIndex];
                 rp = m_rate_param_fake_mu;
                 found = true;
+            } else {
+                cout<<"getHistoAndParametrization: invalid lepton type (fake, must be either el or mu)"<<endl;
             }
+        } else {
+            cout<<"getHistoAndParametrization: invalid lepton type (must be either real or fake)"<<endl;
         }
     }
     return found;

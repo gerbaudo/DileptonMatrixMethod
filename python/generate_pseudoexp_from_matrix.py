@@ -75,6 +75,7 @@ def main():
                 break
         return obj
 
+    # manually retrieve the efficiencies for the first test
     h_eff_el_real = find_by_name(histos_per_region[region], 'el_real_eff_' +region)
     h_eff_el_fake = find_by_name(histos_per_region[region], 'el_fake_rate_'+region)
     h_eff_mu_real = find_by_name(histos_per_region[region], 'mu_real_eff_' +region)
@@ -91,20 +92,11 @@ def main():
     eff_mu_real = binContents(h_eff_mu_real)
     eff_mu_fake = binContents(h_eff_mu_fake)
 
-
     load_packages()
     matrix = r.susy.fake.DileptonMatrixMethod()
     regions = r.std.vector('std::string')()
     regions.push_back(region)
     matrix.configure1d(matrix_name, regions)
-    systematic = r.susy.fake.Systematic.SYS_NOM
-    region_index = matrix.getIndexRegion(region)
-    l0 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
-    l1 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
-
-
-
-
     num_TT = 0
     num_fake_TT = 0
     num_FF_TT, num_FR_TT, num_RF_TT, num_RR_TT = 0, 0, 0, 0
@@ -121,7 +113,6 @@ def main():
         return random()<fraction_of_real
     def random_is_tight(loose_to_tight_efficiency):
         return random()<loose_to_tight_efficiency
-
 
     print "\n"
     print "Test of single-category matrix:"
@@ -210,6 +201,12 @@ def main():
     num_FF_LL, num_FR_LL, num_RF_LL, num_RR_LL = 0, 0, 0, 0
     num_FF_TT, num_FR_TT, num_RF_TT, num_RR_TT = 0, 0, 0, 0
     num_events_generated = 0
+    systematic = r.susy.fake.Systematic.SYS_NOM
+    region_index = matrix.getIndexRegion(region)
+    l0 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
+    l1 = r.susy.fake.Lepton(False, False, 10.0, 1.0)
+    l0.isEl(True)
+    l1.isMu(True)
     while num_TT < num_TT_events_to_generate:
         # convention for this test:
         # - l0=el, l1=mu
@@ -254,13 +251,9 @@ def main():
         num_FR_LL += 1 if FR else 0
         num_RF_LL += 1 if RF else 0
         num_RR_LL += 1 if RR else 0
-        # if l0_is_real : m_r0.count(0, l0_is_tight)
-        # else          : m_f0.count(0, l0_is_tight)
-        # if l1_is_real : m_r1.count(0, l1_is_tight)
-        # else          : m_f1.count(0, l1_is_tight)
 
-        l1 = l1.isEl(True ).isTight(l0_is_tight).pt(l0_pt)#.eta(0.1)
-        l0 = l0.isEl(False).isTight(l1_is_tight).pt(l1_pt)#.eta(0.1)
+        l0 = l0.isTight(l0_is_tight).pt(l0_pt)
+        l1 = l1.isTight(l1_is_tight).pt(l1_pt)
         weight = matrix.getTotalFake(l0, l1, region_index, systematic)
         tot_fake_weight += weight
 
