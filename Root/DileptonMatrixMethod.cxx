@@ -181,6 +181,15 @@ float DileptonMatrixMethod::getTotalFake(const Lepton& lep1,
   return fake_contribution;
 }
 // -----------------------------------------------------------------------------
+float DileptonMatrixMethod::getTotalFake(const Lepton& l1, const Lepton& l2, const size_t regionIndex,
+                                         float dummymetrel,
+                                         Systematic::Value syst) const
+{
+    cout<<"DileptonMatrixMethod::getTotalFake: "
+        <<"This function is obsolete, please use getTotalFake(l1, l2, regionIndex, syst)"<<endl;
+    return getTotalFake(l1, l2, regionIndex, syst);
+}
+// -----------------------------------------------------------------------------
 float DileptonMatrixMethod::getNrealreal(const int &n_tt, const int &n_tl,
                                          const int &n_lt, const int &n_ll,
                                          const float &r1, const float &r2,

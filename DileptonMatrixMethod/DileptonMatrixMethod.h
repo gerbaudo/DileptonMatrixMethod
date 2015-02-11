@@ -66,6 +66,10 @@ class DileptonMatrixMethod
       /// Sum all contributions that include one fake lepton (RealFake + FakeReal + FakeFake)
       float getTotalFake(const Lepton& l1, const Lepton& l2, const size_t regionIndex,
                          Systematic::Value syst = Systematic::SYS_NOM) const;
+      /// Temporary signature for backward compatibility; to be deleted (DG 2015-02-11)
+      float getTotalFake(const Lepton& l1, const Lepton& l2, const size_t regionIndex,
+                         float dummymetrel,
+                         Systematic::Value syst = Systematic::SYS_NOM) const;
       /// given a region, determine the internal index used to store its histograms; abort if invalid
       size_t getIndexRegion(const std::string &regionName) const;
       /// names of the available signal regions
@@ -97,6 +101,15 @@ class DileptonMatrixMethod
       float getNfakefake(const Lepton& lep1, const Lepton& lep2, size_t regionIndex,
                          Systematic::Value syst = Systematic::SYS_NOM) const;
       /// same as getN* above, but with the matrix elements as inputs
+      /**
+         When computing the event weight used to fill histograms, the
+         function `getTotalFake(Lepton, Lepton, ...)` is recommended.
+         The function `getTotalFake(n_tt, n_tl, n_lt, n_ll, ...)` is
+         meant to be used only for testing, in particular when
+         computing the total number of expected fakes (see for example
+         `generate_pseudoexp_from_matrix.py`).
+         The underlying implementation is the same.
+       */
       float getNrealreal(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
                          const float &r1, const float &r2, const float &f1, const float &f2) const;
       float getNrealfake(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
@@ -105,6 +118,14 @@ class DileptonMatrixMethod
                          const float &r1, const float &r2, const float &f1, const float &f2) const;
       float getNfakefake(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
                          const float &r1, const float &r2, const float &f1, const float &f2) const;
+      /// sum of the RF+FR+FF contributions above
+      float getTotalFake(const int &n_tt, const int &n_tl, const int &n_lt, const int &n_ll,
+                         const float &r1, const float &r2, const float &f1, const float &f2) const
+          {
+              return (getNrealfake(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2)
+                      +getNfakereal(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2)
+                      +getNfakefake(n_tt, n_tl, n_lt, n_ll, r1, r2, f1, f2));
+          }
       ///< name of the nominal histogram for a given region, parametrization, and lepton type
       /**
          Either el or mu; either real or fake.
