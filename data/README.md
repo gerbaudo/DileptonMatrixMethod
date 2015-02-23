@@ -1,6 +1,7 @@
 Summary of the various matrices.
 As a rule of thumb, always pick the latest one.
 
+- FakeMatrix_Feb_18: after bugfix tight def (still rates from ss data) 
 - FakeMatrix_Feb_02_loose_iso: denominator (loose) only drops isolation req, keeps PV requirements
 - FakeMatrix_Dec_10 : for hlfv, same as Dec_09, hf-sf=1.3
 - FakeMatrix_Dec_09 : for hlfv, updated efficiencies and compositions (both Dec_01); hf-sf=1.0
