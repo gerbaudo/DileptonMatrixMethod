@@ -113,7 +113,11 @@ bool DileptonMatrixMethod::configure(const std::string &file_name,
     } else if(invalidInputFile) {
         cout<<"DileptonMatrixMethod::configure: failed to open fake rate file: "<<fname<<endl;
     } else {
-        cout<<"DileptonMatrixMethod::configure with input '"<<fname<<"'"<<endl;
+        cout<<"DileptonMatrixMethod::configure"
+            <<" "<<(real_el==Parametrization::PT ? "Parametrization::PT" :
+                    real_el==Parametrization::PT_ETA ? "Parametrization::PT_ETA" :
+                    "unknown")
+            <<" with input '"<<fname<<"'"<<endl;
         m_rate_param_real_el = real_el;
         m_rate_param_fake_el = fake_el;
         m_rate_param_real_mu = real_mu;
@@ -531,12 +535,20 @@ bool DileptonMatrixMethod::loadSysFromFile()
     cout<<"Will use 0.0 for these"<<endl;
   }
   RetrieveOrNull ron(m_hist_file);
-  m_el_frac_up = ron("el_fake_rate_razor_frac_up");
-  m_el_frac_do = ron("el_fake_rate_razor_frac_do");
-  m_mu_frac_up = ron("mu_fake_rate_razor_frac_up");
-  m_mu_frac_do = ron("mu_fake_rate_razor_frac_do");
-  m_el_eta     = ron("el_eta_sys");
-  m_mu_eta     = ron("mu_eta_sys");
+  if(m_signalRegions.size()==1 && m_signalRegions[0]=="razor") {
+      m_el_frac_up = ron("el_fake_rate_razor_frac_up");
+      m_el_frac_do = ron("el_fake_rate_razor_frac_do");
+      m_mu_frac_up = ron("mu_fake_rate_razor_frac_up");
+      m_mu_frac_do = ron("mu_fake_rate_razor_frac_do");
+      m_el_eta     = ron("el_eta_sys");
+      m_mu_eta     = ron("mu_eta_sys");
+  } else if(m_signalRegions.size()==1 && m_signalRegions[0]=="emuInc") { // hlfv
+      m_el_frac_up = ron("el_fake_rate2d_emuInc_frac_up");
+      m_el_frac_do = ron("el_fake_rate2d_emuInc_frac_do");
+      m_mu_frac_up = ron("mu_fake_rate2d_emuInc_frac_up");
+      m_mu_frac_do = ron("mu_fake_rate2d_emuInc_frac_do");
+  } else
+      cout<<"Sorry, the syst variations are only implemented for some of the selections"<<endl;
   if(ron.anythingMissing()) {
       cout<<"DileptonMatrixMethod::loadSysFromFile(): missing the following systematic histograms:"<<endl;
       copy(ron.miss_.begin(), ron.miss_.end(), ostream_iterator<string>(cout,"\n\t"));
@@ -680,6 +692,7 @@ void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, 
         if(isEl){
             syss.push_back(Systematic::SYS_EL_FR_UP       );
             syss.push_back(Systematic::SYS_EL_FR_DOWN     );
+/*
             syss.push_back(Systematic::SYS_EL_HFLF_UP     );
             syss.push_back(Systematic::SYS_EL_HFLF_DOWN   );
             syss.push_back(Systematic::SYS_EL_ETA         );
@@ -693,9 +706,11 @@ void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, 
             syss.push_back(Systematic::SYS_EL_FRAC_DO     );
             syss.push_back(Systematic::SYS_MU_FRAC_UP     );
             syss.push_back(Systematic::SYS_MU_FRAC_DO     );
+*/
         } else { // isEl
             syss.push_back(Systematic::SYS_MU_FR_UP        );
             syss.push_back(Systematic::SYS_MU_FR_DOWN      );
+/*
             syss.push_back(Systematic::SYS_MU_ETA          );
             syss.push_back(Systematic::SYS_MU_FR_STAT_UP   );
             syss.push_back(Systematic::SYS_MU_FR_STAT_DOWN );
@@ -707,11 +722,13 @@ void DileptonMatrixMethod::printRateSystematics(const Lepton &l, RATE_TYPE &rt, 
             syss.push_back(Systematic::SYS_EL_FRAC_DO      );
             syss.push_back(Systematic::SYS_MU_FRAC_UP      );
             syss.push_back(Systematic::SYS_MU_FRAC_DO      );
+*/
         } // end isMu
     } // end isFake
     cout<<" fractional variations : ";
-    for(size_t s=0; s<syss.size(); ++s)
+    for(size_t s=0; s<syss.size(); ++s){
         cout<<Systematic::str(syss[s])<<" : "<<getRateSyst(l, rt, regionIndex, syss[s])<<" ";
+    }
     cout<<endl;
 }
 //----------------------------------------------------------
@@ -776,9 +793,9 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
 {
     float relativeError=0.0;
     const std::string &region = m_signalRegions[regionIndex];
-    bool validRegion = (region=="razor");
-    bool validParam = (m_rate_param_real_el==Parametrization::PT);
-    if(validRegion && validParam){
+    const susy::fake::Parametrization::Value &current_param = m_rate_param_real_el;
+    if((region=="razor"  && current_param==Parametrization::PT) ||
+       (region=="emuInc" && current_param==Parametrization::PT_ETA)) {
         if(rt==FAKE &&
            (syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO ||
             syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO )){
@@ -795,8 +812,8 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
                 if(!nomHisto) cout<<"cannot get nom histo"<<endl;
                 if(!sysHisto) cout<<"cannot get sys histo"<<endl;
                 if(nomHisto&&sysHisto){
-                    int nomBin = getRateBin(lep, nomHisto, Parametrization::PT_ETA);
-                    int sysBin = getRateBin(lep, sysHisto, Parametrization::PT_ETA);
+                    int nomBin = getRateBin(lep, nomHisto, Parametrization::PT);
+                    int sysBin = getRateBin(lep, sysHisto, Parametrization::PT);
                     float nom = nomHisto->GetBinContent(nomBin);
                     float sys = sysHisto->GetBinContent(sysBin);
                     if(nom) relativeError=(sys-nom)/nom;
@@ -804,8 +821,8 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
             }
         } // end if(FAKE); assume real is negligible
     } else {
-        cout<<"getFracRelativeError: implemented only for razor 1D param,"
-            <<"not for '"<<region<<"'; returning "<<relativeError<<endl;
+        cout<<"getFracRelativeError: implemented only for razor 1D param or emuInc 2D param,"
+            <<" not for '"<<region<<"'; returning "<<relativeError<<endl;
     }
     return relativeError;
 }
