@@ -441,8 +441,8 @@ float DileptonMatrixMethod::getRateSyst(const Lepton& lep,
           if(syst==Systematic::SYS_EL_FR_UP ||
              syst==Systematic::SYS_EL_FR_DOWN){ // Fake Rate el
               float updown = syst==Systematic::SYS_EL_FR_UP ? +1.0 : -1.0;
-              float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
-              etaSys = etaSys > 0 ? etaSys : 0.;
+              // float etaSys   = m_el_eta->GetBinContent( m_el_eta->FindBin(fabs(lep.eta())) );
+              // etaSys = etaSys > 0 ? etaSys : 0.;
               float statSys = getRelStatError(lep, rate_type, regionIndex);
               //float errors[] = {statSys, m_el_HFLFerr, etaSys, m_el_datamc, m_el_region};
               float errors[] = {statSys}; // other components now included in stat or obsolete (eta parametrization)
@@ -463,8 +463,8 @@ float DileptonMatrixMethod::getRateSyst(const Lepton& lep,
           if(syst==Systematic::SYS_MU_FR_UP ||
              syst==Systematic::SYS_MU_FR_DOWN){ // Fake Rate mu
               float updown = syst==Systematic::SYS_MU_FR_UP ? +1.0 : -1.0;
-              float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
-              etaSys = etaSys > 0.0 ? etaSys : 0.0;
+              // float etaSys   = m_mu_eta->GetBinContent( m_mu_eta->FindBin(fabs(lep.eta())) );
+              // etaSys = etaSys > 0.0 ? etaSys : 0.0;
               float statSys  = getRelStatError(lep, rate_type, regionIndex);
               //float errors[] = {statSys, etaSys, m_mu_datamc, m_mu_region};
               float errors[] = {statSys}; // other components now included in stat or obsolete (eta parametrization)
