@@ -1,6 +1,10 @@
 Summary of the various matrices.
 As a rule of thumb, always pick the latest one.
 
+- FakeMatrix_hlfv_Mar_18.root as Mar_12, but consider emu and mue when extracting el fake
+- FakeMatrix_hlfv_Feb_17.root as Mar_12, but from the hlfv area
+- FakeMatrix_Mar_12.root: fix, require tag to be tight
+- FakeMatrix_Mar_02.root: with 2d pt_eta
 - FakeMatrix_Feb_18: after bugfix tight def (still rates from ss data) 
 - FakeMatrix_Feb_02_loose_iso: denominator (loose) only drops isolation req, keeps PV requirements
 - FakeMatrix_Dec_10 : for hlfv, same as Dec_09, hf-sf=1.3
