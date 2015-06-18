@@ -28,13 +28,49 @@ float sum_in_quadrature(const float* elements, const size_t num_elements)
         sum += (elements[i]*elements[i]);
     return sqrt(sum);
 }
+//----------------------------------------------------------
+/// helper to determine whether this syst should read an el syst rate histo
+struct IsElFracSyst {
+    bool operator()(const Systematic::Value &s) {
+        return (s==Systematic::SYS_EL_FRAC_UP  ||
+                s==Systematic::SYS_EL_FRAC_DO  ||
+                s==Systematic::SYS_EL_FR_KIN_1 ||
+                s==Systematic::SYS_EL_FR_KIN_2 ||
+                s==Systematic::SYS_EL_FR_KIN_3 ||
+                s==Systematic::SYS_EL_FR_KIN_4 ||
+                s==Systematic::SYS_EL_FR_KIN_5 );
+    }
+};
+//----------------------------------------------------------
+/// helper to determine whether this syst should read a mu syst rate histo
+struct IsMuFracSyst {
+    bool operator()(const Systematic::Value &s) {
+        return (s==Systematic::SYS_MU_FRAC_UP  ||
+                s==Systematic::SYS_MU_FRAC_DO  ||
+                s==Systematic::SYS_MU_FR_KIN_1 ||
+                s==Systematic::SYS_MU_FR_KIN_2 ||
+                s==Systematic::SYS_MU_FR_KIN_3 ||
+                s==Systematic::SYS_MU_FR_KIN_4 ||
+                s==Systematic::SYS_MU_FR_KIN_5 );
+    }
+};
 // -----------------------------------------------------------------------------
 DileptonMatrixMethod::DileptonMatrixMethod():
     m_hist_file(NULL),
     m_el_frac_up(NULL),
     m_el_frac_do(NULL),
+    m_el_fr_kin_1(NULL),
+    m_el_fr_kin_2(NULL),
+    m_el_fr_kin_3(NULL),
+    m_el_fr_kin_4(NULL),
+    m_el_fr_kin_5(NULL),
     m_mu_frac_up(NULL),
     m_mu_frac_do(NULL),
+    m_mu_fr_kin_1(NULL),
+    m_mu_fr_kin_2(NULL),
+    m_mu_fr_kin_3(NULL),
+    m_mu_fr_kin_4(NULL),
+    m_mu_fr_kin_5(NULL),
     m_el_real_up(0.0), m_el_real_down(0.0),
     m_mu_real_up(0.0), m_mu_real_down(0.0),
     m_el_datamc(0.0), m_mu_datamc(0.0),
@@ -425,7 +461,7 @@ float DileptonMatrixMethod::getRateSyst(const Lepton& lep,
                                         Systematic::Value syst) const
 {
   if( syst == Systematic::SYS_NOM ) return 0.0;
-  if(!Systematic::isValid(syst)) { std::cout << "WARNING: invalid SYSTEMATIC type\n"; }
+  if(!Systematic::isValid(syst)) { std::cout << "WARNING: invalid SYSTEMATIC type "<<Systematic::str(syst)<<"\n"; }
   if( rate_type == REAL ){ // Real Eff Sys
       float statSys = getRelStatError(lep, rate_type, regionIndex);
       if( lep.isElectron() ){
@@ -438,8 +474,7 @@ float DileptonMatrixMethod::getRateSyst(const Lepton& lep,
       return 0.;
   }
   if( rate_type == FAKE ){ // Fake Rate Sys
-      if(syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO ||
-         syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO )
+      if(IsElFracSyst()(syst) || IsMuFracSyst()(syst))
           return getFracRelativeError(lep, rate_type, regionIndex, syst);
       if( lep.isElectron() ){
           if(syst==Systematic::SYS_EL_FR_UP ||
@@ -543,10 +578,20 @@ bool DileptonMatrixMethod::loadSysFromFile()
       m_el_eta     = ron("el_eta_sys");
       m_mu_eta     = ron("mu_eta_sys");
   } else if(m_signalRegions.size()==1 && m_signalRegions[0]=="emuInc") { // hlfv
-      m_el_frac_up = ron("el_fake_rate2d_emuInc_frac_up");
-      m_el_frac_do = ron("el_fake_rate2d_emuInc_frac_do");
-      m_mu_frac_up = ron("mu_fake_rate2d_emuInc_frac_up");
-      m_mu_frac_do = ron("mu_fake_rate2d_emuInc_frac_do");
+      m_el_frac_up  = ron("el_fake_rate2d_emuInc_frac_up");
+      m_el_frac_do  = ron("el_fake_rate2d_emuInc_frac_do");
+      m_el_fr_kin_1 = ron("el_fake_rate2d_emuInc_fr_kin_1");
+      m_el_fr_kin_2 = ron("el_fake_rate2d_emuInc_fr_kin_2");
+      m_el_fr_kin_3 = ron("el_fake_rate2d_emuInc_fr_kin_3");
+      m_el_fr_kin_4 = ron("el_fake_rate2d_emuInc_fr_kin_4");
+      m_el_fr_kin_5 = ron("el_fake_rate2d_emuInc_fr_kin_5");
+      m_mu_frac_up  = ron("mu_fake_rate2d_emuInc_frac_up");
+      m_mu_frac_do  = ron("mu_fake_rate2d_emuInc_frac_do");
+      m_mu_fr_kin_1 = ron("mu_fake_rate2d_emuInc_fr_kin_1");
+      m_mu_fr_kin_2 = ron("mu_fake_rate2d_emuInc_fr_kin_2");
+      m_mu_fr_kin_3 = ron("mu_fake_rate2d_emuInc_fr_kin_3");
+      m_mu_fr_kin_4 = ron("mu_fake_rate2d_emuInc_fr_kin_4");
+      m_mu_fr_kin_5 = ron("mu_fake_rate2d_emuInc_fr_kin_5");
   } else
       cout<<"Sorry, the syst variations are only implemented for some of the selections"<<endl;
   if(ron.anythingMissing()) {
@@ -796,19 +841,15 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
     const susy::fake::Parametrization::Value &current_param = m_rate_param_real_el;
     if((region=="razor"  && current_param==Parametrization::PT) ||
        (region=="emuInc" && current_param==Parametrization::PT_ETA)) {
-        if(rt==FAKE &&
-           (syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO ||
-            syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO )){
+        if(rt==FAKE && (IsElFracSyst()(syst) || IsMuFracSyst()(syst))){
             bool isEl(lep.isElectron()), isMu(lep.isMuon());
-            bool isElSys(syst==Systematic::SYS_EL_FRAC_UP || syst==Systematic::SYS_EL_FRAC_DO);
-            bool isMuSys(syst==Systematic::SYS_MU_FRAC_UP || syst==Systematic::SYS_MU_FRAC_DO);
             assert(isEl!=isMu);
             int iRegion(getIndexRegion(region));
             TH1* nomHisto = isEl ? m_el_fake_rate[iRegion] : m_mu_fake_rate[iRegion];
             TH1* sysHisto = NULL;
-            if((isEl && isElSys) || (isMu && isMuSys)){
-                if(isEl) sysHisto = syst==Systematic::SYS_EL_FRAC_UP ? m_el_frac_up : m_el_frac_do;
-                if(isMu) sysHisto = syst==Systematic::SYS_MU_FRAC_UP ? m_mu_frac_up : m_mu_frac_do;
+            if((isEl && IsElFracSyst()(syst)) ||
+               (isMu && IsMuFracSyst()(syst)) ){
+                sysHisto = getFakeFractionSystematicHisto(syst);
                 if(!nomHisto) cout<<"cannot get nom histo"<<endl;
                 if(!sysHisto) cout<<"cannot get sys histo"<<endl;
                 if(nomHisto&&sysHisto){
@@ -825,6 +866,29 @@ float DileptonMatrixMethod::getFracRelativeError(const Lepton &lep,
             <<" not for '"<<region<<"'; returning "<<relativeError<<endl;
     }
     return relativeError;
+}
+//----------------------------------------------------------
+TH1* DileptonMatrixMethod::getFakeFractionSystematicHisto(const Systematic::Value s) const
+{
+    TH1* h = NULL;
+    switch(s){
+    case Systematic::SYS_EL_FRAC_UP  : h = m_el_frac_up ; break;
+    case Systematic::SYS_EL_FRAC_DO  : h = m_el_frac_do ; break;
+    case Systematic::SYS_EL_FR_KIN_1 : h = m_el_fr_kin_1; break;
+    case Systematic::SYS_EL_FR_KIN_2 : h = m_el_fr_kin_2; break;
+    case Systematic::SYS_EL_FR_KIN_3 : h = m_el_fr_kin_3; break;
+    case Systematic::SYS_EL_FR_KIN_4 : h = m_el_fr_kin_4; break;
+    case Systematic::SYS_EL_FR_KIN_5 : h = m_el_fr_kin_5; break;
+    case Systematic::SYS_MU_FRAC_UP  : h = m_mu_frac_up ; break;
+    case Systematic::SYS_MU_FRAC_DO  : h = m_mu_frac_do ; break;
+    case Systematic::SYS_MU_FR_KIN_1 : h = m_mu_fr_kin_1; break;
+    case Systematic::SYS_MU_FR_KIN_2 : h = m_mu_fr_kin_2; break;
+    case Systematic::SYS_MU_FR_KIN_3 : h = m_mu_fr_kin_3; break;
+    case Systematic::SYS_MU_FR_KIN_4 : h = m_mu_fr_kin_4; break;
+    case Systematic::SYS_MU_FR_KIN_5 : h = m_mu_fr_kin_5; break;
+    default: break;
+    }
+    return h;
 }
 //----------------------------------------------------------
 std::string DileptonMatrixMethod::generateNominalHistoname(bool isEl, bool isReal,

@@ -40,6 +40,16 @@ std::string Systematic::str(const Systematic::Value &p)
     case Systematic::SYS_EL_FRAC_DO      : name = "EL_FRAC_DO"     ; break;
     case Systematic::SYS_MU_FRAC_UP      : name = "MU_FRAC_UP"     ; break;
     case Systematic::SYS_MU_FRAC_DO      : name = "MU_FRAC_DO"     ; break;
+    case Systematic::SYS_EL_FR_KIN_1     : name = "EL_FR_KIN_1"    ; break;
+    case Systematic::SYS_MU_FR_KIN_1     : name = "MU_FR_KIN_1"    ; break;
+    case Systematic::SYS_EL_FR_KIN_2     : name = "EL_FR_KIN_2"    ; break;
+    case Systematic::SYS_MU_FR_KIN_2     : name = "MU_FR_KIN_2"    ; break;
+    case Systematic::SYS_EL_FR_KIN_3     : name = "EL_FR_KIN_3"    ; break;
+    case Systematic::SYS_MU_FR_KIN_3     : name = "MU_FR_KIN_3"    ; break;
+    case Systematic::SYS_EL_FR_KIN_4     : name = "EL_FR_KIN_4"    ; break;
+    case Systematic::SYS_MU_FR_KIN_4     : name = "MU_FR_KIN_4"    ; break;
+    case Systematic::SYS_EL_FR_KIN_5     : name = "EL_FR_KIN_5"    ; break;
+    case Systematic::SYS_MU_FR_KIN_5     : name = "MU_FR_KIN_5"    ; break;
     // do not put default, so that the compiler will warn on forgotten cases
     }
     return name;
@@ -52,6 +62,16 @@ bool Systematic::requiresHistogram(const Systematic::Value &p)
             p==SYS_MU_FRAC_UP ||
             p==SYS_MU_FRAC_DO ||
             p==SYS_EL_ETA     ||
-            p==SYS_MU_ETA);
+            p==SYS_MU_ETA     ||
+            p==SYS_EL_FR_KIN_1||
+            p==SYS_MU_FR_KIN_1||
+            p==SYS_EL_FR_KIN_2||
+            p==SYS_MU_FR_KIN_2||
+            p==SYS_EL_FR_KIN_3||
+            p==SYS_MU_FR_KIN_3||
+            p==SYS_EL_FR_KIN_4||
+            p==SYS_MU_FR_KIN_4||
+            p==SYS_EL_FR_KIN_5||
+            p==SYS_MU_FR_KIN_5);
 }
 //----------------------------------------------------------

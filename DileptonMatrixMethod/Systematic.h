@@ -50,11 +50,22 @@ struct Systematic {
       ,SYS_EL_FRAC_DO      ///< electron uncertainty on the fraction determination (down)
       ,SYS_MU_FRAC_UP      ///< muon uncertainty on the fraction determination (up)
       ,SYS_MU_FRAC_DO      ///< muon uncertainty on the fraction determination (down)
+      // uncertainty on the kin in the fake rate
+      ,SYS_EL_FR_KIN_1 ///< harder tag (pt0>40)
+      ,SYS_MU_FR_KIN_1 ///< harder tag (pt0>40)
+      ,SYS_EL_FR_KIN_2 ///< dphi_l1_met
+      ,SYS_MU_FR_KIN_2 ///< dphi_l1_met
+      ,SYS_EL_FR_KIN_3 ///< dphi_l0_l1
+      ,SYS_MU_FR_KIN_3 ///< dphi_l0_l1
+      ,SYS_EL_FR_KIN_4 ///< dpt_l0_l1
+      ,SYS_MU_FR_KIN_4 ///< dpt_l0_l1
+      ,SYS_EL_FR_KIN_5 ///> dilepton trigger
+      ,SYS_MU_FR_KIN_5 ///> dilepton trigger
     };
   /// first valid value (useful for loop and validation)
   static const Value first() { return SYS_NOM; }
   /// last valid value (needs to be updated when enum is extended)
-  static const Value last() { return SYS_MU_FRAC_DO; }
+  static const Value last() { return SYS_MU_FR_KIN_5; }
   /// whether p is a valid enum value
   static bool isValid(const Systematic::Value &p);
   /// string representation

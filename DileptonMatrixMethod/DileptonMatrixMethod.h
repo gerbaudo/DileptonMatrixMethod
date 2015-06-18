@@ -184,6 +184,8 @@ class DileptonMatrixMethod
                                       Parametrization::Value &rp) const;
       float getFracRelativeError(const Lepton &lep, RATE_TYPE rt, size_t regionIndex,
                                  Systematic::Value syst) const;
+      /// map the frac systematic values to the corresponding histograms
+      TH1* getFakeFractionSystematicHisto(const Systematic::Value s) const;
 
       /// input file holding the real efficiency and fake rates for leptons
       TFile* m_hist_file;
@@ -195,8 +197,19 @@ class DileptonMatrixMethod
       std::vector<TH1*> m_mu_fake_rate;
       TH1* m_el_frac_up;
       TH1* m_el_frac_do;
+      TH1* m_el_fr_kin_1;
+      TH1* m_el_fr_kin_2;
+      TH1* m_el_fr_kin_3;
+      TH1* m_el_fr_kin_4;
+      TH1* m_el_fr_kin_5;
       TH1* m_mu_frac_up;
       TH1* m_mu_frac_do;
+      TH1* m_mu_fr_kin_1;
+      TH1* m_mu_fr_kin_2;
+      TH1* m_mu_fr_kin_3;
+      TH1* m_mu_fr_kin_4;
+      TH1* m_mu_fr_kin_5;
+
 
       // Systematic uncertainties grabbed from the config file
       // Real errors
