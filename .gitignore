@@ -1,4 +1,7 @@
 *~
+*.eps
+*.png
+*.pyc
 StandAlone/
 bin/
 obj/
