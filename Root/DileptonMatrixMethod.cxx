@@ -19,6 +19,7 @@
 using susy::fake::DileptonMatrixMethod;
 using susy::fake::Parametrization;
 using susy::fake::Systematic;
+using namespace std;
 
 //----------------------------------------------------------
 float sum_in_quadrature(const float* elements, const size_t num_elements)
